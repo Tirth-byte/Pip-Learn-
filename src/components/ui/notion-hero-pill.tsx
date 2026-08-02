@@ -91,8 +91,8 @@ export function NotionHeroPill() {
           className="w-[0.28em] h-[0.28em] min-w-[0.28em] min-h-[0.28em] rounded-full shrink-0"
         />
 
-        {/* Dynamic Word Container using CSS Grid so width adapts naturally to in-flow text without position absolute collapse */}
-        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center overflow-hidden h-[1.15em] leading-none whitespace-nowrap">
+        {/* Dynamic Word Container using CSS Grid with subpixel padding buffer to prevent font glyph right-clipping */}
+        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center overflow-hidden h-[1.15em] px-[0.08em] leading-none whitespace-nowrap">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={text}
@@ -103,7 +103,7 @@ export function NotionHeroPill() {
                 duration: 0.4,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-center align-middle"
+              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-center align-middle px-[0.04em]"
             >
               {text}
             </motion.span>
