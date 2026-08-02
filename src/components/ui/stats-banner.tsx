@@ -1,39 +1,90 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { Globe, Zap, Bot, BookOpen, Trophy } from "lucide-react";
 
+function CountUpNumber({
+  target,
+  prefix = "",
+  suffix = "",
+  decimals = 0,
+}: {
+  target: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+}) {
+  const [current, setCurrent] = useState<number>(0);
+  const hasAnimated = useRef<boolean>(false);
+
+  const startAnimation = () => {
+    if (hasAnimated.current) return;
+    hasAnimated.current = true;
+
+    const duration = 2000; // 2 seconds
+    const startTime = performance.now();
+
+    const step = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Smooth Ease-Out Cubic Curve: 1 - (1 - t)^3
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const val = easeProgress * target;
+      setCurrent(val);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        setCurrent(target);
+      }
+    };
+
+    requestAnimationFrame(step);
+  };
+
+  return (
+    <motion.span
+      onViewportEnter={startAnimation}
+      viewport={{ once: true, margin: "-20px" }}
+    >
+      {prefix}
+      {current.toFixed(decimals)}
+      {suffix}
+    </motion.span>
+  );
+}
+
 interface StatItem {
   icon: React.ReactNode;
-  value: string;
+  numberComponent: React.ReactNode;
   label: string;
 }
 
 const STATS: StatItem[] = [
   {
     icon: <Globe className="size-6 text-gray-400 group-hover:text-[#111827] transition-colors duration-300" />,
-    value: "500K+",
+    numberComponent: <CountUpNumber target={500} suffix="K+" />,
     label: "PYTHON DEVELOPERS",
   },
   {
     icon: <Zap className="size-6 text-gray-400 group-hover:text-[#111827] transition-colors duration-300" />,
-    value: "15M+",
+    numberComponent: <CountUpNumber target={15} suffix="M+" />,
     label: "CODE EXECUTIONS",
   },
   {
     icon: <Bot className="size-6 text-gray-400 group-hover:text-[#111827] transition-colors duration-300" />,
-    value: "99.8%",
+    numberComponent: <CountUpNumber target={99.8} suffix="%" decimals={1} />,
     label: "BUG CORRECTION RATE",
   },
   {
     icon: <BookOpen className="size-6 text-gray-400 group-hover:text-[#111827] transition-colors duration-300" />,
-    value: "120+",
+    numberComponent: <CountUpNumber target={120} suffix="+" />,
     label: "INTERACTIVE COURSES",
   },
   {
     icon: <Trophy className="size-6 text-gray-400 group-hover:text-[#111827] transition-colors duration-300" />,
-    value: "#1",
+    numberComponent: <CountUpNumber target={1} prefix="#" />,
     label: "AI WORKSPACE ON G2",
   },
 ];
@@ -63,9 +114,9 @@ export function StatsBanner() {
                 {stat.icon}
               </div>
 
-              {/* Massive Bold Number */}
+              {/* Massive Bold Number with 60fps Count-Up Animation */}
               <div className="text-4xl sm:text-5xl font-extrabold text-[#111827] tracking-tight leading-none">
-                {stat.value}
+                {stat.numberComponent}
               </div>
 
               {/* Spaced Small Uppercase Label */}
