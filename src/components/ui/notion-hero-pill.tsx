@@ -83,12 +83,12 @@ export function NotionHeroPill() {
   }, [updateWidth]);
 
   return (
-    <span className="inline-flex items-center align-middle relative mx-1 sm:mx-1.5 select-none">
+    <span className="inline-flex items-center relative mx-1 sm:mx-1.5 select-none">
       {/* Hidden element for measuring exact word width */}
       <span
         ref={measureRef}
         aria-hidden="true"
-        className="invisible absolute top-[-9999px] left-[-9999px] whitespace-nowrap font-extrabold tracking-tight pointer-events-none select-none"
+        className="invisible absolute top-[-9999px] left-[-9999px] whitespace-nowrap font-extrabold tracking-tight leading-none pointer-events-none select-none"
       >
         {text}
       </span>
@@ -105,7 +105,7 @@ export function NotionHeroPill() {
           backgroundColor: bgColor,
           borderRadius: "9999px",
         }}
-        className="px-[0.45em] py-[0.08em] inline-flex items-center gap-[0.28em] text-[#000000] font-extrabold tracking-tight overflow-hidden align-middle shadow-xs relative leading-tight"
+        className="px-[0.45em] py-[0.15em] inline-flex items-center gap-[0.28em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative"
       >
         {/* Solid Circular Color Dot with smooth color transition */}
         <motion.span
@@ -119,7 +119,7 @@ export function NotionHeroPill() {
           style={{
             backgroundColor: color,
           }}
-          className="w-[0.28em] h-[0.28em] min-w-[0.28em] min-h-[0.28em] rounded-full inline-block shrink-0 align-middle"
+          className="w-[0.28em] h-[0.28em] min-w-[0.28em] min-h-[0.28em] rounded-full shrink-0"
         />
 
         {/* Dynamic Word Container with smooth animated width per word & vertical slide-up transition */}
@@ -129,7 +129,7 @@ export function NotionHeroPill() {
             duration: 0.42,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="relative inline-block overflow-hidden h-[1.18em] align-middle"
+          className="relative inline-flex items-center overflow-hidden h-[1.15em] leading-none"
         >
           <AnimatePresence initial={false}>
             <motion.span
@@ -141,7 +141,7 @@ export function NotionHeroPill() {
                 duration: 0.42,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="absolute left-0 top-0 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none align-middle"
+              className="absolute left-0 inset-y-0 flex items-center whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none"
             >
               {text}
             </motion.span>
@@ -151,6 +151,7 @@ export function NotionHeroPill() {
     </span>
   );
 }
+
 
 
 
