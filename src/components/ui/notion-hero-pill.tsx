@@ -59,7 +59,7 @@ export function NotionHeroPill() {
   const { text, color, bgColor } = PILL_STATES[index];
 
   return (
-    <span className="inline-flex items-center relative select-none whitespace-nowrap align-middle">
+    <span className="inline-flex items-center relative select-none whitespace-nowrap align-middle mx-[0.3em]">
       {/* Outer Pill Container with smooth layout width & background color transitions */}
       <motion.span
         layout
@@ -74,9 +74,9 @@ export function NotionHeroPill() {
           backgroundColor: bgColor,
           borderRadius: "9999px",
         }}
-        className="px-[0.45em] py-[0.12em] inline-flex items-center gap-[0.28em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle"
+        className="px-[0.75em] py-[0.1em] inline-flex items-center gap-[0.4em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle"
       >
-        {/* Solid Circular Color Dot with smooth color transition */}
+        {/* Solid Circular Color Dot with smooth color transition & fixed flex-shrink: 0 */}
         <motion.span
           animate={{
             backgroundColor: color,
@@ -88,7 +88,7 @@ export function NotionHeroPill() {
           style={{
             backgroundColor: color,
           }}
-          className="w-[0.28em] h-[0.28em] min-w-[0.28em] min-h-[0.28em] rounded-full shrink-0"
+          className="w-[0.45em] h-[0.45em] min-w-[0.45em] min-h-[0.45em] rounded-full shrink-0 flex-shrink-0"
         />
 
         {/* Dynamic Word Container using CSS Grid so width adapts naturally to in-flow text without position absolute collapse */}
@@ -113,6 +113,7 @@ export function NotionHeroPill() {
     </span>
   );
 }
+
 
 
 
