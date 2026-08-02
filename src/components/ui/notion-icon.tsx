@@ -31,7 +31,12 @@ interface NotionIconProps {
     | "check"
     | "layers"
     | "cpu"
-    | "shield";
+    | "shield"
+    | "bug"
+    | "test"
+    | "fileCode"
+    | "zap"
+    | "globe";
   color?: NotionIconColor;
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
@@ -94,6 +99,37 @@ export function NotionIcon({ name, color = "gray", size = "md", className }: Not
             <polyline points="8 6 2 12 8 18" />
           </svg>
         );
+      case "fileCode":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+            <polyline points="14 2 14 8 20 8" />
+            <path d="m10 13-2 2 2 2" />
+            <path d="m14 13 2 2-2 2" />
+          </svg>
+        );
+      case "bug":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
+            <rect width="8" height="14" x="8" y="6" rx="4" />
+            <path d="m19 7-3 2" />
+            <path d="m5 7 3 2" />
+            <path d="m19 19-3-2" />
+            <path d="m5 19 3-2" />
+            <path d="M20 13h-4" />
+            <path d="M4 13h4" />
+            <path d="m10 4 1-2" />
+            <path d="m14 4-1-2" />
+          </svg>
+        );
+      case "test":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
+            <path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2" />
+            <path d="M8.5 2h7" />
+            <path d="M14.5 16h-5" />
+          </svg>
+        );
       case "target":
         return (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
@@ -103,9 +139,10 @@ export function NotionIcon({ name, color = "gray", size = "md", className }: Not
           </svg>
         );
       case "flame":
+      case "zap":
         return (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
-            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
           </svg>
         );
       case "chat":
@@ -123,6 +160,26 @@ export function NotionIcon({ name, color = "gray", size = "md", className }: Not
             <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
             <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
             <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+          </svg>
+        );
+      case "star":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        );
+      case "check":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="size-full">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        );
+      case "globe":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="size-full">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
           </svg>
         );
       case "rocket":

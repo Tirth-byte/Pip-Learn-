@@ -11,17 +11,17 @@ interface PillState {
 
 const PILL_STATES: PillState[] = [
   {
-    text: "Think",
+    text: "Learn",
     color: "#0066FF",
     bgColor: "#EBF3FF",
   },
   {
-    text: "Jam",
+    text: "Code",
     color: "#8B5CF6",
     bgColor: "#F4F0FF",
   },
   {
-    text: "Scale",
+    text: "Debug",
     color: "#0D9488",
     bgColor: "#E0F8F5",
   },
