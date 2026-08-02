@@ -363,52 +363,79 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5 Quick-Action Feature Badges with Lucide Icons */}
-      <section className="px-6 py-12 max-w-6xl mx-auto w-full">
-        <p className="text-xs font-semibold text-[rgba(55,53,47,0.45)] mb-6">See what PipLearn can do for you</p>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Link href="/sandbox" className="border border-[rgba(55,53,47,0.12)] rounded-xl p-4 bg-white hover:border-black/30 transition-all cursor-pointer group flex flex-col justify-between h-32">
-            <div className="size-9 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center">
+      {/* 5 Quick-Action Feature Badges with Notion 3D Tactile Styling & Hover Animations */}
+      <section className="px-6 py-14 max-w-6xl mx-auto w-full">
+        <p className="text-xs font-bold tracking-widest text-[rgba(55,53,47,0.5)] uppercase mb-6 select-none">
+          See what PipLearn can do for you
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4.5">
+          {/* 1. Debug Python tracebacks */}
+          <Link
+            href="/sandbox"
+            className="bg-white border border-[rgba(55,53,47,0.16)] rounded-2xl p-5 shadow-[0_4px_0_0_rgba(55,53,47,0.08)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.08),0_6px_0_0_rgba(55,53,47,0.18)] hover:border-[rgba(55,53,47,0.3)] hover:-translate-y-1.5 active:translate-y-0 active:shadow-[0_2px_0_0_rgba(55,53,47,0.08)] transition-all duration-300 group cursor-pointer flex flex-col justify-between h-36"
+          >
+            <div className="size-10 rounded-xl bg-rose-50/90 border border-rose-200/80 group-hover:bg-rose-100 group-hover:border-rose-300 flex items-center justify-center shadow-xs transition-all duration-300 group-hover:scale-110">
               <Bug className="size-5 text-rose-600" />
             </div>
-            <div className="font-semibold text-xs text-[#37352F] group-hover:underline flex items-center gap-1">
-              Debug Python tracebacks <ArrowRight className="size-3" />
+            <div className="font-bold text-xs sm:text-sm text-[#111827] group-hover:text-[#2383E2] transition-colors leading-snug flex items-center justify-between gap-1">
+              <span>Debug Python tracebacks</span>
+              <ArrowRight className="size-3.5 text-[rgba(55,53,47,0.4)] group-hover:text-[#2383E2] group-hover:translate-x-1 transition-all shrink-0" />
             </div>
           </Link>
 
-          <Link href="/courses" className="border border-[rgba(55,53,47,0.12)] rounded-xl p-4 bg-white hover:border-black/30 transition-all cursor-pointer group flex flex-col justify-between h-32">
-            <div className="size-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center">
+          {/* 2. Generate pytest unit tests */}
+          <Link
+            href="/courses"
+            className="bg-white border border-[rgba(55,53,47,0.16)] rounded-2xl p-5 shadow-[0_4px_0_0_rgba(55,53,47,0.08)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.08),0_6px_0_0_rgba(55,53,47,0.18)] hover:border-[rgba(55,53,47,0.3)] hover:-translate-y-1.5 active:translate-y-0 active:shadow-[0_2px_0_0_rgba(55,53,47,0.08)] transition-all duration-300 group cursor-pointer flex flex-col justify-between h-36"
+          >
+            <div className="size-10 rounded-xl bg-blue-50/90 border border-blue-200/80 group-hover:bg-blue-100 group-hover:border-blue-300 flex items-center justify-center shadow-xs transition-all duration-300 group-hover:scale-110">
               <FileCheck className="size-5 text-blue-600" />
             </div>
-            <div className="font-semibold text-xs text-[#37352F] group-hover:underline flex items-center gap-1">
-              Generate pytest unit tests <ArrowRight className="size-3" />
+            <div className="font-bold text-xs sm:text-sm text-[#111827] group-hover:text-[#2383E2] transition-colors leading-snug flex items-center justify-between gap-1">
+              <span>Generate pytest unit tests</span>
+              <ArrowRight className="size-3.5 text-[rgba(55,53,47,0.4)] group-hover:text-[#2383E2] group-hover:translate-x-1 transition-all shrink-0" />
             </div>
           </Link>
 
-          <Link href="/sandbox" className="border border-[rgba(55,53,47,0.12)] rounded-xl p-4 bg-white hover:border-black/30 transition-all cursor-pointer group flex flex-col justify-between h-32">
-            <div className="size-9 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center">
+          {/* 3. Build Gemini Python agents */}
+          <Link
+            href="/sandbox"
+            className="bg-white border border-[rgba(55,53,47,0.16)] rounded-2xl p-5 shadow-[0_4px_0_0_rgba(55,53,47,0.08)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.08),0_6px_0_0_rgba(55,53,47,0.18)] hover:border-[rgba(55,53,47,0.3)] hover:-translate-y-1.5 active:translate-y-0 active:shadow-[0_2px_0_0_rgba(55,53,47,0.08)] transition-all duration-300 group cursor-pointer flex flex-col justify-between h-36"
+          >
+            <div className="size-10 rounded-xl bg-purple-50/90 border border-purple-200/80 group-hover:bg-purple-100 group-hover:border-purple-300 flex items-center justify-center shadow-xs transition-all duration-300 group-hover:scale-110">
               <Bot className="size-5 text-purple-600" />
             </div>
-            <div className="font-semibold text-xs text-[#37352F] group-hover:underline flex items-center gap-1">
-              Build Gemini Python agents <ArrowRight className="size-3" />
+            <div className="font-bold text-xs sm:text-sm text-[#111827] group-hover:text-[#2383E2] transition-colors leading-snug flex items-center justify-between gap-1">
+              <span>Build Gemini Python agents</span>
+              <ArrowRight className="size-3.5 text-[rgba(55,53,47,0.4)] group-hover:text-[#2383E2] group-hover:translate-x-1 transition-all shrink-0" />
             </div>
           </Link>
 
-          <Link href="/courses" className="border border-[rgba(55,53,47,0.12)] rounded-xl p-4 bg-white hover:border-black/30 transition-all cursor-pointer group flex flex-col justify-between h-32">
-            <div className="size-9 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center">
+          {/* 4. Practice algorithm structures */}
+          <Link
+            href="/courses"
+            className="bg-white border border-[rgba(55,53,47,0.16)] rounded-2xl p-5 shadow-[0_4px_0_0_rgba(55,53,47,0.08)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.08),0_6px_0_0_rgba(55,53,47,0.18)] hover:border-[rgba(55,53,47,0.3)] hover:-translate-y-1.5 active:translate-y-0 active:shadow-[0_2px_0_0_rgba(55,53,47,0.08)] transition-all duration-300 group cursor-pointer flex flex-col justify-between h-36"
+          >
+            <div className="size-10 rounded-xl bg-amber-50/90 border border-amber-200/80 group-hover:bg-amber-100 group-hover:border-amber-300 flex items-center justify-center shadow-xs transition-all duration-300 group-hover:scale-110">
               <Code2 className="size-5 text-amber-600" />
             </div>
-            <div className="font-semibold text-xs text-[#37352F] group-hover:underline flex items-center gap-1">
-              Practice algorithm structures <ArrowRight className="size-3" />
+            <div className="font-bold text-xs sm:text-sm text-[#111827] group-hover:text-[#2383E2] transition-colors leading-snug flex items-center justify-between gap-1">
+              <span>Practice algorithm structures</span>
+              <ArrowRight className="size-3.5 text-[rgba(55,53,47,0.4)] group-hover:text-[#2383E2] group-hover:translate-x-1 transition-all shrink-0" />
             </div>
           </Link>
 
-          <Link href="/sandbox" className="border border-[rgba(55,53,47,0.12)] rounded-xl p-4 bg-white hover:border-black/30 transition-all cursor-pointer group flex flex-col justify-between h-32">
-            <div className="size-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+          {/* 5. Isolated Python 3 sandbox */}
+          <Link
+            href="/sandbox"
+            className="bg-white border border-[rgba(55,53,47,0.16)] rounded-2xl p-5 shadow-[0_4px_0_0_rgba(55,53,47,0.08)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.08),0_6px_0_0_rgba(55,53,47,0.18)] hover:border-[rgba(55,53,47,0.3)] hover:-translate-y-1.5 active:translate-y-0 active:shadow-[0_2px_0_0_rgba(55,53,47,0.08)] transition-all duration-300 group cursor-pointer flex flex-col justify-between h-36"
+          >
+            <div className="size-10 rounded-xl bg-emerald-50/90 border border-emerald-200/80 group-hover:bg-emerald-100 group-hover:border-emerald-300 flex items-center justify-center shadow-xs transition-all duration-300 group-hover:scale-110">
               <Terminal className="size-5 text-emerald-600" />
             </div>
-            <div className="font-semibold text-xs text-[#37352F] group-hover:underline flex items-center gap-1">
-              Isolated Python 3 sandbox <ArrowRight className="size-3" />
+            <div className="font-bold text-xs sm:text-sm text-[#111827] group-hover:text-[#2383E2] transition-colors leading-snug flex items-center justify-between gap-1">
+              <span>Isolated Python 3 sandbox</span>
+              <ArrowRight className="size-3.5 text-[rgba(55,53,47,0.4)] group-hover:text-[#2383E2] group-hover:translate-x-1 transition-all shrink-0" />
             </div>
           </Link>
         </div>
