@@ -67,14 +67,14 @@ export function NotionHeroPill() {
           backgroundColor: bgColor,
         }}
         transition={{
-          layout: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+          layout: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
           backgroundColor: { duration: 0.45, ease: "easeInOut" },
         }}
         style={{
           backgroundColor: bgColor,
           borderRadius: "9999px",
         }}
-        className="px-[0.75em] py-[0.1em] inline-flex items-center gap-[0.4em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle"
+        className="px-[0.65em] py-[0.1em] inline-flex items-center gap-[0.4em] text-[#000000] font-extrabold leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle"
       >
         {/* Solid Circular Color Dot with smooth color transition & fixed flex-shrink: 0 */}
         <motion.span
@@ -91,8 +91,8 @@ export function NotionHeroPill() {
           className="w-[0.45em] h-[0.45em] min-w-[0.45em] min-h-[0.45em] rounded-full shrink-0 flex-shrink-0"
         />
 
-        {/* Dynamic Word Container using CSS Grid with padding to prevent glyph clipping */}
-        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-items-start overflow-hidden h-[1.15em] px-[0.1em] leading-none whitespace-nowrap">
+        {/* Dynamic Word Container using CSS Grid with generous horizontal padding to prevent glyph clipping */}
+        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-items-center overflow-hidden h-[1.25em] px-[0.35em] leading-none whitespace-nowrap">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={text}
@@ -100,10 +100,10 @@ export function NotionHeroPill() {
               animate={{ y: "0%", opacity: 1 }}
               exit={{ y: "-100%", opacity: 0 }}
               transition={{
-                duration: 0.4,
+                duration: 0.38,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-start text-left m-0 align-middle"
+              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold text-[#000000] leading-none flex items-center justify-center text-center m-0 align-middle px-[0.1em]"
             >
               {text}
             </motion.span>
@@ -113,6 +113,7 @@ export function NotionHeroPill() {
     </span>
   );
 }
+
 
 
 
