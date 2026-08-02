@@ -3,75 +3,97 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Terminal, Sparkles, ArrowRight } from "lucide-react";
+import {
+  Terminal,
+  Sparkles,
+  ArrowRight,
+  BookOpen,
+  Code2,
+  FileCode2,
+  Cpu,
+  Zap,
+  Bot
+} from "lucide-react";
 import { motion } from "motion/react";
 
 export function FinalCTASection() {
   return (
     <section className="relative px-6 py-32 sm:py-40 text-center bg-white border-t border-[rgba(55,53,47,0.12)] overflow-hidden select-none">
-      {/* Hand-Drawn Monochrome Line-Art Illustration 1: Top Left - Open Notebook */}
-      <div className="absolute top-12 left-6 sm:left-16 rotate-[-8deg] opacity-65 hover:opacity-100 transition-opacity hidden lg:block pointer-events-none">
-        <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20" fill="none" stroke="#37352F" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          {/* Notebook Outline */}
-          <rect x="8" y="10" width="48" height="44" rx="4" fill="white" />
-          {/* Spine Divider */}
-          <line x1="32" y1="10" x2="32" y2="54" strokeWidth="1.5" strokeDasharray="3 3" />
-          {/* Spiral Binding Rings */}
-          <path d="M28 14 H36 M28 22 H36 M28 30 H36 M28 38 H36 M28 46 H36" />
-          {/* Page Lines Left */}
-          <line x1="14" y1="20" x2="26" y2="20" opacity="0.6" />
-          <line x1="14" y1="28" x2="26" y2="28" opacity="0.6" />
-          <line x1="14" y1="36" x2="26" y2="36" opacity="0.6" />
-          {/* Page Lines Right */}
-          <line x1="38" y1="20" x2="50" y2="20" opacity="0.6" />
-          <line x1="38" y1="28" x2="50" y2="28" opacity="0.6" />
-          <line x1="38" y1="36" x2="50" y2="36" opacity="0.6" />
-        </svg>
-      </div>
+      {/* 3D Floating Element 1: Top Left - Notebook & Code Badge */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="absolute top-12 left-6 sm:left-14 rotate-[-8deg] hidden lg:block"
+      >
+        <div className="bg-white border border-[rgba(55,53,47,0.14)] rounded-2xl p-4 shadow-[0_12px_28px_rgba(0,0,0,0.08),0_4px_0_0_rgba(55,53,47,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12),0_6px_0_0_rgba(55,53,47,0.18)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3 cursor-pointer group">
+          <div className="size-9 rounded-xl bg-[#F7F7F5] border border-[rgba(55,53,47,0.1)] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <BookOpen className="size-4.5 text-[#111827]" />
+          </div>
+          <div className="text-left pr-1">
+            <div className="font-extrabold text-xs text-[#111827]">Python 3.12</div>
+            <div className="text-[10px] font-mono font-semibold text-[rgba(55,53,47,0.5)]">Curriculum</div>
+          </div>
+        </div>
+      </motion.div>
 
-      {/* Hand-Drawn Monochrome Line-Art Illustration 2: Bottom Left - Graphite Pencil */}
-      <div className="absolute bottom-16 left-8 sm:left-24 rotate-[14deg] opacity-65 hover:opacity-100 transition-opacity hidden lg:block pointer-events-none">
-        <svg viewBox="0 0 64 64" className="w-14 h-14 sm:w-16 sm:h-16" fill="none" stroke="#37352F" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          {/* Pencil Body */}
-          <polygon points="12,48 42,18 48,24 18,54" fill="white" />
-          {/* Pencil Tip */}
-          <polygon points="12,48 18,54 8,56" fill="#37352F" />
-          {/* Eraser End */}
-          <path d="M42 18 L48 24 L52 20 L46 14 Z" />
-          <line x1="40" y1="20" x2="46" y2="26" />
-        </svg>
-      </div>
+      {/* 3D Floating Element 2: Bottom Left - PyTest & Sparkles Badge */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="absolute bottom-16 left-8 sm:left-20 rotate-[12deg] hidden lg:block"
+      >
+        <div className="bg-white border border-[rgba(55,53,47,0.14)] rounded-2xl p-4 shadow-[0_12px_28px_rgba(0,0,0,0.08),0_4px_0_0_rgba(55,53,47,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12),0_6px_0_0_rgba(55,53,47,0.18)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3 cursor-pointer group">
+          <div className="size-9 rounded-xl bg-[#F7F7F5] border border-[rgba(55,53,47,0.1)] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <FileCode2 className="size-4.5 text-[#111827]" />
+          </div>
+          <div className="text-left pr-1">
+            <div className="font-extrabold text-xs text-[#111827]">PyTest Suite</div>
+            <div className="text-[10px] font-mono font-semibold text-[rgba(55,53,47,0.5)]">Unit Generator</div>
+          </div>
+        </div>
+      </motion.div>
 
-      {/* Hand-Drawn Monochrome Line-Art Illustration 3: Top Right - Terminal Window (>_) */}
-      <div className="absolute top-14 right-6 sm:right-16 rotate-[6deg] opacity-65 hover:opacity-100 transition-opacity hidden lg:block pointer-events-none">
-        <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20" fill="none" stroke="#37352F" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          {/* Terminal Window Frame */}
-          <rect x="8" y="12" width="48" height="40" rx="4" fill="white" />
-          {/* Window Header Line */}
-          <line x1="8" y1="22" x2="56" y2="22" />
-          {/* macOS Dots */}
-          <circle cx="15" cy="17" r="1.5" fill="#37352F" />
-          <circle cx="21" cy="17" r="1.5" fill="#37352F" />
-          <circle cx="27" cy="17" r="1.5" fill="#37352F" />
-          {/* Command Prompt >_ */}
-          <path d="M16 30 L23 35 L16 40" />
-          <line x1="27" y1="40" x2="36" y2="40" strokeWidth="2" />
-        </svg>
-      </div>
+      {/* 3D Floating Element 3: Top Right - Terminal & Compiler Badge */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="absolute top-14 right-6 sm:right-14 rotate-[8deg] hidden lg:block"
+      >
+        <div className="bg-white border border-[rgba(55,53,47,0.14)] rounded-2xl p-4 shadow-[0_12px_28px_rgba(0,0,0,0.08),0_4px_0_0_rgba(55,53,47,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12),0_6px_0_0_rgba(55,53,47,0.18)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3 cursor-pointer group">
+          <div className="size-9 rounded-xl bg-[#F7F7F5] border border-[rgba(55,53,47,0.1)] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Terminal className="size-4.5 text-[#111827]" />
+          </div>
+          <div className="text-left pr-1">
+            <div className="font-extrabold text-xs text-[#111827]">Isolated Sandbox</div>
+            <div className="text-[10px] font-mono font-semibold text-[rgba(55,53,47,0.5)]">&gt;_ REPL 3.12</div>
+          </div>
+        </div>
+      </motion.div>
 
-      {/* Hand-Drawn Monochrome Line-Art Illustration 4: Bottom Right - Coffee Cup */}
-      <div className="absolute bottom-14 right-8 sm:right-24 rotate-[-10deg] opacity-65 hover:opacity-100 transition-opacity hidden lg:block pointer-events-none">
-        <svg viewBox="0 0 64 64" className="w-14 h-14 sm:w-16 sm:h-16" fill="none" stroke="#37352F" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          {/* Mug Body */}
-          <rect x="16" y="20" width="28" height="32" rx="4" fill="white" />
-          {/* Mug Handle */}
-          <path d="M44 26 C52 26 52 42 44 42" />
-          {/* Steam Swirls */}
-          <path d="M22 14 C22 10 24 10 24 6" opacity="0.7" />
-          <path d="M30 14 C30 10 32 10 32 6" opacity="0.7" />
-          <path d="M38 14 C38 10 40 10 40 6" opacity="0.7" />
-        </svg>
-      </div>
+      {/* 3D Floating Element 4: Bottom Right - AI Tutor Badge */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.25 }}
+        className="absolute bottom-14 right-8 sm:right-20 rotate-[-10deg] hidden lg:block"
+      >
+        <div className="bg-white border border-[rgba(55,53,47,0.14)] rounded-2xl p-4 shadow-[0_12px_28px_rgba(0,0,0,0.08),0_4px_0_0_rgba(55,53,47,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12),0_6px_0_0_rgba(55,53,47,0.18)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3 cursor-pointer group">
+          <div className="size-9 rounded-xl bg-[#F7F7F5] border border-[rgba(55,53,47,0.1)] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Bot className="size-4.5 text-[#111827]" />
+          </div>
+          <div className="text-left pr-1">
+            <div className="font-extrabold text-xs text-[#111827]">Pip AI Tutor</div>
+            <div className="text-[10px] font-mono font-semibold text-[rgba(55,53,47,0.5)]">Tracebacks</div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Main Content Container */}
       <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
