@@ -261,37 +261,106 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Company Logos Marquee Bar with Lucide Icons */}
+      {/* Top University Logos Showcase Bar */}
       <section className="border-t border-[rgba(55,53,47,0.08)] bg-white py-12 px-6 text-center select-none">
         <p className="text-xs font-semibold text-[rgba(55,53,47,0.45)] mb-8 tracking-wide">
-          Used by developers and engineers at top technology companies and universities
+          Trusted by students, researchers, and developers at top universities worldwide
         </p>
-        <div className="max-w-5xl mx-auto space-y-4">
+        <div className="max-w-5xl mx-auto space-y-5">
+          {/* Main Top Universities with Authentic Crests & Logos */}
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-extrabold text-[#37352F]">
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <Bot className="size-4 text-purple-600" /> OpenAI
+            
+            {/* MIT */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <path d="M2 4h3v16H2V4zm5 0h3v11H7V4zm5 0h3v16h-3V4zm5 0h5v3h-2v13h-3V7h-2V4zM7 17h3v3H7v-3z" fill="#A31D1D" />
+              </svg>
+              <span>MIT</span>
             </span>
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <Sparkles className="size-4 text-blue-600" /> Google DeepMind
+
+            {/* Stanford */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="#8C1515" />
+                <path d="M12 5l-2.5 5h2v6h1v-6h2L12 5z" fill="#FFFFFF" />
+                <path d="M10.5 16h3v1.5h-3z" fill="#FFFFFF" />
+              </svg>
+              <span>Stanford University</span>
             </span>
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <Code2 className="size-4 text-[#37352F]" /> Cursor
+
+            {/* Harvard */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <path d="M12 2L3 6v6c0 6 4 10.5 9 12 5-1.5 9-6 9-12V6l-9-4z" fill="#A51C30" />
+                <rect x="6.5" y="7" width="5" height="4" rx="0.5" fill="#FFFFFF" />
+                <rect x="12.5" y="7" width="5" height="4" rx="0.5" fill="#FFFFFF" />
+                <rect x="9.5" y="12.5" width="5" height="4" rx="0.5" fill="#FFFFFF" />
+              </svg>
+              <span>Harvard</span>
             </span>
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <Zap className="size-4 text-black fill-black" /> Vercel
+
+            {/* UC Berkeley */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#003262" />
+                <circle cx="12" cy="12" r="8" stroke="#FDB515" strokeWidth="1.2" fill="none" />
+                <path d="M12 6l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6L12 6z" fill="#FDB515" />
+              </svg>
+              <span>UC Berkeley</span>
             </span>
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <Cpu className="size-4 text-emerald-600" /> NVIDIA
+
+            {/* Oxford */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <path d="M12 2L4 6v6c0 5.5 3.8 10.5 8 12 4.2-1.5 8-6.5 8-12V6l-8-4z" fill="#002147" />
+                <path d="M7.5 8h9v5.5h-9V8z" fill="#FFFFFF" />
+                <circle cx="9" cy="16" r="1" fill="#FDB515" />
+                <circle cx="12" cy="16" r="1" fill="#FDB515" />
+                <circle cx="15" cy="16" r="1" fill="#FDB515" />
+              </svg>
+              <span>Oxford</span>
             </span>
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <GraduationCap className="size-4 text-red-600" /> Stanford
+
+            {/* Cambridge */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <path d="M12 2L4 6v6c0 5.5 3.8 10.5 8 12 4.2-1.5 8-6.5 8-12V6l-8-4z" fill="#A51C30" />
+                <path d="M12 4v16M4 12h16" stroke="#FDB515" strokeWidth="1.8" />
+              </svg>
+              <span>Cambridge</span>
             </span>
-            <span className="px-3.5 py-1.5 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2 hover:border-black/30 transition-all">
-              <Trophy className="size-4 text-amber-600" /> MIT
+
+            {/* Carnegie Mellon */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <rect x="3" y="3" width="18" height="18" rx="4" fill="#C41230" />
+                <path d="M7 8h3.5c1.5 0 2.5 1 2.5 2.5v3c0 1.5-1 2.5-2.5 2.5H7V8z" stroke="#FFFFFF" strokeWidth="2" fill="none" />
+                <path d="M15 8h2v8h-2" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <span>Carnegie Mellon</span>
+            </span>
+
+            {/* ETH Zürich */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <rect x="2" y="5" width="20" height="14" rx="3" fill="#1F407A" />
+                <path d="M5 8h4M5 12h3M5 16h4M11 8h4M13 8v8M17 8h4M17 12h4M17 16h4" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+              <span>ETH Zürich</span>
+            </span>
+
+            {/* Princeton */}
+            <span className="px-4 py-2 rounded-full border border-[rgba(55,53,47,0.12)] bg-[#FAF9F6] flex items-center gap-2.5 hover:border-black/30 hover:shadow-xs transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none">
+                <path d="M12 2L4 6v6c0 5.5 3.8 10.5 8 12 4.2-1.5 8-6.5 8-12V6l-8-4z" fill="#E77500" />
+                <rect x="9" y="9" width="6" height="5" rx="0.5" fill="#000000" />
+              </svg>
+              <span>Princeton</span>
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2.5 text-xs font-semibold text-[rgba(55,53,47,0.65)]">
+          {/* Sub-row: Python Ecosystem Foundation Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 text-xs font-semibold text-[rgba(55,53,47,0.65)] pt-1">
             <span className="px-3 py-1 rounded-md bg-[#F7F7F5] border border-black/5 flex items-center gap-1.5">
               <Terminal className="size-3.5 text-amber-600" /> PyPI
             </span>
