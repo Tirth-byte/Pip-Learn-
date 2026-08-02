@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Globe, Building2 } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
 
 function PipLearnLogoMark({ className = "size-12" }: { className?: string }) {
   return (
@@ -19,6 +21,14 @@ function PipLearnLogoMark({ className = "size-12" }: { className?: string }) {
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const { login } = useAppContext();
+  const router = useRouter();
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(email || undefined);
+    router.push("/dashboard");
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F7F5] flex flex-col items-center justify-center p-4 sm:p-6 text-[#37352F] select-none">
@@ -39,7 +49,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form Input Section */}
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div className="text-left space-y-1.5">
             <label htmlFor="email" className="text-xs font-semibold text-[rgba(55,53,47,0.7)] block">
               Email
@@ -58,12 +68,12 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <Link
-            href="/dashboard"
-            className="w-full h-11 bg-[#0066FF] hover:bg-[#0052CC] text-white font-semibold text-sm rounded-lg flex items-center justify-center transition-colors shadow-xs mt-2"
+          <button
+            type="submit"
+            className="w-full h-11 bg-[#0066FF] hover:bg-[#0052CC] text-white font-semibold text-sm rounded-lg flex items-center justify-center transition-colors shadow-xs mt-2 cursor-pointer"
           >
             Continue
-          </Link>
+          </button>
         </form>
 
         {/* Divider */}

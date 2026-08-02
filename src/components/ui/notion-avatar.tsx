@@ -4,13 +4,14 @@ import React from "react";
 
 interface NotionAvatarProps {
   seed: string;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
   hasShadow?: boolean;
   avatarIndex?: number;
 }
 
 const sizeMap = {
+  xs: "size-6 border-[1.5px]",
   sm: "size-7 border-[2px]",
   md: "size-10 border-[2.5px]",
   lg: "size-12 border-[3px]",

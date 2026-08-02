@@ -31,6 +31,8 @@ import {
   Settings,
   LucideIcon
 } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
+import { NotionAvatar } from "@/components/ui/notion-avatar";
 
 function PipLearnLogoMark({ className = "size-5" }: { className?: string }) {
   return (
@@ -70,6 +72,7 @@ const accountNav: NavItem[] = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { user } = useAppContext();
 
   return (
     <Sidebar className="border-r border-[rgba(55,53,47,0.09)] bg-[#FBFBFA] text-[#37352F] text-sm select-none">
@@ -221,14 +224,17 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Notion New Page Footer */}
-      <div className="p-2 border-t border-[rgba(55,53,47,0.06)] mt-auto">
-        <Link 
-          href="/sandbox" 
-          className="flex items-center gap-3 p-1.5 rounded-md text-xs text-gray-600 hover:bg-[rgba(55,53,47,0.08)] hover:text-gray-900 transition-colors cursor-pointer group"
+      {/* User Profile Footer */}
+      <div className="p-2 border-t border-[rgba(55,53,47,0.06)] mt-auto space-y-1">
+        <Link
+          href="/profile"
+          className="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-[rgba(55,53,47,0.08)] transition-colors cursor-pointer group"
         >
-          <Plus className="size-4 text-gray-400 group-hover:text-gray-900 shrink-0 stroke-[1.5]" />
-          <span className="font-medium">New Python Page</span>
+          <NotionAvatar seed={user.name} avatarIndex={user.avatarIndex} size="sm" hasShadow={false} />
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-xs font-bold text-gray-900 truncate">{user.name}</span>
+            <span className="text-[10px] text-gray-400 truncate">{user.email}</span>
+          </div>
         </Link>
       </div>
     </Sidebar>

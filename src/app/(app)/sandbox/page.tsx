@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Play, RotateCcw, Check, Save, CheckCircle2, XCircle, Code2, Sparkles, Terminal, FileText } from "lucide-react";
 import Link from "next/link";
+import { useAppContext } from "@/context/app-context";
 
 type Problem = {
   id: string;
@@ -155,6 +156,7 @@ def level_order(root):
 function SandboxContent() {
   const searchParams = useSearchParams();
   const problemIdParam = searchParams?.get("problem") || "1";
+  const { completeProblem, progress } = useAppContext();
 
   const [prevProblemId, setPrevProblemId] = useState(problemIdParam);
   const [currentProblem, setCurrentProblem] = useState<Problem>(
@@ -232,6 +234,8 @@ function SandboxContent() {
     handleRunCode();
     setTimeout(() => {
       setIsSubmitted(true);
+      // Award XP via global context
+      completeProblem(currentProblem.id, 20);
     }, 200);
   };
 

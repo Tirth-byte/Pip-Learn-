@@ -18,8 +18,10 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { NotionAvatar } from "@/components/ui/notion-avatar";
+import { useAppContext } from "@/context/app-context";
 
 export default function DashboardPage() {
+  const { user, progress } = useAppContext();
   const [activeView, setActiveView] = useState<"gallery" | "table">("gallery");
   const [toggleScratchpad, setToggleScratchpad] = useState(true);
 
@@ -36,7 +38,7 @@ export default function DashboardPage() {
       <div className="px-6 pt-2">
         {/* Page Title */}
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-4">
-          Ada's Learning Workspace
+          {user.firstName}&apos;s Learning Workspace
         </h1>
 
         {/* Notion Page Properties */}
@@ -48,8 +50,8 @@ export default function DashboardPage() {
               <span>Owner</span>
             </div>
             <div className="font-medium text-[#37352F] flex items-center gap-2">
-              <NotionAvatar seed="Ada Lovelace" size="sm" hasShadow={false} />
-              <span>Ada Lovelace</span>
+              <NotionAvatar seed={user.name} avatarIndex={user.avatarIndex} size="sm" hasShadow={false} />
+              <span>{user.name}</span>
             </div>
           </div>
 
@@ -60,7 +62,7 @@ export default function DashboardPage() {
               <span>Streak</span>
             </div>
             <div>
-              <span className="notion-tag notion-tag-orange font-semibold">12 Days Active</span>
+              <span className="notion-tag notion-tag-orange font-semibold">{progress.streak} Days Active</span>
             </div>
           </div>
 
@@ -71,7 +73,7 @@ export default function DashboardPage() {
               <span>Total XP</span>
             </div>
             <div>
-              <span className="notion-tag notion-tag-purple font-semibold">2,450 XP</span>
+              <span className="notion-tag notion-tag-purple font-semibold">{progress.xp.toLocaleString()} XP</span>
             </div>
           </div>
 
@@ -82,7 +84,7 @@ export default function DashboardPage() {
               <span>Current Target</span>
             </div>
             <div>
-              <span className="notion-tag notion-tag-blue">Python Control Flow</span>
+              <span className="notion-tag notion-tag-blue">{progress.currentTarget}</span>
             </div>
           </div>
         </div>
@@ -93,7 +95,7 @@ export default function DashboardPage() {
           <div className="text-xs space-y-1">
             <div className="font-semibold text-[#403A2B]">Daily Focus Recommendation</div>
             <div className="opacity-90 leading-relaxed text-[#403A2B]">
-              You are 65% through <strong>Control Flow & Loops</strong>. Finish Lesson 5 today to maintain your 12-day streak!
+              You are 65% through <strong>Control Flow & Loops</strong>. Finish Lesson 5 today to maintain your {progress.streak}-day streak!
             </div>
           </div>
         </div>

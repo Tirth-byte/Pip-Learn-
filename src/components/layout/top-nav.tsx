@@ -20,6 +20,8 @@ import {
   LucideIcon
 } from "lucide-react";
 import Link from "next/link";
+import { useAppContext } from "@/context/app-context";
+import { NotionAvatar } from "@/components/ui/notion-avatar";
 
 function PipLearnLogoMark({ className = "size-4" }: { className?: string }) {
   return (
@@ -49,6 +51,7 @@ export function TopNav() {
   const paths = pathname.split('/').filter(p => p);
   const [copied, setCopied] = useState(false);
   const [isStarred, setIsStarred] = useState(false);
+  const { user } = useAppContext();
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -123,6 +126,10 @@ export function TopNav() {
             </>
           )}
         </button>
+
+        <Link href="/profile" className="ml-1">
+          <NotionAvatar seed={user.name} avatarIndex={user.avatarIndex} size="xs" hasShadow={false} />
+        </Link>
       </div>
     </div>
   );

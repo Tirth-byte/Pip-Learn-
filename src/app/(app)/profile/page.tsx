@@ -7,22 +7,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NotionAvatar } from "@/components/ui/notion-avatar";
 import { Code2, Globe, CheckCircle2 } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
 
 export default function ProfilePage() {
-  const [firstName, setFirstName] = useState("John");
-  const [lastName, setLastName] = useState("Doe");
-  const [bio, setBio] = useState("Passionate learner building projects in Python and Next.js");
-  const [website, setWebsite] = useState("https://johndoe.dev");
-  const [github, setGithub] = useState("github.com/johndoe");
-  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState<number>(0);
+  const { user, updateProfile } = useAppContext();
+
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [bio, setBio] = useState(user.bio);
+  const [website, setWebsite] = useState(user.website);
+  const [github, setGithub] = useState(user.github);
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState<number>(user.avatarIndex);
   const [savedNotice, setSavedNotice] = useState(false);
 
+  const handleAvatarChange = (idx: number) => {
+    setSelectedAvatarIndex(idx);
+    updateProfile({ avatarIndex: idx });
+  };
+
   const handleSave = () => {
+    updateProfile({
+      firstName,
+      lastName,
+      bio,
+      website,
+      github,
+      avatarIndex: selectedAvatarIndex,
+    });
     setSavedNotice(true);
     setTimeout(() => setSavedNotice(false), 3000);
   };
 
-  const fullName = `${firstName} ${lastName}`.trim() || "John Doe";
+  const fullName = `${firstName} ${lastName}`.trim() || "Tirth Patel";
 
   const stickerNames = [
     "Girl (Blue Ring)",
@@ -67,7 +83,7 @@ export default function ProfilePage() {
                     <button
                       key={idx}
                       type="button"
-                      onClick={() => setSelectedAvatarIndex(idx)}
+                      onClick={() => handleAvatarChange(idx)}
                       title={stickerNames[idx]}
                       className={`relative rounded-full transition-all duration-200 cursor-pointer ${
                         isSelected
@@ -115,7 +131,7 @@ export default function ProfilePage() {
 
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email</Label>
-              <Input id="email" type="email" defaultValue="john@example.com" disabled className="h-9 shadow-none border-neutral-200 bg-neutral-100 text-neutral-500 cursor-not-allowed rounded-lg" />
+              <Input id="email" type="email" value={user.email} disabled className="h-9 shadow-none border-neutral-200 bg-neutral-100 text-neutral-500 cursor-not-allowed rounded-lg" />
             </div>
 
             <div className="space-y-1.5">
