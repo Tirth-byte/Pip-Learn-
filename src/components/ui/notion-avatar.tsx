@@ -7,6 +7,7 @@ interface NotionAvatarProps {
   size?: "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
   hasShadow?: boolean;
+  avatarIndex?: number;
 }
 
 const sizeMap = {
@@ -30,8 +31,9 @@ export function NotionAvatar({
   size = "md",
   className = "",
   hasShadow = true,
+  avatarIndex,
 }: NotionAvatarProps) {
-  const index = getStickerIndex(seed);
+  const index = avatarIndex !== undefined ? Math.abs(avatarIndex) % 7 : getStickerIndex(seed);
   const sizeClass = sizeMap[size] || sizeMap.md;
 
   const shadowClass = hasShadow

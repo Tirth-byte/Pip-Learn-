@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NotionAvatar } from "@/components/ui/notion-avatar";
-import { Code2, Globe, CheckCircle2 } from "lucide-react";
+import { Code2, Globe, CheckCircle2, Sparkles } from "lucide-react";
 
 export default function ProfilePage() {
   const [firstName, setFirstName] = useState("John");
@@ -14,6 +14,7 @@ export default function ProfilePage() {
   const [bio, setBio] = useState("Passionate learner building projects in Python and Next.js");
   const [website, setWebsite] = useState("https://johndoe.dev");
   const [github, setGithub] = useState("github.com/johndoe");
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState<number>(0);
   const [savedNotice, setSavedNotice] = useState(false);
 
   const handleSave = () => {
@@ -23,28 +24,68 @@ export default function ProfilePage() {
 
   const fullName = `${firstName} ${lastName}`.trim() || "John Doe";
 
+  const stickerNames = [
+    "Girl (Blue Ring)",
+    "Minimalist L-Nose",
+    "Red Signpost",
+    "Pencil Boy (Gold)",
+    "Minimalist Eyes",
+    "Blue Folder",
+    "Glasses Man (Red)",
+  ];
+
   return (
     <div className="space-y-8 animate-in fade-in duration-300 max-w-3xl mx-auto pb-10 select-none">
+      {/* Page Header */}
       <div className="border-b border-neutral-100 pb-4 mt-4">
         <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-1">Profile</h1>
-        <p className="text-neutral-500 text-sm">Manage your public profile and personal information.</p>
+        <p className="text-neutral-500 text-sm">Manage your public profile, Notion sticker avatar, and personal information.</p>
       </div>
 
+      {/* Main Avatar & User Summary Card */}
       <Card className="shadow-none border-neutral-200 rounded-2xl overflow-hidden bg-white">
         <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <NotionAvatar seed={fullName} size="2xl" />
+          <NotionAvatar seed={fullName} avatarIndex={selectedAvatarIndex} size="2xl" />
           <div className="space-y-3 flex-1 mt-1">
             <div>
-              <h2 className="text-xl font-bold text-neutral-900 tracking-tight">{fullName}</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-neutral-900 tracking-tight">{fullName}</h2>
+                <span className="notion-tag notion-tag-blue font-mono text-[10px]">Sticker #{selectedAvatarIndex + 1}</span>
+              </div>
               <p className="text-neutral-500 text-sm mt-1 leading-relaxed max-w-md">{bio}</p>
             </div>
-            <Button variant="outline" size="sm" className="h-8 px-3 border-neutral-200 hover:bg-neutral-100 shadow-none text-xs font-semibold rounded-lg text-neutral-700">
-              Randomize Avatar Seed
-            </Button>
+            
+            {/* Notion Avatar Picker Grid */}
+            <div className="pt-2">
+              <label className="text-xs font-semibold text-gray-500 block mb-2">
+                Choose Notion Avatar Sticker:
+              </label>
+              <div className="flex items-center gap-2.5 overflow-x-auto pb-1">
+                {[0, 1, 2, 3, 4, 5, 6].map((idx) => {
+                  const isSelected = selectedAvatarIndex === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedAvatarIndex(idx)}
+                      title={stickerNames[idx]}
+                      className={`relative rounded-full p-0.5 transition-all cursor-pointer ${
+                        isSelected
+                          ? "ring-2 ring-black scale-110"
+                          : "opacity-75 hover:opacity-100 hover:scale-105"
+                      }`}
+                    >
+                      <NotionAvatar seed={fullName} avatarIndex={idx} size="sm" hasShadow={false} />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
 
+      {/* Form Details */}
       <div className="grid gap-6">
         <Card className="shadow-none border-neutral-200 rounded-2xl overflow-hidden bg-white">
           <CardHeader className="bg-white border-b border-neutral-100 px-6 py-4">
