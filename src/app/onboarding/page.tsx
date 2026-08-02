@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { BookOpen, Target, Hammer, Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 
 function PipLearnLogoMark({ className = "size-7" }: { className?: string }) {
   return (
@@ -14,11 +14,61 @@ function PipLearnLogoMark({ className = "size-7" }: { className?: string }) {
   );
 }
 
+{/* Notion Circular Sticker Avatar 1: Person with Pencil in Hair */}
+function NotionPencilAvatar({ className = "size-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-full border-[2.5px] border-[#FFB800] bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-xs`}>
+      <svg viewBox="0 0 80 80" className="size-full">
+        <path d="M 22 42 C 16 32 22 18 36 18 C 42 12 56 16 60 26 C 66 36 62 48 58 56 C 54 52 50 48 46 52 C 40 50 32 50 28 54 C 24 50 22 46 22 42 Z" fill="#000000" />
+        <ellipse cx="40" cy="46" rx="16" ry="18" fill="#E5E7EB" stroke="#000000" strokeWidth="2.5" />
+        <g transform="rotate(-35 52 30)">
+          <rect x="42" y="28" width="18" height="6" fill="#FFC107" stroke="#000000" strokeWidth="1.8" />
+          <rect x="60" y="28" width="5" height="6" fill="#E57373" stroke="#000000" strokeWidth="1.8" />
+          <polygon points="42,28 36,31 42,34" fill="#000000" />
+        </g>
+        <ellipse cx="35" cy="44" rx="2.2" ry="3" fill="#000000" />
+        <ellipse cx="46" cy="44" rx="2.2" ry="3" fill="#000000" />
+        <path d="M 31 39 Q 35 37 38 40" stroke="#000000" strokeWidth="1.8" fill="none" />
+        <path d="M 43 40 Q 46 37 50 39" stroke="#000000" strokeWidth="1.8" fill="none" />
+        <path d="M 40 45 L 39 49 L 41 49" stroke="#000000" strokeWidth="1.5" fill="none" />
+        <path d="M 37 54 Q 40 56 44 54" stroke="#000000" strokeWidth="1.8" fill="none" />
+      </svg>
+    </div>
+  );
+}
+
+{/* Notion Circular Sticker Avatar 2: Red Signpost */}
+function NotionSignpostAvatar({ className = "size-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-full border-[2.5px] border-black bg-[#FF3B30] flex items-center justify-center overflow-hidden shrink-0 shadow-[1.5px_2px_0px_0px_rgba(0,0,0,1)]`}>
+      <svg viewBox="0 0 80 80" className="size-full">
+        <rect x="36" y="42" width="7" height="28" fill="#FFFFFF" stroke="#000000" strokeWidth="2.5" rx="1" />
+        <path d="M 18 20 H 52 L 68 32 L 52 44 H 18 Z" fill="#FFFFFF" stroke="#000000" strokeWidth="3" strokeLinejoin="round" />
+        <circle cx="32" cy="32" r="3" fill="#000000" />
+        <circle cx="42" cy="32" r="3" fill="#000000" />
+      </svg>
+    </div>
+  );
+}
+
+{/* Notion Circular Sticker Avatar 3: Blue Folder */}
+function NotionFolderAvatar({ className = "size-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-full border-[2.5px] border-black bg-[#4392F1] flex items-center justify-center overflow-hidden shrink-0 shadow-[1.5px_2px_0px_0px_rgba(0,0,0,1)]`}>
+      <svg viewBox="0 0 80 80" className="size-full">
+        <path d="M 16 26 C 16 23 18 21 21 21 H 34 C 36 21 38 23 39 25 L 42 28 H 60 C 63 28 65 30 65 33 V 56 C 65 59 63 61 60 61 H 21 C 18 61 16 59 16 56 Z" fill="#FFFFFF" stroke="#000000" strokeWidth="3.2" strokeLinejoin="round" />
+        <circle cx="48" cy="43" r="3.2" fill="#000000" />
+        <circle cx="58" cy="43" r="3.2" fill="#000000" />
+      </svg>
+    </div>
+  );
+}
+
 interface GoalOption {
   id: string;
   title: string;
   subtitle: string;
-  icon: React.ElementType;
+  avatar: React.ElementType;
 }
 
 export default function OnboardingPage() {
@@ -29,19 +79,19 @@ export default function OnboardingPage() {
       id: "scratch",
       title: "Learn Python from scratch",
       subtitle: "I have little to no programming experience.",
-      icon: BookOpen,
+      avatar: NotionPencilAvatar,
     },
     {
       id: "interview",
       title: "Prepare for interviews",
       subtitle: "I want to practice algorithms and data structures.",
-      icon: Target,
+      avatar: NotionSignpostAvatar,
     },
     {
       id: "projects",
       title: "Build real-world projects",
       subtitle: "I want to learn by building developer tools & applications.",
-      icon: Hammer,
+      avatar: NotionFolderAvatar,
     },
   ];
 
@@ -72,10 +122,10 @@ export default function OnboardingPage() {
             </p>
           </div>
 
-          {/* Selectable Custom Option Cards */}
+          {/* Selectable Custom Option Cards with Notion Circular Avatars */}
           <div className="space-y-3.5">
             {goals.map((goal) => {
-              const Icon = goal.icon;
+              const AvatarComponent = goal.avatar;
               const isSelected = selectedGoal === goal.id;
 
               return (
@@ -88,16 +138,8 @@ export default function OnboardingPage() {
                       : "bg-white border border-gray-200 hover:bg-gray-50/60 hover:border-gray-300"
                   }`}
                 >
-                  {/* Left Icon */}
-                  <div
-                    className={`size-10 sm:size-11 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
-                      isSelected
-                        ? "bg-white text-black border-gray-300 shadow-2xs"
-                        : "bg-gray-50 text-gray-400 border-gray-200"
-                    }`}
-                  >
-                    <Icon className="size-5" />
-                  </div>
+                  {/* Notion Circular Avatar Badge */}
+                  <AvatarComponent className="size-11 sm:size-12" />
 
                   {/* Middle Text Content */}
                   <div className="flex-1 text-left">
