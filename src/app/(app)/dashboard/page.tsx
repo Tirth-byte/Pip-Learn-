@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import { NotionAvatar } from "@/components/ui/notion-avatar";
+
 export default function DashboardPage() {
   const [activeView, setActiveView] = useState<"gallery" | "table">("gallery");
   const [toggleScratchpad, setToggleScratchpad] = useState(true);
@@ -46,7 +48,7 @@ export default function DashboardPage() {
               <span>Owner</span>
             </div>
             <div className="font-medium text-[#37352F] flex items-center gap-2">
-              <span className="size-4 rounded-full bg-[#37352F] text-white flex items-center justify-center text-[10px] font-bold">A</span>
+              <NotionAvatar seed="Ada Lovelace" size="sm" hasShadow={false} />
               <span>Ada Lovelace</span>
             </div>
           </div>

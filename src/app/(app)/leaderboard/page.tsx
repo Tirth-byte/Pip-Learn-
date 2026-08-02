@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Trophy, Medal, Flame } from "lucide-react";
+import { NotionAvatar } from "@/components/ui/notion-avatar";
 
 const leaderboard = [
   { rank: 1, name: "Alice Cooper", handle: "@alice", score: 12500, streak: 45 },
@@ -47,11 +47,7 @@ export default function LeaderboardPage() {
                 </TableCell>
                 <TableCell className="py-3">
                   <div className="flex items-center gap-3">
-                    <Avatar className="size-8 rounded">
-                      <AvatarFallback className="bg-[#F7F7F5] text-xs font-medium text-neutral-900 border border-neutral-200 rounded">
-                        {user.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
+                    <NotionAvatar seed={user.name} size="sm" hasShadow={false} />
                     <div>
                       <div className="text-sm font-medium text-neutral-900">{user.name} {user.isCurrentUser && <span className="text-neutral-500 ml-1 font-medium text-xs">(You)</span>}</div>
                       <div className="text-xs text-neutral-500">{user.handle}</div>
