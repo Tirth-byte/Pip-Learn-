@@ -7,6 +7,7 @@ interface PillState {
   text: string;
   color: string;
   bgColor: string;
+  width: string;
 }
 
 const PILL_STATES: PillState[] = [
@@ -14,31 +15,37 @@ const PILL_STATES: PillState[] = [
     text: "code",
     color: "#0066FF",
     bgColor: "#EBF3FF",
+    width: "3.75em",
   },
   {
     text: "debug",
     color: "#8B5CF6",
     bgColor: "#F4F0FF",
+    width: "4.45em",
   },
   {
     text: "ship",
     color: "#16A34A",
     bgColor: "#E6F7EA",
+    width: "3.7em",
   },
   {
     text: "master",
     color: "#0D9488",
     bgColor: "#E0F8F5",
+    width: "5.1em",
   },
   {
     text: "build",
     color: "#EA580C",
     bgColor: "#FFEFE5",
+    width: "4.35em",
   },
   {
     text: "solve",
     color: "#EAB308",
     bgColor: "#FFFBE5",
+    width: "4.3em",
   },
 ];
 
@@ -56,30 +63,28 @@ export function NotionHeroPill() {
     return () => clearInterval(timer);
   }, []);
 
-  const { text, color, bgColor } = PILL_STATES[index];
+  const { text, color, bgColor, width } = PILL_STATES[index];
 
   return (
-    <span className="inline-flex items-center relative mx-1.5 sm:mx-2 select-none whitespace-nowrap align-middle">
-      {/* Outer Pill Container with GPU-accelerated fluid morphing width & background color transitions */}
+    <span className="inline-flex items-center justify-center relative mx-1 select-none whitespace-nowrap align-middle shrink-0">
+      {/* Outer Pill Container with continuous 60fps width interpolation & background color transitions */}
       <motion.span
-        layout="size"
         animate={{
           backgroundColor: bgColor,
+          width: width,
         }}
         transition={{
-          layout: {
-            type: "spring",
-            stiffness: 380,
-            damping: 32,
-            mass: 0.6,
+          width: {
+            duration: 0.48,
+            ease: [0.16, 1, 0.3, 1],
           },
-          backgroundColor: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+          backgroundColor: { duration: 0.48, ease: [0.16, 1, 0.3, 1] },
         }}
         style={{
           backgroundColor: bgColor,
           borderRadius: "9999px",
         }}
-        className="px-[0.62em] py-[0.16em] inline-flex items-center gap-[0.32em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle transform-gpu"
+        className="h-[1.5em] px-[0.5em] inline-flex items-center justify-center gap-[0.32em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle transform-gpu shrink-0"
       >
         {/* Solid Circular Color Dot with smooth color transition */}
         <motion.span
@@ -87,7 +92,7 @@ export function NotionHeroPill() {
             backgroundColor: color,
           }}
           transition={{
-            duration: 0.45,
+            duration: 0.48,
             ease: [0.16, 1, 0.3, 1],
           }}
           style={{
@@ -97,7 +102,7 @@ export function NotionHeroPill() {
         />
 
         {/* Dynamic Word Container using CSS Grid with subpixel padding buffer */}
-        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center overflow-hidden h-[1.18em] px-[0.06em] leading-none whitespace-nowrap">
+        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-center overflow-hidden h-[1.18em] px-[0.04em] leading-none whitespace-nowrap">
           <AnimatePresence initial={false}>
             <motion.span
               key={text}
@@ -105,10 +110,13 @@ export function NotionHeroPill() {
               animate={{ y: "0%", opacity: 1 }}
               exit={{ y: "-100%", opacity: 0 }}
               transition={{
-                y: { type: "spring", stiffness: 380, damping: 32, mass: 0.6 },
-                opacity: { duration: 0.25 },
+                y: {
+                  duration: 0.42,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+                opacity: { duration: 0.28 },
               }}
-              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-center align-middle px-[0.04em]"
+              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-center text-center align-middle px-[0.04em]"
             >
               {text}
             </motion.span>
@@ -118,9 +126,3 @@ export function NotionHeroPill() {
     </span>
   );
 }
-
-
-
-
-
-
