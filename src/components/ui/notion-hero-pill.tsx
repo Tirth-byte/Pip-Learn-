@@ -15,37 +15,37 @@ const PILL_STATES: PillState[] = [
     text: "code",
     color: "#0066FF",
     bgColor: "#EBF3FF",
-    width: "3.75em",
+    width: "4.1em",
   },
   {
     text: "debug",
     color: "#8B5CF6",
     bgColor: "#F4F0FF",
-    width: "4.45em",
+    width: "4.8em",
   },
   {
     text: "ship",
     color: "#16A34A",
     bgColor: "#E6F7EA",
-    width: "3.7em",
+    width: "4.0em",
   },
   {
     text: "master",
     color: "#0D9488",
     bgColor: "#E0F8F5",
-    width: "5.1em",
+    width: "5.5em",
   },
   {
     text: "build",
     color: "#EA580C",
     bgColor: "#FFEFE5",
-    width: "4.35em",
+    width: "4.6em",
   },
   {
     text: "solve",
     color: "#EAB308",
     bgColor: "#FFFBE5",
-    width: "4.3em",
+    width: "4.6em",
   },
 ];
 
@@ -67,7 +67,7 @@ export function NotionHeroPill() {
 
   return (
     <span className="inline-flex items-center justify-center relative mx-1 select-none whitespace-nowrap align-middle shrink-0">
-      {/* Outer Pill Container with continuous 60fps width interpolation & background color transitions */}
+      {/* Outer Pill Container: Fixed left-to-right flex alignment (justify-start) with continuous 60fps width morphing */}
       <motion.span
         animate={{
           backgroundColor: bgColor,
@@ -84,9 +84,9 @@ export function NotionHeroPill() {
           backgroundColor: bgColor,
           borderRadius: "9999px",
         }}
-        className="h-[1.5em] px-[0.5em] inline-flex items-center justify-center gap-[0.32em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle transform-gpu shrink-0"
+        className="h-[1.5em] pl-[0.55em] pr-[0.5em] inline-flex items-center justify-start gap-[0.32em] text-[#000000] font-extrabold tracking-tight leading-none overflow-hidden shadow-xs relative whitespace-nowrap select-none align-middle transform-gpu shrink-0"
       >
-        {/* Solid Circular Color Dot with smooth color transition */}
+        {/* Solid Circular Color Dot: Permanently pinned at x = 0.55em from left edge */}
         <motion.span
           animate={{
             backgroundColor: color,
@@ -101,8 +101,8 @@ export function NotionHeroPill() {
           className="w-[0.28em] h-[0.28em] min-w-[0.28em] min-h-[0.28em] rounded-full shrink-0"
         />
 
-        {/* Dynamic Word Container using CSS Grid with subpixel padding buffer */}
-        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-center overflow-hidden h-[1.18em] px-[0.04em] leading-none whitespace-nowrap">
+        {/* Dynamic Word Container: Left-aligned with comfortable padding buffer to prevent text clipping */}
+        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-start overflow-hidden h-[1.22em] px-[0.06em] leading-none whitespace-nowrap">
           <AnimatePresence initial={false}>
             <motion.span
               key={text}
@@ -116,7 +116,7 @@ export function NotionHeroPill() {
                 },
                 opacity: { duration: 0.28 },
               }}
-              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-center text-center align-middle px-[0.04em]"
+              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none flex items-center justify-start text-left align-middle px-[0.04em]"
             >
               {text}
             </motion.span>
