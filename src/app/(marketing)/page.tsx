@@ -34,6 +34,7 @@ import { NotionAvatarsRow } from "@/components/ui/notion-avatars-row";
 import { NotionHeroPill } from "@/components/ui/notion-hero-pill";
 import { UniversityMarquee } from "@/components/ui/university-marquee";
 import { StatsBanner } from "@/components/ui/stats-banner";
+import { FinalCTASection } from "@/components/ui/final-cta-section";
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState<"exercises" | "sandbox" | "leaderboard" | "docs">("exercises");
@@ -543,30 +544,8 @@ export default function LandingPage() {
       {/* Premium High-Contrast Statistics Section */}
       <StatsBanner />
 
-      {/* Section 6: Get Started Today CTA Box */}
-      <section className="px-6 py-28 text-center bg-[#F7F7F5] border-t border-[rgba(55,53,47,0.09)]">
-        <div className="max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-3 mb-6 p-2 rounded-xl bg-white border border-[rgba(55,53,47,0.12)] shadow-xs">
-            <Terminal className="size-6 text-amber-500" />
-            <Sparkles className="size-6 text-purple-600" />
-          </div>
-          <h2 className="text-4xl sm:text-6xl font-extrabold text-[#000000] tracking-tight mb-8">
-            Start learning Python today.
-          </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button asChild size="lg" className="bg-[#2383E2] hover:bg-[#1D6FBE] text-white h-11 px-7 text-sm font-semibold rounded-md border-none shadow-sm">
-              <Link href="/signup">
-                Get PipLearn free
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="bg-white hover:bg-[#F1F1EF] text-[#37352F] border border-[rgba(55,53,47,0.16)] h-11 px-6 text-sm font-semibold rounded-md">
-              <Link href="/demo">
-                Request a demo
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Section 6: Modern SaaS Final CTA Component */}
+      <FinalCTASection />
 
     </div>
   );
