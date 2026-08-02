@@ -141,11 +141,11 @@ export function FinalCTASection() {
           transition={{ duration: 0.4, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto"
         >
-          {/* Primary Button */}
+          {/* Primary Button (Notion Blue) */}
           <Button
             asChild
             size="lg"
-            className="bg-black hover:bg-[#2F2F2F] text-white h-12 px-7 text-sm font-semibold rounded-md shadow-none border-none transition-colors group flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="bg-[#2383E2] hover:bg-[#1D6FBE] text-white h-12 px-7 text-sm font-semibold rounded-md shadow-sm hover:shadow-md hover:-translate-y-0.5 border-none transition-all group flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Link href="/signup">
               <span>Get PipLearn free</span>
@@ -153,12 +153,12 @@ export function FinalCTASection() {
             </Link>
           </Button>
 
-          {/* Secondary Button */}
+          {/* Secondary Button (Apple Style: Pure White Background, Blue Text) */}
           <Button
             asChild
             size="lg"
             variant="outline"
-            className="bg-white hover:bg-[#F7F7F5] text-[#37352F] border border-[rgba(55,53,47,0.18)] h-12 px-7 text-sm font-semibold rounded-md shadow-none transition-colors w-full sm:w-auto"
+            className="bg-white hover:bg-[#FAF9F6] text-[#2383E2] hover:text-[#1D6FBE] border border-[rgba(55,53,47,0.16)] hover:border-[#2383E2]/40 h-12 px-7 text-sm font-semibold rounded-md transition-colors w-full sm:w-auto"
           >
             <Link href="/demo">Request a demo</Link>
           </Button>
