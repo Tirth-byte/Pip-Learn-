@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NotionAvatar } from "@/components/ui/notion-avatar";
-import { Code2, Globe, CheckCircle2, Sparkles } from "lucide-react";
+import { Code2, Globe, CheckCircle2 } from "lucide-react";
 
 export default function ProfilePage() {
   const [firstName, setFirstName] = useState("John");
@@ -55,12 +55,12 @@ export default function ProfilePage() {
               <p className="text-neutral-500 text-sm mt-1 leading-relaxed max-w-md">{bio}</p>
             </div>
             
-            {/* Notion Avatar Picker Grid */}
+            {/* Notion Avatar Picker Grid - Refined Spacing & Ring Offset */}
             <div className="pt-2">
-              <label className="text-xs font-semibold text-gray-500 block mb-2">
+              <label className="text-xs font-semibold text-gray-500 block mb-2.5">
                 Choose Notion Avatar Sticker:
               </label>
-              <div className="flex items-center gap-2.5 overflow-x-auto pb-1">
+              <div className="flex items-center gap-3.5 overflow-x-auto p-1.5 -ml-1">
                 {[0, 1, 2, 3, 4, 5, 6].map((idx) => {
                   const isSelected = selectedAvatarIndex === idx;
                   return (
@@ -69,9 +69,9 @@ export default function ProfilePage() {
                       type="button"
                       onClick={() => setSelectedAvatarIndex(idx)}
                       title={stickerNames[idx]}
-                      className={`relative rounded-full p-0.5 transition-all cursor-pointer ${
+                      className={`relative rounded-full transition-all duration-200 cursor-pointer ${
                         isSelected
-                          ? "ring-2 ring-black scale-110"
+                          ? "ring-2 ring-black ring-offset-2 scale-110 shadow-xs"
                           : "opacity-75 hover:opacity-100 hover:scale-105"
                       }`}
                     >
