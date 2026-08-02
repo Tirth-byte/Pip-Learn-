@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Play, RotateCcw, Check, Save, CheckCircle2, XCircle, Code2, Sparkles, Terminal } from "lucide-react";
+import { Play, RotateCcw, Check, Save, CheckCircle2, XCircle, Code2, Sparkles, Terminal, FileText } from "lucide-react";
 import Link from "next/link";
 
 type Problem = {
@@ -238,12 +238,14 @@ function SandboxContent() {
   const lineCount = code.split("\n").length;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5.5rem)] max-w-6xl mx-auto w-full pb-4 px-4 text-[#37352F]">
+    <div className="flex flex-col h-[calc(100vh-5.5rem)] max-w-6xl mx-auto w-full pb-4 px-4 text-[#37352F] select-none bg-white">
       
       {/* Notion Top Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[rgba(55,53,47,0.09)] pb-3 mt-2">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl select-none">💻</span>
+        <div className="flex items-center gap-2.5">
+          <div className="size-8 rounded-lg bg-[#F7F7F5] border border-[rgba(55,53,47,0.12)] flex items-center justify-center shrink-0">
+            <Code2 className="size-4 text-gray-900 stroke-[1.5]" />
+          </div>
           <select
             value={currentProblem.id}
             onChange={(e) => handleSelectProblem(e.target.value)}
@@ -268,14 +270,14 @@ function SandboxContent() {
             onClick={handleReset}
             className="notion-btn-secondary h-7 text-xs px-2.5"
           >
-            <RotateCcw className="mr-1 size-3" /> Reset
+            <RotateCcw className="mr-1 size-3 stroke-[1.5]" /> Reset
           </button>
 
           <button
             onClick={handleSave}
             className="notion-btn-secondary h-7 text-xs px-2.5"
           >
-            <Save className="mr-1 size-3" /> {isSaved ? "Saved!" : "Save"}
+            <Save className="mr-1 size-3 stroke-[1.5]" /> {isSaved ? "Saved!" : "Save"}
           </button>
 
           <button
@@ -283,14 +285,14 @@ function SandboxContent() {
             disabled={isRunning}
             className="notion-btn-secondary h-7 text-xs px-2.5"
           >
-            <Play className="mr-1 size-3" /> {isRunning ? "Running..." : "Run Code"}
+            <Play className="mr-1 size-3 stroke-[1.5]" /> {isRunning ? "Running..." : "Run Code"}
           </button>
 
           <button
             onClick={handleSubmit}
             className="notion-btn-primary h-7 text-xs px-3"
           >
-            Submit <Check className="ml-1 size-3" />
+            Submit <Check className="ml-1 size-3 stroke-[1.5]" />
           </button>
         </div>
       </div>
@@ -299,13 +301,13 @@ function SandboxContent() {
       <div className="flex-1 grid md:grid-cols-2 gap-4 mt-3 min-h-0">
         
         {/* Editor Panel - Styled as Notion Code Block */}
-        <div className="flex flex-col border border-[rgba(55,53,47,0.12)] rounded bg-white overflow-hidden">
+        <div className="flex flex-col border border-[rgba(55,53,47,0.12)] rounded-xl bg-white overflow-hidden">
           <div className="h-8 bg-[#F7F7F5] border-b border-[rgba(55,53,47,0.09)] flex items-center justify-between px-3 text-xs text-[rgba(55,53,47,0.65)] font-medium">
             <div className="flex items-center gap-2">
-              <Code2 className="size-3.5 text-[rgba(55,53,47,0.45)]" />
+              <Code2 className="size-3.5 text-gray-400 stroke-[1.5]" />
               <span className="font-semibold text-[#37352F]">solution.py</span>
             </div>
-            <span className="notion-tag notion-tag-gray">Python 3.12</span>
+            <span className="notion-tag notion-tag-gray font-mono">Python 3.12</span>
           </div>
 
           <div className="flex-1 flex overflow-hidden font-mono text-xs">
@@ -338,18 +340,18 @@ function SandboxContent() {
         </div>
 
         {/* Output & Test Panel */}
-        <div className="flex flex-col border border-[rgba(55,53,47,0.12)] rounded bg-white overflow-hidden">
+        <div className="flex flex-col border border-[rgba(55,53,47,0.12)] rounded-xl bg-white overflow-hidden">
           <div className="h-8 bg-[#F7F7F5] border-b border-[rgba(55,53,47,0.09)] flex items-center justify-between px-3 text-xs text-[rgba(55,53,47,0.65)] font-medium">
             <div className="flex items-center gap-2">
-              <Terminal className="size-3.5 text-[rgba(55,53,47,0.45)]" />
+              <Terminal className="size-3.5 text-gray-400 stroke-[1.5]" />
               <span className="font-semibold text-[#37352F]">Console & Test Results</span>
             </div>
           </div>
 
           <div className="flex-1 p-4 overflow-y-auto space-y-4 text-xs font-mono">
             {/* Description Callout */}
-            <div className="notion-callout notion-callout-gray">
-              <span className="text-lg">📌</span>
+            <div className="notion-callout notion-callout-gray flex items-start gap-2.5">
+              <FileText className="size-4 text-gray-400 stroke-[1.5] shrink-0 mt-0.5" />
               <div className="font-sans">
                 <div className="font-semibold text-xs text-[#37352F] mb-1">Problem Description</div>
                 <div className="text-[11px] text-[rgba(55,53,47,0.7)] leading-relaxed">{currentProblem.description}</div>
@@ -361,7 +363,7 @@ function SandboxContent() {
               <div className="font-sans font-semibold text-xs text-[#37352F] mb-2">Test Cases</div>
               <div className="space-y-2">
                 {currentProblem.testCases.map((tc, idx) => (
-                  <div key={idx} className="bg-[#F7F7F5] p-2.5 rounded border border-[rgba(55,53,47,0.09)] text-[11px] text-[#37352F]">
+                  <div key={idx} className="bg-[#F7F7F5] p-2.5 rounded-lg border border-[rgba(55,53,47,0.09)] text-[11px] text-[#37352F]">
                     <div><span className="font-bold">Case {idx + 1}:</span> {tc.input}</div>
                     <div className="text-[rgba(55,53,47,0.6)]"><span className="font-semibold">Expected:</span> {tc.expected}</div>
                   </div>
@@ -373,16 +375,16 @@ function SandboxContent() {
             <div>
               <div className="font-sans font-semibold text-xs text-[#37352F] mb-2">Execution Log</div>
               {testResults ? (
-                <div className={`p-3 rounded border ${testResults.passed ? 'notion-callout-green' : 'notion-callout-pink'} space-y-1.5`}>
+                <div className={`p-3 rounded-lg border ${testResults.passed ? 'notion-callout-green' : 'notion-callout-pink'} space-y-1.5`}>
                   <div className="flex items-center gap-1.5 font-bold font-sans text-xs">
                     {testResults.passed ? (
                       <>
-                        <CheckCircle2 className="size-4 text-emerald-600" />
+                        <CheckCircle2 className="size-4 text-emerald-600 stroke-[1.5]" />
                         <span>All Test Cases Passed!</span>
                       </>
                     ) : (
                       <>
-                        <XCircle className="size-4 text-rose-600" />
+                        <XCircle className="size-4 text-rose-600 stroke-[1.5]" />
                         <span>Test Failed</span>
                       </>
                     )}
@@ -394,7 +396,7 @@ function SandboxContent() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#F7F7F5] p-3 rounded border border-[rgba(55,53,47,0.09)] text-[rgba(55,53,47,0.5)] text-[11px]">
+                <div className="bg-[#F7F7F5] p-3 rounded-lg border border-[rgba(55,53,47,0.09)] text-[rgba(55,53,47,0.5)] text-[11px]">
                   &gt; Click "Run Code" or "Submit" to test your function...
                 </div>
               )}
@@ -403,7 +405,7 @@ function SandboxContent() {
             {isSubmitted && (
               <div className="notion-callout notion-callout-yellow flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="size-4 text-amber-600" />
+                  <Sparkles className="size-4 text-amber-600 stroke-[1.5]" />
                   <span className="font-bold font-sans text-xs">Problem Solved! +20 XP awarded.</span>
                 </div>
                 <Link href="/practice" className="notion-btn-primary py-1 px-3 text-xs">

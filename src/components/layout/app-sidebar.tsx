@@ -32,6 +32,16 @@ import {
   LucideIcon
 } from "lucide-react";
 
+function PipLearnLogoMark({ className = "size-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} fill="none">
+      <path d="M24 8 L38 16 L24 24 L10 16 Z" fill="#000000" />
+      <path d="M10 21 L24 29 L38 21 L38 24.5 L24 32.5 L10 24.5 Z" fill="#0066FF" />
+      <path d="M10 29.5 L24 37.5 L38 29.5 L38 33 L24 41 L10 33 Z" fill="#000000" />
+    </svg>
+  );
+}
+
 interface NavItem {
   title: string;
   url: string;
@@ -63,17 +73,15 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r border-[rgba(55,53,47,0.09)] bg-[#FBFBFA] text-[#37352F] text-sm select-none">
-      {/* Workspace Switcher Header */}
+      {/* Workspace Switcher Header with Official PipLearn Stacked Layers Logo */}
       <div className="p-2 border-b border-[rgba(55,53,47,0.06)]">
         <Link 
           href="/dashboard"
           className="flex items-center justify-between p-1.5 rounded-md hover:bg-[rgba(55,53,47,0.08)] transition-colors cursor-pointer group"
         >
-          <div className="flex items-center gap-3 overflow-hidden">
-            <div className="size-6 rounded-md bg-black text-white flex items-center justify-center shrink-0">
-              <Terminal className="size-3.5 text-amber-400 stroke-[1.5]" />
-            </div>
-            <div className="truncate font-semibold text-xs text-[#37352F]">
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <PipLearnLogoMark className="size-5.5 shrink-0" />
+            <div className="truncate font-bold text-xs tracking-tight text-[#37352F]">
               PipLearn Workspace
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Send, Bot, User, Code2, HelpCircle, Bug, Check } from "lucide-react";
+import { Sparkles, Send, Bot, User, Code2, HelpCircle, Bug, Check, Lightbulb, Zap, Brain } from "lucide-react";
 
 type Message = {
   id: string;
@@ -71,12 +71,14 @@ my_tuple = (1, 2, 3)
   };
 
   return (
-    <div className="max-w-4xl mx-auto w-full pb-16 px-6 text-[#37352F] flex flex-col h-[calc(100vh-5.5rem)]">
+    <div className="max-w-4xl mx-auto w-full pb-16 px-6 text-[#37352F] flex flex-col h-[calc(100vh-5.5rem)] select-none bg-white">
       
       {/* Notion Page Header */}
       <div className="pt-6 pb-3 border-b border-[rgba(55,53,47,0.09)] mb-4 shrink-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-3xl select-none">✨</span>
+        <div className="flex items-center gap-3 mb-1.5">
+          <div className="size-10 rounded-xl bg-[#F0EBF9] border border-[#E0C7FA] flex items-center justify-center shrink-0">
+            <Sparkles className="size-5 text-[#8846C7] stroke-[1.5]" />
+          </div>
           <h1 className="text-2xl font-bold tracking-tight text-[#37352F]">
             Pip AI Mentor
           </h1>
@@ -88,24 +90,27 @@ my_tuple = (1, 2, 3)
       </div>
 
       {/* Suggested Quick Prompts */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 shrink-0">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-3 shrink-0">
         <button
           onClick={() => handleSend("Explain the difference between a list and a tuple in Python.")}
-          className="notion-tag notion-tag-blue hover:bg-[#D5E8F0] cursor-pointer py-1 px-2.5 text-xs transition-colors"
+          className="notion-tag notion-tag-blue hover:bg-[#D5E8F0] cursor-pointer py-1.5 px-3 text-xs transition-colors flex items-center gap-1.5 font-medium"
         >
-          💡 List vs Tuple
+          <Lightbulb className="size-3.5 stroke-[1.5]" />
+          <span>List vs Tuple</span>
         </button>
         <button
           onClick={() => handleSend("How do Python for loops work with range()?")}
-          className="notion-tag notion-tag-green hover:bg-[#D6E8D4] cursor-pointer py-1 px-2.5 text-xs transition-colors"
+          className="notion-tag notion-tag-green hover:bg-[#D6E8D4] cursor-pointer py-1.5 px-3 text-xs transition-colors flex items-center gap-1.5 font-medium"
         >
-          ⚡ For Loops
+          <Zap className="size-3.5 stroke-[1.5]" />
+          <span>For Loops</span>
         </button>
         <button
           onClick={() => handleSend("What is object-oriented programming in Python?")}
-          className="notion-tag notion-tag-purple hover:bg-[#E5D2F8] cursor-pointer py-1 px-2.5 text-xs transition-colors"
+          className="notion-tag notion-tag-purple hover:bg-[#E5D2F8] cursor-pointer py-1.5 px-3 text-xs transition-colors flex items-center gap-1.5 font-medium"
         >
-          🧠 OOP Concepts
+          <Brain className="size-3.5 stroke-[1.5]" />
+          <span>OOP Concepts</span>
         </button>
       </div>
 
@@ -113,13 +118,13 @@ my_tuple = (1, 2, 3)
       <div className="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 text-xs">
         {messages.map((m) => (
           <div key={m.id} className="space-y-2">
-            <div className={`p-3.5 rounded border ${
+            <div className={`p-3.5 rounded-xl border ${
               m.sender === "ai" ? "notion-callout-gray" : "bg-[#F7F7F5] border-[rgba(55,53,47,0.12)] text-[#37352F]"
             }`}>
-              <div className="flex items-center gap-1.5 font-semibold text-xs mb-1">
+              <div className="flex items-center gap-2 font-semibold text-xs mb-1">
                 {m.sender === "ai" ? (
                   <>
-                    <Sparkles className="size-3.5 text-[#8846C7]" />
+                    <Sparkles className="size-3.5 text-[#8846C7] stroke-[1.5]" />
                     <span className="text-[#4D2875]">Pip AI Assistant</span>
                   </>
                 ) : (
@@ -134,7 +139,7 @@ my_tuple = (1, 2, 3)
               </div>
 
               {m.codeSnippet && (
-                <div className="mt-3 bg-white border border-[rgba(55,53,47,0.12)] rounded p-3 font-mono text-[11px] text-[#37352F] leading-relaxed">
+                <div className="mt-3 bg-white border border-[rgba(55,53,47,0.12)] rounded-lg p-3 font-mono text-[11px] text-[#37352F] leading-relaxed">
                   <pre><code>{m.codeSnippet}</code></pre>
                 </div>
               )}
@@ -143,8 +148,8 @@ my_tuple = (1, 2, 3)
         ))}
 
         {isLoading && (
-          <div className="notion-callout notion-callout-gray animate-pulse text-xs">
-            <Sparkles className="size-3.5 text-[#8846C7] mr-1.5 inline" />
+          <div className="notion-callout notion-callout-gray animate-pulse text-xs flex items-center gap-2">
+            <Sparkles className="size-3.5 text-[#8846C7] stroke-[1.5]" />
             <span>Pip AI is thinking...</span>
           </div>
         )}
@@ -157,9 +162,9 @@ my_tuple = (1, 2, 3)
             e.preventDefault();
             handleSend();
           }}
-          className="flex items-center gap-2 bg-[#F7F7F5] border border-[rgba(55,53,47,0.16)] rounded p-1.5 focus-within:bg-white focus-within:border-[#2383E2] transition-colors"
+          className="flex items-center gap-2 bg-[#F7F7F5] border border-[rgba(55,53,47,0.16)] rounded-lg p-1.5 focus-within:bg-white focus-within:border-[#2383E2] transition-colors"
         >
-          <Sparkles className="size-4 text-[#8846C7] ml-2 shrink-0" />
+          <Sparkles className="size-4 text-[#8846C7] ml-2 shrink-0 stroke-[1.5]" />
           <input
             type="text"
             value={input}
@@ -170,9 +175,10 @@ my_tuple = (1, 2, 3)
           <button
             type="submit"
             disabled={!input.trim()}
-            className="notion-btn-primary h-7 px-3 text-xs shrink-0 disabled:opacity-40"
+            className="notion-btn-primary h-7 px-3 text-xs shrink-0 disabled:opacity-40 flex items-center gap-1"
           >
-            <Send className="size-3 mr-1" /> Ask
+            <Send className="size-3 stroke-[1.5]" />
+            <span>Ask</span>
           </button>
         </form>
       </div>

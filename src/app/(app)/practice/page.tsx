@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, CheckCircle2, Circle, ArrowUpDown } from "lucide-react";
+import { Search, CheckCircle2, Circle, Target } from "lucide-react";
 
 type Problem = {
   id: string;
@@ -35,11 +35,13 @@ export default function PracticePage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto w-full pb-16 px-6 text-[#37352F]">
+    <div className="max-w-5xl mx-auto w-full pb-16 px-6 text-[#37352F] select-none">
       
       {/* Notion Page Header */}
       <div className="pt-6 pb-4 border-b border-[rgba(55,53,47,0.09)] mb-6">
-        <div className="text-4xl mb-3 select-none">⚡</div>
+        <div className="size-11 bg-white p-2.5 rounded-xl border border-[rgba(55,53,47,0.12)] shadow-xs flex items-center justify-center mb-3">
+          <Target className="size-6 text-gray-900 stroke-[1.5]" />
+        </div>
         <h1 className="text-3xl font-bold tracking-tight text-[#37352F] mb-1">
           Practice Problems
         </h1>
@@ -84,7 +86,7 @@ export default function PracticePage() {
           </select>
 
           <div className="relative w-full sm:w-48">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-[rgba(55,53,47,0.4)]" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-[rgba(55,53,47,0.4)] stroke-[1.5]" />
             <input
               type="text"
               value={search}
@@ -97,7 +99,7 @@ export default function PracticePage() {
       </div>
 
       {/* Notion Database Table View */}
-      <div className="border border-[rgba(55,53,47,0.12)] rounded overflow-hidden text-xs bg-white shadow-none">
+      <div className="border border-[rgba(55,53,47,0.12)] rounded-xl overflow-hidden text-xs bg-white shadow-none">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-[#F7F7F5] border-b border-[rgba(55,53,47,0.09)] text-[rgba(55,53,47,0.6)] font-medium">
@@ -114,9 +116,9 @@ export default function PracticePage() {
                 <tr key={p.id} className="hover:bg-[#FBFBFA] transition-colors">
                   <td className="p-2.5 pl-4">
                     {p.status === "Solved" ? (
-                      <CheckCircle2 className="size-4 text-emerald-600" />
+                      <CheckCircle2 className="size-4 text-emerald-600 stroke-[1.5]" />
                     ) : (
-                      <Circle className="size-4 text-[rgba(55,53,47,0.25)]" />
+                      <Circle className="size-4 text-[rgba(55,53,47,0.25)] stroke-[1.5]" />
                     )}
                   </td>
                   <td className="p-2.5 font-semibold text-[#37352F]">
