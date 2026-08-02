@@ -47,8 +47,12 @@ export default function LandingPage() {
         <NotionAvatarsRow />
 
         {/* Main Hero Headline customized for PipLearn: Where developers {Pill} Python with AI */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-[#000000] leading-[1.12]">
-          Where developers <NotionHeroPill /> Python with AI.
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-[#000000] leading-[1.18]">
+          <span className="inline-flex items-center justify-center flex-wrap gap-x-[0.35em] gap-y-[0.1em]">
+            <span>Where developers</span>
+            <NotionHeroPill />
+            <span>Python with AI.</span>
+          </span>
         </h1>
 
         {/* Subtitle customized for PipLearn */}
