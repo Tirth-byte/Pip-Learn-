@@ -33,6 +33,7 @@ import {
 import { NotionAvatarsRow } from "@/components/ui/notion-avatars-row";
 import { NotionHeroPill } from "@/components/ui/notion-hero-pill";
 import { UniversityMarquee } from "@/components/ui/university-marquee";
+import { StatsBanner } from "@/components/ui/stats-banner";
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState<"exercises" | "sandbox" | "leaderboard" | "docs">("exercises");
@@ -539,26 +540,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Metrics Ticker Row with Lucide Icons */}
-      <section className="border-y border-[rgba(55,53,47,0.08)] bg-[#FAF9F6] py-6 px-6 overflow-hidden select-none">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-6 text-xs font-semibold text-[rgba(55,53,47,0.8)]">
-          <span className="flex items-center gap-2">
-            <Globe className="size-4 text-blue-600" /> 500K+ Python Developers
-          </span>
-          <span className="flex items-center gap-2">
-            <Zap className="size-4 text-amber-500 fill-amber-500" /> 15M+ Code Executions
-          </span>
-          <span className="flex items-center gap-2">
-            <Bot className="size-4 text-purple-600" /> 99.8% AI Bug Correction Rate
-          </span>
-          <span className="flex items-center gap-2">
-            <BookOpen className="size-4 text-emerald-600" /> 120+ Interactive Python Courses
-          </span>
-          <span className="flex items-center gap-2">
-            <Trophy className="size-4 text-amber-600" /> #1 Python AI Workspace on G2
-          </span>
-        </div>
-      </section>
+      {/* Premium High-Contrast Statistics Section */}
+      <StatsBanner />
 
       {/* Section 6: Get Started Today CTA Box */}
       <section className="px-6 py-28 text-center bg-[#F7F7F5] border-t border-[rgba(55,53,47,0.09)]">
