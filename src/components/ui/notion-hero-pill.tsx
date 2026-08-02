@@ -91,9 +91,9 @@ export function NotionHeroPill() {
           className="w-[0.45em] h-[0.45em] min-w-[0.45em] min-h-[0.45em] rounded-full shrink-0 flex-shrink-0"
         />
 
-        {/* Dynamic Word Container using CSS Grid with generous horizontal padding to prevent glyph clipping */}
-        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-items-center overflow-hidden h-[1.25em] px-[0.35em] leading-none whitespace-nowrap">
-          <AnimatePresence mode="popLayout" initial={false}>
+        {/* Dynamic Word Container using CSS Grid with w-max & generous padding to guarantee zero letter clipping */}
+        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center justify-items-center overflow-hidden h-[1.25em] leading-none whitespace-nowrap">
+          <AnimatePresence initial={false}>
             <motion.span
               key={text}
               initial={{ y: "100%", opacity: 0 }}
@@ -103,7 +103,7 @@ export function NotionHeroPill() {
                 duration: 0.38,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold text-[#000000] leading-none flex items-center justify-center text-center m-0 align-middle px-[0.1em]"
+              className="col-start-1 row-start-1 whitespace-nowrap font-extrabold text-[#000000] leading-none flex items-center justify-center text-center m-0 align-middle w-max px-[0.4em]"
             >
               {text}
             </motion.span>
@@ -113,6 +113,7 @@ export function NotionHeroPill() {
     </span>
   );
 }
+
 
 
 
