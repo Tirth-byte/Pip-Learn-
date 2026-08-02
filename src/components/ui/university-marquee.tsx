@@ -150,7 +150,7 @@ export function UniversityMarquee() {
 
       {/* 2. Infinite Marquee Container */}
       <div className="relative w-full overflow-hidden flex [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="flex gap-6 sm:gap-8 shrink-0 animate-[marquee_32s_linear_infinite] group-hover:[animation-play-state:paused] whitespace-nowrap py-3">
+        <div className="flex gap-6 sm:gap-8 shrink-0 animate-[marquee_32s_linear_infinite] whitespace-nowrap py-3">
           {/* Loop 1 */}
           {UNIVERSITIES.map((uni, idx) => (
             <div
