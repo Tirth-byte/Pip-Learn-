@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Globe } from "lucide-react";
+import { Globe, Building2 } from "lucide-react";
 
 function PipLearnLogoMark({ className = "size-12" }: { className?: string }) {
   return (
@@ -76,7 +76,7 @@ export default function SignupPage() {
           </span>
         </div>
 
-        {/* 3 OAuth SSO Buttons (as shown in Signup screenshot: Google, GitHub, Microsoft) */}
+        {/* 6 OAuth SSO Buttons (2 rows x 3 columns - identical to Login) */}
         <div className="grid grid-cols-3 gap-3">
           {/* 1. Google */}
           <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
@@ -97,7 +97,15 @@ export default function SignupPage() {
             <span>GitHub</span>
           </button>
 
-          {/* 3. Microsoft */}
+          {/* 3. Apple */}
+          <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
+            <svg viewBox="0 0 384 512" className="w-5 h-5 shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+            </svg>
+            <span>Apple</span>
+          </button>
+
+          {/* 4. Microsoft */}
           <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
             <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
               <rect x="2" y="2" width="9.5" height="9.5" fill="#F25022" />
@@ -106,6 +114,20 @@ export default function SignupPage() {
               <rect x="12.5" y="12.5" width="9.5" height="9.5" fill="#FFB900" />
             </svg>
             <span>Microsoft</span>
+          </button>
+
+          {/* 5. Passkey */}
+          <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
+            <svg viewBox="0 0 16 16" className="w-5 h-5 shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1" />
+            </svg>
+            <span>Passkey</span>
+          </button>
+
+          {/* 6. SSO */}
+          <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
+            <Building2 className="w-5 h-5 text-[#37352F] shrink-0" />
+            <span>SSO</span>
           </button>
         </div>
 
