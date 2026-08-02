@@ -77,10 +77,10 @@ export default function SignupPage() {
         </div>
 
         {/* 3 OAuth SSO Buttons (as shown in Signup screenshot) */}
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-3 gap-3">
           {/* 1. Google */}
-          <button className="h-14 border border-[rgba(55,53,47,0.14)] rounded-xl py-2 px-1 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1 text-[11px] font-bold text-[#37352F] transition-colors cursor-pointer shadow-2xs">
-            <svg viewBox="0 0 24 24" className="size-5 shrink-0">
+          <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
@@ -90,8 +90,8 @@ export default function SignupPage() {
           </button>
 
           {/* 2. Microsoft */}
-          <button className="h-14 border border-[rgba(55,53,47,0.14)] rounded-xl py-2 px-1 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1 text-[11px] font-bold text-[#37352F] transition-colors cursor-pointer shadow-2xs">
-            <svg viewBox="0 0 24 24" className="size-5 shrink-0">
+          <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
               <rect x="2" y="2" width="9.5" height="9.5" fill="#F25022" />
               <rect x="12.5" y="2" width="9.5" height="9.5" fill="#7FBA00" />
               <rect x="2" y="12.5" width="9.5" height="9.5" fill="#00A4EF" />
@@ -101,8 +101,8 @@ export default function SignupPage() {
           </button>
 
           {/* 3. ChatGPT / OpenAI */}
-          <button className="h-14 border border-[rgba(55,53,47,0.14)] rounded-xl py-2 px-1 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1 text-[11px] font-bold text-[#37352F] transition-colors cursor-pointer shadow-2xs">
-            <svg viewBox="0 0 24 24" className="size-5 shrink-0" fill="#000000" xmlns="http://www.w3.org/2000/svg">
+          <button className="h-16 border border-[rgba(55,53,47,0.14)] rounded-xl py-2.5 px-2 bg-white hover:bg-[#F7F7F5] flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#37352F] transition-all cursor-pointer shadow-2xs">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" fill="currentColor">
               <path d="M22.28 9.82a5.98 5.98 0 0 0-.51-4.91 6.04 6.04 0 0 0-6.51-2.9 6.06 6.06 0 0 0-5.27 2.18 5.98 5.98 0 0 0-4 2.9 6.04 6.04 0 0 0 .74 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.51 2.9 6.05 6.05 0 0 0 5.27-2.18 5.98 5.98 0 0 0 4-2.9 6.05 6.05 0 0 0-.74-7.1zm-9.02 12.61a4.47 4.47 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.79.79 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.05v5.58a4.5 4.5 0 0 1-4.49 4.5zm-9.68-4.89a4.47 4.47 0 0 1-.53-3l.14.08 4.78 2.76a.79.79 0 0 0 .79 0l5.83-3.37v2.33a.08.08 0 0 1-.03.07l-4.84 2.79a4.5 4.5 0 0 1-6.14-1.66zm-1.02-10.82a4.47 4.47 0 0 1 2.34-1.96v.16v5.52a.79.79 0 0 0 .39.68l5.83 3.37-2.02 1.17a.08.08 0 0 1-.07 0L4.2 14.73a4.5 4.5 0 0 1-1.64-6.14zm16.6 3a4.47 4.47 0 0 1 .53 3l-.14-.08-4.78-2.76a.79.79 0 0 0-.79 0l-5.83 3.37v-2.33a.08.08 0 0 1 .03-.07l4.84-2.79a4.5 4.5 0 0 1 6.14 1.66zm1.02 10.83a4.47 4.47 0 0 1-2.34 1.96v-.16v-5.52a.79.79 0 0 0-.39-.68l-5.83-3.37 2.02-1.17a.08.08 0 0 1 .07 0l4.84 2.79a4.5 4.5 0 0 1 1.64 6.15zM8.3 12.83l2.67-1.54 2.68 1.54v3.09L10.97 17.46 8.3 15.92v-3.09z" />
             </svg>
             <span>ChatGPT</span>
