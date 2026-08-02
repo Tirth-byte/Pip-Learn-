@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface PillState {
@@ -42,12 +42,20 @@ const PILL_STATES: PillState[] = [
   },
 ];
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export function NotionHeroPill() {
   const [index, setIndex] = useState<number>(0);
+  const [textWidth, setTextWidth] = useState<number | undefined>(undefined);
+  const measureRef = useRef<HTMLSpanElement>(null);
 
+  // Timer interval to cycle through PILL_STATES every 2500ms
   useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % PILL_STATES.length);
+      if (typeof document === "undefined" || document.visibilityState === "visible") {
+        setIndex((prev) => (prev + 1) % PILL_STATES.length);
+      }
     }, 2500);
 
     return () => clearInterval(timer);
@@ -55,23 +63,49 @@ export function NotionHeroPill() {
 
   const { text, color, bgColor } = PILL_STATES[index];
 
+  // Accurately measure the text width without causing layout shifts or text scaling distortion
+  const updateWidth = useCallback(() => {
+    if (measureRef.current) {
+      const width = measureRef.current.getBoundingClientRect().width;
+      if (width > 0) {
+        setTextWidth(width);
+      }
+    }
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    updateWidth();
+  }, [index, updateWidth]);
+
+  useEffect(() => {
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, [updateWidth]);
+
   return (
-    <span className="inline-flex items-center align-middle relative mx-1 sm:mx-1.5">
-      {/* Outer Pill Container with smooth layout width & background transition */}
+    <span className="inline-flex items-center align-middle relative mx-1 sm:mx-1.5 select-none">
+      {/* Hidden element for measuring exact text width */}
+      <span
+        ref={measureRef}
+        aria-hidden="true"
+        className="invisible absolute top-[-9999px] left-[-9999px] whitespace-nowrap font-extrabold tracking-tight pointer-events-none select-none"
+      >
+        {text}
+      </span>
+
+      {/* Outer Pill Container with smooth background color transition */}
       <motion.span
-        layout
         animate={{
           backgroundColor: bgColor,
         }}
         transition={{
-          layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
           backgroundColor: { duration: 0.45, ease: "easeInOut" },
         }}
         style={{
           backgroundColor: bgColor,
           borderRadius: "9999px",
         }}
-        className="px-[0.45em] py-[0.08em] inline-flex items-center gap-[0.28em] text-[#000000] font-extrabold tracking-tight select-none overflow-hidden align-middle shadow-xs relative leading-tight"
+        className="px-[0.45em] py-[0.08em] inline-flex items-center gap-[0.28em] text-[#000000] font-extrabold tracking-tight overflow-hidden align-middle shadow-xs relative leading-tight"
       >
         {/* Solid Circular Color Dot with smooth color transition */}
         <motion.span
@@ -88,9 +122,16 @@ export function NotionHeroPill() {
           className="w-[0.28em] h-[0.28em] min-w-[0.28em] min-h-[0.28em] rounded-full inline-block shrink-0 align-middle"
         />
 
-        {/* Dynamic Word Container with Vertical Slide-Up & Opacity Fade Animation */}
-        <span className="relative inline-grid grid-cols-1 grid-rows-1 items-center overflow-hidden h-[1.12em] align-middle">
-          <AnimatePresence mode="popLayout" initial={false}>
+        {/* Dynamic Word Container with smooth width & vertical slide-up transition */}
+        <motion.span
+          animate={{ width: textWidth !== undefined ? textWidth : "auto" }}
+          transition={{
+            duration: 0.4,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="relative inline-block overflow-hidden h-[1.18em] align-middle"
+        >
+          <AnimatePresence initial={false}>
             <motion.span
               key={text}
               initial={{ y: "100%", opacity: 0 }}
@@ -100,14 +141,15 @@ export function NotionHeroPill() {
                 duration: 0.4,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="col-start-1 row-start-1 inline-block text-left font-extrabold tracking-tight text-[#000000] whitespace-nowrap leading-none align-middle"
+              className="absolute left-0 top-0 whitespace-nowrap font-extrabold tracking-tight text-[#000000] leading-none align-middle"
             >
               {text}
             </motion.span>
           </AnimatePresence>
-        </span>
+        </motion.span>
       </motion.span>
     </span>
   );
 }
+
 
