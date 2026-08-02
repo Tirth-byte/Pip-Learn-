@@ -441,144 +441,99 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 4: Trusted By Engineers and Teams with Real Avatars & Notion Emojis */}
+      {/* Section 4: Official Notion-Style Duotone Photo Testimonial Cards */}
       <section className="px-6 py-20 max-w-6xl mx-auto w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
-          <div>
-            <span className="text-xs font-bold tracking-widest text-[rgba(55,53,47,0.5)] uppercase block mb-2 select-none">
-              LOVE FROM THE COMMUNITY 💬
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#000000]">
-              Trusted by developers who ship.
-            </h2>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[rgba(55,53,47,0.6)] bg-[#F7F7F5] border border-[rgba(55,53,47,0.12)] px-3.5 py-2 rounded-xl">
-            <span className="text-amber-500 text-sm">★★★★★</span>
-            <span>4.9/5 overall rating from 12,000+ reviews</span>
-          </div>
-        </div>
+        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#000000] mb-12">
+          Trusted by teams that ship.
+        </h2>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Card 1 - Dark Charcoal (Cursor) */}
-          <div className="bg-[#191919] text-white border border-[#2D2D2D] rounded-2xl p-8 flex flex-col justify-between min-h-[400px] shadow-[0_8px_0_0_#0D0D0D] hover:shadow-[0_16px_32px_rgba(0,0,0,0.4),0_8px_0_0_#000000] hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute top-4 right-4 opacity-5 group-hover:opacity-15 transition-opacity pointer-events-none">
-              <Code2 className="size-32 text-white" />
-            </div>
-            
-            <div className="relative z-10">
-              {/* Header: Notion Emoji + Brand Badge + Stars */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🚀</span>
-                  <span className="font-black text-xs tracking-widest uppercase bg-white/10 text-white/90 px-3 py-1 rounded-lg border border-white/15 backdrop-blur-xs">
-                    CURSOR
-                  </span>
-                </div>
-                <div className="text-amber-400 text-sm tracking-wider">★★★★★</div>
-              </div>
+          {/* Card 1 - CURSOR (Crimson Red Duotone Photo) */}
+          <div className="relative rounded-2xl overflow-hidden min-h-[460px] flex flex-col justify-between p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer border border-black/10">
+            {/* Full-size Background Photo */}
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80"
+              alt="Michael Truell"
+              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+            {/* Crimson Red Duotone Overlay */}
+            <div className="absolute inset-0 bg-[#C02626]/85 mix-blend-multiply transition-colors duration-300 group-hover:bg-[#B91C1C]/80" />
+            {/* Gradient Mask for High Contrast Quote Legibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
 
-              {/* Quote */}
-              <p className="text-base sm:text-lg font-medium leading-relaxed text-white/90">
-                "PipLearn is an incredible AI-native workspace. Our engineers use it to quickly master new Python libraries and build AI tools."
+            {/* Top Brand Logo */}
+            <div className="relative z-10 flex items-center gap-2">
+              <Code2 className="size-5 text-white" />
+              <span className="font-extrabold text-base tracking-widest text-white uppercase">CURSOR</span>
+            </div>
+
+            {/* Bottom Quote & Author */}
+            <div className="relative z-10 text-white space-y-4 pt-20">
+              <p className="text-base sm:text-lg font-medium leading-snug text-white/95 tracking-tight">
+                "Using the most AI-native tools like PipLearn is an important competitive advantage for us to stay small while doing a lot."
               </p>
-            </div>
-
-            {/* Author Footer with Real Person Avatar */}
-            <div className="relative z-10 flex items-center gap-3.5 pt-6 border-t border-white/15">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
-                alt="Michael Truell"
-                className="size-11 rounded-full border-2 border-white/30 shadow-md object-cover shrink-0"
-              />
-              <div>
-                <div className="font-bold text-sm text-white flex items-center gap-1.5">
-                  Michael Truell
-                  <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono font-medium">✓ Verified</span>
-                </div>
-                <div className="text-xs text-white/70">Co-founder & CEO, Cursor</div>
-              </div>
+              <p className="text-xs sm:text-sm font-semibold text-white/80 tracking-wide">
+                Michael Truell, Co-founder & CEO
+              </p>
             </div>
           </div>
 
-          {/* Card 2 - Deep Notion Blue (OpenAI) */}
-          <div className="bg-[#0F223D] text-white border border-[#1C365A] rounded-2xl p-8 flex flex-col justify-between min-h-[400px] shadow-[0_8px_0_0_#0A1729] hover:shadow-[0_16px_32px_rgba(15,34,61,0.5),0_8px_0_0_#060F1A] hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute top-4 right-4 opacity-5 group-hover:opacity-15 transition-opacity pointer-events-none">
-              <Bot className="size-32 text-white" />
+          {/* Card 2 - FAIRE / OPENAI (Royal Blue Duotone Photo) */}
+          <div className="relative rounded-2xl overflow-hidden min-h-[460px] flex flex-col justify-between p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer border border-black/10">
+            {/* Full-size Background Photo */}
+            <img
+              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80"
+              alt="Renee Solorzano"
+              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+            {/* Royal Blue Duotone Overlay */}
+            <div className="absolute inset-0 bg-[#1D4ED8]/85 mix-blend-multiply transition-colors duration-300 group-hover:bg-[#1E40AF]/80" />
+            {/* Gradient Mask for High Contrast Quote Legibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+
+            {/* Top Brand Logo */}
+            <div className="relative z-10 flex items-center gap-2">
+              <span className="font-extrabold text-base tracking-[0.25em] text-white uppercase">F A I R E</span>
             </div>
 
-            <div className="relative z-10">
-              {/* Header: Notion Emoji + Brand Badge + Stars */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">⚡</span>
-                  <span className="font-black text-xs tracking-widest uppercase bg-white/10 text-white/90 px-3 py-1 rounded-lg border border-white/15 backdrop-blur-xs">
-                    OPENAI
-                  </span>
-                </div>
-                <div className="text-amber-400 text-sm tracking-wider">★★★★★</div>
-              </div>
-
-              {/* Quote */}
-              <p className="text-base sm:text-lg font-medium leading-relaxed text-white/90">
-                "The real-time code explanations and PyPI documentation integration cut our developers' learning curve in half."
+            {/* Bottom Quote & Author */}
+            <div className="relative z-10 text-white space-y-4 pt-20">
+              <p className="text-base sm:text-lg font-medium leading-snug text-white/95 tracking-tight">
+                "PipLearn's thoughtful design speeds up collaboration and decisions so we can deliver impact to our customers faster."
               </p>
-            </div>
-
-            {/* Author Footer with Real Person Avatar */}
-            <div className="relative z-10 flex items-center gap-3.5 pt-6 border-t border-white/15">
-              <img
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80"
-                alt="Sarah Jenkins"
-                className="size-11 rounded-full border-2 border-white/30 shadow-md object-cover shrink-0"
-              />
-              <div>
-                <div className="font-bold text-sm text-white flex items-center gap-1.5">
-                  Sarah Jenkins
-                  <span className="text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded font-mono font-medium">✓ Verified</span>
-                </div>
-                <div className="text-xs text-white/70">Lead AI Developer Advocate, OpenAI</div>
-              </div>
+              <p className="text-xs sm:text-sm font-semibold text-white/80 tracking-wide">
+                Renee Solorzano, Sr. Director of Product Design
+              </p>
             </div>
           </div>
 
-          {/* Card 3 - Deep Warm Espresso (Ramp) */}
-          <div className="bg-[#281A12] text-white border border-[#402B1F] rounded-2xl p-8 flex flex-col justify-between min-h-[400px] shadow-[0_8px_0_0_#1A100B] hover:shadow-[0_16px_32px_rgba(40,26,18,0.5),0_8px_0_0_#100A07] hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute top-4 right-4 opacity-5 group-hover:opacity-15 transition-opacity pointer-events-none">
-              <Sparkles className="size-32 text-white" />
+          {/* Card 3 - RAMP (Golden Amber Duotone Photo) */}
+          <div className="relative rounded-2xl overflow-hidden min-h-[460px] flex flex-col justify-between p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer border border-black/10">
+            {/* Full-size Background Photo */}
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=80"
+              alt="Ben Levick"
+              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+            {/* Golden Amber Duotone Overlay */}
+            <div className="absolute inset-0 bg-[#D97706]/85 mix-blend-multiply transition-colors duration-300 group-hover:bg-[#B45309]/80" />
+            {/* Gradient Mask for High Contrast Quote Legibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+
+            {/* Top Brand Logo */}
+            <div className="relative z-10 flex items-center gap-2">
+              <span className="font-extrabold text-base tracking-wider text-white lower">ramp</span>
+              <Zap className="size-4 text-white" />
             </div>
 
-            <div className="relative z-10">
-              {/* Header: Notion Emoji + Brand Badge + Stars */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🧠</span>
-                  <span className="font-black text-xs tracking-widest uppercase bg-white/10 text-white/90 px-3 py-1 rounded-lg border border-white/15 backdrop-blur-xs">
-                    RAMP
-                  </span>
-                </div>
-                <div className="text-amber-400 text-sm tracking-wider">★★★★★</div>
-              </div>
-
-              {/* Quote */}
-              <p className="text-base sm:text-lg font-medium leading-relaxed text-white/90">
-                "PipLearn's AI tutor helps our team write clean Python, test edge cases, and deploy backend microservices smoothly."
+            {/* Bottom Quote & Author */}
+            <div className="relative z-10 text-white space-y-4 pt-20">
+              <p className="text-base sm:text-lg font-medium leading-snug text-white/95 tracking-tight">
+                "PipLearn Custom AI Agents help our team go beyond doing work with AI to building AI tools that do the work for them."
               </p>
-            </div>
-
-            {/* Author Footer with Real Person Avatar */}
-            <div className="relative z-10 flex items-center gap-3.5 pt-6 border-t border-white/15">
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
-                alt="Ben Levick"
-                className="size-11 rounded-full border-2 border-white/30 shadow-md object-cover shrink-0"
-              />
-              <div>
-                <div className="font-bold text-sm text-white flex items-center gap-1.5">
-                  Ben Levick
-                  <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-mono font-medium">✓ Verified</span>
-                </div>
-                <div className="text-xs text-white/70">Head of AI Engineering, Ramp</div>
-              </div>
+              <p className="text-xs sm:text-sm font-semibold text-white/80 tracking-wide">
+                Ben Levick, Head of Operations & Internal AI
+              </p>
             </div>
           </div>
         </div>
