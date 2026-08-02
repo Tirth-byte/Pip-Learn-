@@ -7,7 +7,7 @@ const UNIVERSITIES = [
     name: "Harvard University",
     location: "Cambridge, MA · Computer Science",
     logo: (
-      <svg viewBox="0 0 48 48" className="h-11 w-11 sm:h-12 sm:w-12 shrink-0" fill="none">
+      <svg viewBox="0 0 48 48" className="h-14 w-14 sm:h-16 sm:w-16 shrink-0" fill="none">
         {/* Harvard Outer Gold Rim */}
         <path
           d="M24 2 L4 8.5 V24 C4 35.5 12.8 44.2 24 47.5 C35.2 44.2 44 35.5 44 24 V8.5 L24 2 Z"
@@ -36,7 +36,7 @@ const UNIVERSITIES = [
     name: "Stanford University",
     location: "Stanford, CA · AI & Engineering",
     logo: (
-      <svg viewBox="0 0 48 48" className="h-11 w-11 sm:h-12 sm:w-12 shrink-0" fill="none">
+      <svg viewBox="0 0 48 48" className="h-14 w-14 sm:h-16 sm:w-16 shrink-0" fill="none">
         {/* Stanford Outer Gold Rim */}
         <path
           d="M24 2 L4 8.5 V24 C4 35.5 12.8 44.2 24 47.5 C35.2 44.2 44 35.5 44 24 V8.5 L24 2 Z"
@@ -66,7 +66,7 @@ const UNIVERSITIES = [
     name: "MIT",
     location: "Cambridge, MA · EECS & AI",
     logo: (
-      <svg viewBox="0 0 48 48" className="h-11 w-11 sm:h-12 sm:w-12 shrink-0" fill="none">
+      <svg viewBox="0 0 48 48" className="h-14 w-14 sm:h-16 sm:w-16 shrink-0" fill="none">
         {/* MIT Red & Gray Block Emblem */}
         <rect x="3" y="6" width="7" height="36" fill="#A31D1D" rx="1" />
         <rect x="14" y="6" width="7" height="24" fill="#A31D1D" rx="1" />
@@ -81,7 +81,7 @@ const UNIVERSITIES = [
     name: "University of Oxford",
     location: "Oxford, UK · Software & Systems",
     logo: (
-      <svg viewBox="0 0 48 48" className="h-11 w-11 sm:h-12 sm:w-12 shrink-0" fill="none">
+      <svg viewBox="0 0 48 48" className="h-14 w-14 sm:h-16 sm:w-16 shrink-0" fill="none">
         {/* Oxford Outer Gold Rim */}
         <path
           d="M24 2 L4 8.5 V24 C4 35.5 12.8 44.2 24 47.5 C35.2 44.2 44 35.5 44 24 V8.5 L24 2 Z"
@@ -111,7 +111,7 @@ const UNIVERSITIES = [
     name: "University of Cambridge",
     location: "Cambridge, UK · Advanced Computing",
     logo: (
-      <svg viewBox="0 0 48 48" className="h-11 w-11 sm:h-12 sm:w-12 shrink-0" fill="none">
+      <svg viewBox="0 0 48 48" className="h-14 w-14 sm:h-16 sm:w-16 shrink-0" fill="none">
         {/* Cambridge Outer Gold Rim */}
         <path
           d="M24 2 L4 8.5 V24 C4 35.5 12.8 44.2 24 47.5 C35.2 44.2 44 35.5 44 24 V8.5 L24 2 Z"
@@ -142,27 +142,27 @@ const UNIVERSITIES = [
 
 export function UniversityMarquee() {
   return (
-    <section className="border-t border-[rgba(55,53,47,0.08)] bg-[#FAF9F6] py-16 text-center select-none overflow-hidden group">
+    <section className="border-t border-[rgba(55,53,47,0.08)] bg-[#FAF9F6] py-20 text-center select-none overflow-hidden group">
       {/* 1. Section Header */}
-      <p className="text-xs sm:text-sm font-semibold tracking-widest text-[rgba(55,53,47,0.5)] uppercase mb-10 px-6">
+      <p className="text-xs sm:text-sm font-semibold tracking-widest text-[rgba(55,53,47,0.5)] uppercase mb-12 px-6">
         TRUSTED BY STUDENTS, RESEARCHERS, AND DEVELOPERS AT TOP UNIVERSITIES WORLDWIDE
       </p>
 
       {/* 2. Infinite Marquee Container */}
       <div className="relative w-full overflow-hidden flex [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="flex gap-5 shrink-0 animate-[marquee_30s_linear_infinite] group-hover:[animation-play-state:paused] whitespace-nowrap py-2">
+        <div className="flex gap-6 sm:gap-8 shrink-0 animate-[marquee_32s_linear_infinite] group-hover:[animation-play-state:paused] whitespace-nowrap py-3">
           {/* Loop 1 */}
           {UNIVERSITIES.map((uni, idx) => (
             <div
               key={`u1-${idx}`}
-              className="inline-flex items-center gap-4 px-6 py-4 rounded-xl border border-[rgba(55,53,47,0.12)] bg-white shadow-xs hover:shadow-md hover:border-black/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0 text-left"
+              className="inline-flex items-center gap-5 sm:gap-6 px-8 py-5 sm:px-10 sm:py-6 rounded-2xl border border-[rgba(55,53,47,0.14)] bg-white shadow-sm hover:shadow-lg hover:border-black/25 hover:-translate-y-1 transition-all duration-300 cursor-pointer shrink-0 text-left min-w-[300px] sm:min-w-[340px]"
             >
               {uni.logo}
               <div>
-                <div className="font-extrabold text-base text-[#111827] tracking-tight leading-snug">
+                <div className="font-extrabold text-xl sm:text-2xl text-[#111827] tracking-tight leading-tight">
                   {uni.name}
                 </div>
-                <div className="text-[11px] font-semibold text-[rgba(55,53,47,0.5)] tracking-wide font-mono mt-0.5">
+                <div className="text-xs sm:text-sm font-semibold text-[rgba(55,53,47,0.55)] tracking-wide font-mono mt-1">
                   {uni.location}
                 </div>
               </div>
@@ -173,14 +173,14 @@ export function UniversityMarquee() {
           {UNIVERSITIES.map((uni, idx) => (
             <div
               key={`u2-${idx}`}
-              className="inline-flex items-center gap-4 px-6 py-4 rounded-xl border border-[rgba(55,53,47,0.12)] bg-white shadow-xs hover:shadow-md hover:border-black/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0 text-left"
+              className="inline-flex items-center gap-5 sm:gap-6 px-8 py-5 sm:px-10 sm:py-6 rounded-2xl border border-[rgba(55,53,47,0.14)] bg-white shadow-sm hover:shadow-lg hover:border-black/25 hover:-translate-y-1 transition-all duration-300 cursor-pointer shrink-0 text-left min-w-[300px] sm:min-w-[340px]"
             >
               {uni.logo}
               <div>
-                <div className="font-extrabold text-base text-[#111827] tracking-tight leading-snug">
+                <div className="font-extrabold text-xl sm:text-2xl text-[#111827] tracking-tight leading-tight">
                   {uni.name}
                 </div>
-                <div className="text-[11px] font-semibold text-[rgba(55,53,47,0.5)] tracking-wide font-mono mt-0.5">
+                <div className="text-xs sm:text-sm font-semibold text-[rgba(55,53,47,0.55)] tracking-wide font-mono mt-1">
                   {uni.location}
                 </div>
               </div>
@@ -191,14 +191,14 @@ export function UniversityMarquee() {
           {UNIVERSITIES.map((uni, idx) => (
             <div
               key={`u3-${idx}`}
-              className="inline-flex items-center gap-4 px-6 py-4 rounded-xl border border-[rgba(55,53,47,0.12)] bg-white shadow-xs hover:shadow-md hover:border-black/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0 text-left"
+              className="inline-flex items-center gap-5 sm:gap-6 px-8 py-5 sm:px-10 sm:py-6 rounded-2xl border border-[rgba(55,53,47,0.14)] bg-white shadow-sm hover:shadow-lg hover:border-black/25 hover:-translate-y-1 transition-all duration-300 cursor-pointer shrink-0 text-left min-w-[300px] sm:min-w-[340px]"
             >
               {uni.logo}
               <div>
-                <div className="font-extrabold text-base text-[#111827] tracking-tight leading-snug">
+                <div className="font-extrabold text-xl sm:text-2xl text-[#111827] tracking-tight leading-tight">
                   {uni.name}
                 </div>
-                <div className="text-[11px] font-semibold text-[rgba(55,53,47,0.5)] tracking-wide font-mono mt-0.5">
+                <div className="text-xs sm:text-sm font-semibold text-[rgba(55,53,47,0.55)] tracking-wide font-mono mt-1">
                   {uni.location}
                 </div>
               </div>
@@ -209,14 +209,14 @@ export function UniversityMarquee() {
           {UNIVERSITIES.map((uni, idx) => (
             <div
               key={`u4-${idx}`}
-              className="inline-flex items-center gap-4 px-6 py-4 rounded-xl border border-[rgba(55,53,47,0.12)] bg-white shadow-xs hover:shadow-md hover:border-black/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0 text-left"
+              className="inline-flex items-center gap-5 sm:gap-6 px-8 py-5 sm:px-10 sm:py-6 rounded-2xl border border-[rgba(55,53,47,0.14)] bg-white shadow-sm hover:shadow-lg hover:border-black/25 hover:-translate-y-1 transition-all duration-300 cursor-pointer shrink-0 text-left min-w-[300px] sm:min-w-[340px]"
             >
               {uni.logo}
               <div>
-                <div className="font-extrabold text-base text-[#111827] tracking-tight leading-snug">
+                <div className="font-extrabold text-xl sm:text-2xl text-[#111827] tracking-tight leading-tight">
                   {uni.name}
                 </div>
-                <div className="text-[11px] font-semibold text-[rgba(55,53,47,0.5)] tracking-wide font-mono mt-0.5">
+                <div className="text-xs sm:text-sm font-semibold text-[rgba(55,53,47,0.55)] tracking-wide font-mono mt-1">
                   {uni.location}
                 </div>
               </div>
