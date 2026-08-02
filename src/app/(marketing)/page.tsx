@@ -46,10 +46,10 @@ export default function LandingPage() {
         {/* Overlapping Notion-Style Avatars Row */}
         <NotionAvatarsRow />
 
-        {/* Main Hero Headline customized for PipLearn: Where developers {Pill} Python with AI */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-[#000000] leading-[1.18]">
-          <span className="inline-flex items-center justify-center flex-wrap gap-x-[0.35em] gap-y-[0.1em]">
-            <span>Where developers</span>
+        {/* Main Hero Headline customized for PipLearn: Locked two-row structural flex grid */}
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-[#000000] leading-[1.15] flex flex-col items-center justify-center text-center">
+          <span className="block whitespace-nowrap">Where developers</span>
+          <span className="inline-flex items-center justify-center gap-[0.35em] whitespace-nowrap mt-1 sm:mt-2">
             <NotionHeroPill />
             <span>Python with AI.</span>
           </span>
