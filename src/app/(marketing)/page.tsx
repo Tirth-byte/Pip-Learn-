@@ -21,13 +21,8 @@ export default function LandingPage() {
         <NotionAvatarsRow />
 
         {/* Main Hero Headline with Text Animation in Notion Pill */}
-        <h1 className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-[#000000] leading-[1.08]">
-          Where developers and <br />
-          <span className="inline-flex items-center justify-center whitespace-nowrap align-middle gap-x-3 sm:gap-x-4">
-            <span>AI agents</span>
-            <NotionHeroPill />
-            <span>together.</span>
-          </span>
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-[#000000] leading-[1.12]">
+          Where developers and AI agents <NotionHeroPill /> together.
         </h1>
 
         {/* Subtitle customized for PipLearn */}
