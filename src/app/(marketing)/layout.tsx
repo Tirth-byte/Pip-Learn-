@@ -1,7 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
 import { ChevronDown } from "lucide-react";
+import { toast } from "sonner";
+
+function comingSoonToast(label: string) {
+  return (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast(`${label} — coming soon`);
+  };
+}
 
 export default function MarketingLayout({
   children,
@@ -18,24 +28,39 @@ export default function MarketingLayout({
           </Link>
           
           <nav className="hidden lg:flex items-center gap-1 text-xs font-medium text-[rgba(55,53,47,0.75)]">
-            <button className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors flex items-center gap-1 cursor-pointer">
+            <button
+              onClick={() => toast("Exploring PipLearn product features...")}
+              className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors flex items-center gap-1 cursor-pointer"
+            >
               Product <ChevronDown className="size-3 opacity-60" />
             </button>
-            <button className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors flex items-center gap-1 cursor-pointer">
+            <button
+              onClick={() => toast("Loading resources & guides...")}
+              className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors flex items-center gap-1 cursor-pointer"
+            >
               Resources <ChevronDown className="size-3 opacity-60" />
             </button>
             <Link href="/courses" className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors">
               Developers
             </Link>
-            <Link href="/enterprise" className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors">
+            <button
+              onClick={() => toast("Enterprise plans — coming soon")}
+              className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors cursor-pointer"
+            >
               Enterprise
-            </Link>
-            <Link href="/pricing" className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors">
+            </button>
+            <button
+              onClick={() => toast("Loading pricing plans...")}
+              className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors cursor-pointer"
+            >
               Pricing
-            </Link>
-            <Link href="/demo" className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors">
+            </button>
+            <button
+              onClick={() => toast("Booking a demo — our team will reach out!")}
+              className="px-2.5 py-1.5 rounded hover:bg-[#F1F1EF] transition-colors cursor-pointer"
+            >
               Request a demo
-            </Link>
+            </button>
           </nav>
         </div>
 
@@ -72,33 +97,33 @@ export default function MarketingLayout({
           <div>
             <div className="font-semibold text-[#37352F] mb-3">Company</div>
             <ul className="space-y-2.5 text-[11px]">
-              <li><a href="#" className="hover:underline">About us</a></li>
-              <li><a href="#" className="hover:underline">Careers</a></li>
-              <li><a href="#" className="hover:underline">Press</a></li>
-              <li><a href="#" className="hover:underline">News</a></li>
-              <li><a href="#" className="hover:underline">Media kit</a></li>
-              <li><a href="#" className="hover:underline">Contact sales</a></li>
+              <li><a href="#" onClick={comingSoonToast("About us")} className="hover:underline">About us</a></li>
+              <li><a href="#" onClick={comingSoonToast("Careers")} className="hover:underline">Careers</a></li>
+              <li><a href="#" onClick={comingSoonToast("Press")} className="hover:underline">Press</a></li>
+              <li><a href="#" onClick={comingSoonToast("News")} className="hover:underline">News</a></li>
+              <li><a href="#" onClick={comingSoonToast("Media kit")} className="hover:underline">Media kit</a></li>
+              <li><a href="#" onClick={comingSoonToast("Contact sales")} className="hover:underline">Contact sales</a></li>
             </ul>
           </div>
 
           <div>
             <div className="font-semibold text-[#37352F] mb-3">Download</div>
             <ul className="space-y-2.5 text-[11px]">
-              <li><a href="#" className="hover:underline">iOS & Android</a></li>
-              <li><a href="#" className="hover:underline">Mac & Windows</a></li>
-              <li><a href="#" className="hover:underline">Web Clipper</a></li>
-              <li><a href="#" className="hover:underline">VS Code Extension</a></li>
+              <li><a href="#" onClick={comingSoonToast("iOS & Android app")} className="hover:underline">iOS & Android</a></li>
+              <li><a href="#" onClick={comingSoonToast("Mac & Windows desktop")} className="hover:underline">Mac & Windows</a></li>
+              <li><a href="#" onClick={comingSoonToast("Web Clipper")} className="hover:underline">Web Clipper</a></li>
+              <li><a href="#" onClick={comingSoonToast("VS Code Extension")} className="hover:underline">VS Code Extension</a></li>
             </ul>
           </div>
 
           <div>
             <div className="font-semibold text-[#37352F] mb-3">Resources</div>
             <ul className="space-y-2.5 text-[11px]">
-              <li><a href="#" className="hover:underline">Help center</a></li>
-              <li><Link href="/pricing" className="hover:underline">Pricing</Link></li>
-              <li><a href="#" className="hover:underline">Template gallery</a></li>
-              <li><a href="#" className="hover:underline">Community</a></li>
-              <li><a href="#" className="hover:underline">Integrations</a></li>
+              <li><a href="#" onClick={comingSoonToast("Help center")} className="hover:underline">Help center</a></li>
+              <li><button onClick={() => toast("Loading pricing plans...")} className="hover:underline cursor-pointer bg-transparent border-none p-0 text-inherit font-inherit">Pricing</button></li>
+              <li><a href="#" onClick={comingSoonToast("Template gallery")} className="hover:underline">Template gallery</a></li>
+              <li><a href="#" onClick={comingSoonToast("Community")} className="hover:underline">Community</a></li>
+              <li><a href="#" onClick={comingSoonToast("Integrations")} className="hover:underline">Integrations</a></li>
             </ul>
           </div>
         </div>

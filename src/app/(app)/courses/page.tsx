@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Search, ChevronRight, BookOpen, Clock, BarChart2, Filter, Terminal, Globe, Zap, LucideIcon } from "lucide-react";
+import { toast } from "sonner";
 
 type Course = {
   id: string;
@@ -183,13 +184,23 @@ export default function CourseLibraryPage() {
                       <span>{course.modules} Modules</span>
                     </div>
 
-                    <Link
-                      href={`/courses/${course.id}`}
-                      className="mt-2 w-full notion-btn-secondary h-8 text-xs font-semibold flex items-center justify-center gap-1.5"
-                    >
-                      <span>Open Syllabus</span>
-                      <ChevronRight className="size-3.5 stroke-[1.5]" />
-                    </Link>
+                    {course.id === "python" ? (
+                      <Link
+                        href={`/courses/${course.id}`}
+                        className="mt-2 w-full notion-btn-secondary h-8 text-xs font-semibold flex items-center justify-center gap-1.5"
+                      >
+                        <span>Open Syllabus</span>
+                        <ChevronRight className="size-3.5 stroke-[1.5]" />
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={() => toast(`${course.title} syllabus — coming soon`)}
+                        className="mt-2 w-full notion-btn-secondary h-8 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>Open Syllabus</span>
+                        <ChevronRight className="size-3.5 stroke-[1.5]" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -237,7 +248,16 @@ export default function CourseLibraryPage() {
                       </div>
                     </td>
                     <td className="p-2.5 text-right pr-3">
-                      <Link href={`/courses/${c.id}`} className="text-[#2383E2] hover:underline font-medium">Open</Link>
+                      {c.id === "python" ? (
+                        <Link href={`/courses/${c.id}`} className="text-[#2383E2] hover:underline font-medium">Open</Link>
+                      ) : (
+                        <button
+                          onClick={() => toast(`${c.title} syllabus — coming soon`)}
+                          className="text-[#2383E2] hover:underline font-medium cursor-pointer bg-transparent border-none p-0 text-inherit"
+                        >
+                          Open
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );

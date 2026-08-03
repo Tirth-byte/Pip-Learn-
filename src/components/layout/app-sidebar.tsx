@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { useAppContext } from "@/context/app-context";
 import { NotionAvatar } from "@/components/ui/notion-avatar";
+import { toast } from "sonner";
 
 function PipLearnLogoMark({ className = "size-5" }: { className?: string }) {
   return (
@@ -93,7 +94,10 @@ export function AppSidebar() {
 
         {/* Quick Search & AI Actions */}
         <div className="mt-1 space-y-0.5">
-          <button className="w-full flex items-center justify-between p-1.5 rounded-md text-xs text-gray-600 hover:bg-[rgba(55,53,47,0.08)] hover:text-gray-900 transition-colors cursor-pointer group">
+          <button
+            onClick={() => toast("Opening quick search... Press ⌘K to search anything")}
+            className="w-full flex items-center justify-between p-1.5 rounded-md text-xs text-gray-600 hover:bg-[rgba(55,53,47,0.08)] hover:text-gray-900 transition-colors cursor-pointer group"
+          >
             <div className="flex items-center gap-3">
               <Search className="size-4 text-gray-400 group-hover:text-gray-900 shrink-0 stroke-[1.5]" />
               <span>Search</span>
@@ -154,7 +158,10 @@ export function AppSidebar() {
         <SidebarGroup className="py-1 mt-1">
           <SidebarGroupLabel className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-2 h-6 flex items-center justify-between">
             <span>Workspace</span>
-            <button className="hover:bg-[rgba(55,53,47,0.1)] p-0.5 rounded text-gray-400 hover:text-gray-900 transition-colors">
+            <button
+              onClick={() => toast("Creating a new workspace...")}
+              className="hover:bg-[rgba(55,53,47,0.1)] p-0.5 rounded text-gray-400 hover:text-gray-900 transition-colors cursor-pointer"
+            >
               <Plus className="size-3.5 stroke-[1.5]" />
             </button>
           </SidebarGroupLabel>

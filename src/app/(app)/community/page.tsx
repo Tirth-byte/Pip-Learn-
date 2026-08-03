@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageSquare, Heart, Share2, Sparkles, Image as ImageIcon, Link as LinkIcon, Send } from "lucide-react";
+import { toast } from "sonner";
 
 type Post = {
   id: number;
@@ -141,9 +142,9 @@ export default function CommunityPage() {
             />
             <div className="flex justify-between items-center mt-2 border-t border-neutral-100 pt-2">
               <div className="flex items-center gap-1 text-neutral-400">
-                <button className="p-1.5 hover:bg-neutral-100 rounded transition-colors hover:text-neutral-900"><ImageIcon className="size-4" /></button>
-                <button className="p-1.5 hover:bg-neutral-100 rounded transition-colors hover:text-neutral-900"><LinkIcon className="size-4" /></button>
-                <button className="p-1.5 hover:bg-neutral-100 rounded transition-colors hover:text-neutral-900"><Sparkles className="size-4" /></button>
+                <button onClick={() => toast("Image upload coming soon")} className="p-1.5 hover:bg-neutral-100 rounded transition-colors hover:text-neutral-900"><ImageIcon className="size-4" /></button>
+                <button onClick={() => toast("Link embed coming soon")} className="p-1.5 hover:bg-neutral-100 rounded transition-colors hover:text-neutral-900"><LinkIcon className="size-4" /></button>
+                <button onClick={() => toast("Generating AI post suggestions...")} className="p-1.5 hover:bg-neutral-100 rounded transition-colors hover:text-neutral-900"><Sparkles className="size-4" /></button>
               </div>
               <Button
                 size="sm"
@@ -196,7 +197,10 @@ export default function CommunityPage() {
                 <MessageSquare className="size-4" /> {post.commentsCount}
               </button>
 
-              <button className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 transition-colors ml-auto">
+              <button
+                onClick={() => toast("Post link copied to clipboard")}
+                className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 transition-colors ml-auto"
+              >
                 <Share2 className="size-4" />
               </button>
             </div>

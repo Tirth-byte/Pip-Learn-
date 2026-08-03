@@ -13,9 +13,13 @@ import {
   Lightbulb,
   BookOpen,
   FileText,
-  Terminal
+  Terminal,
+  Code2,
+  Copy,
+  Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 import { NotionAvatar } from "@/components/ui/notion-avatar";
 import { useAppContext } from "@/context/app-context";
@@ -24,6 +28,28 @@ export default function DashboardPage() {
   const { user, progress } = useAppContext();
   const [activeView, setActiveView] = useState<"gallery" | "table">("gallery");
   const [toggleScratchpad, setToggleScratchpad] = useState(true);
+  const [isCodeVisible, setIsCodeVisible] = useState(false);
+  const [isCodeCopied, setIsCodeCopied] = useState(false);
+
+  const referenceSolution = `def two_sum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        diff = target - num
+        if diff in seen:
+            return [seen[diff], i]
+        seen[num] = i
+    return []`;
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(referenceSolution);
+      setIsCodeCopied(true);
+      toast("Code copied to clipboard");
+      setTimeout(() => setIsCodeCopied(false), 2000);
+    } catch {
+      toast("Couldn't access the clipboard");
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto w-full pb-16 text-[#37352F] select-none">
@@ -253,6 +279,44 @@ export default function DashboardPage() {
               <p>• Remember: Python dictionaries use curly braces <code>&#123;&#125;</code> for key-value lookups.</p>
               <p>• Practice problem solved today: <strong>Two Sum</strong> using HashMap in O(n) time.</p>
               <p>• Next goal: Review list comprehensions in Module 4.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Show Code - Notion Toggle Block */}
+        <div className="border border-[rgba(55,53,47,0.09)] rounded-lg p-4 bg-[#FBFBFA] mb-6">
+          <button
+            onClick={() => setIsCodeVisible(!isCodeVisible)}
+            className="flex items-center gap-2.5 font-semibold text-sm text-gray-900 w-full text-left cursor-pointer group"
+          >
+            {isCodeVisible ? (
+              <ChevronDown className="size-4 text-gray-400 group-hover:text-gray-900 stroke-[1.5] shrink-0" />
+            ) : (
+              <ChevronRight className="size-4 text-gray-400 group-hover:text-gray-900 stroke-[1.5] shrink-0" />
+            )}
+            <Code2 className="size-4 text-gray-400 group-hover:text-gray-900 stroke-[1.5] shrink-0" />
+            <span>Show Code — Two Sum Reference Solution</span>
+          </button>
+
+          {isCodeVisible && (
+            <div className="mt-3 ml-6 border border-[rgba(55,53,47,0.12)] rounded-xl bg-[#262626] overflow-hidden animate-in fade-in duration-200">
+              <div className="flex items-center justify-between px-3 py-2 border-b border-white/10">
+                <span className="font-mono text-[11px] text-[rgba(255,255,255,0.55)]">solution.py</span>
+                <button
+                  onClick={handleCopyCode}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-medium border transition-colors cursor-pointer ${
+                    isCodeCopied
+                      ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-300"
+                      : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  {isCodeCopied ? <Check className="size-3 stroke-[2]" /> : <Copy className="size-3 stroke-[2]" />}
+                  {isCodeCopied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <pre className="p-4 overflow-x-auto font-mono text-[11px] leading-6 text-[#D4D4D4] whitespace-pre">
+                <code>{referenceSolution}</code>
+              </pre>
             </div>
           )}
         </div>

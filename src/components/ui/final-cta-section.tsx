@@ -15,6 +15,7 @@ import {
   Bot
 } from "lucide-react";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 export function FinalCTASection() {
   return (
@@ -155,12 +156,12 @@ export function FinalCTASection() {
 
           {/* Secondary Button (Apple Style: Pure White Background, Blue Text) */}
           <Button
-            asChild
             size="lg"
             variant="outline"
-            className="bg-white hover:bg-[#FAF9F6] text-[#2383E2] hover:text-[#1D6FBE] border border-[rgba(55,53,47,0.16)] hover:border-[#2383E2]/40 h-12 px-7 text-sm font-semibold rounded-md transition-colors w-full sm:w-auto"
+            onClick={() => toast("Booking a demo — our team will reach out!")}
+            className="bg-white hover:bg-[#FAF9F6] text-[#2383E2] hover:text-[#1D6FBE] border border-[rgba(55,53,47,0.16)] hover:border-[#2383E2]/40 h-12 px-7 text-sm font-semibold rounded-md transition-colors w-full sm:w-auto cursor-pointer"
           >
-            <Link href="/demo">Request a demo</Link>
+            Request a demo
           </Button>
         </motion.div>
       </div>

@@ -16,6 +16,7 @@ import {
   Download,
   KeyRound
 } from "lucide-react";
+import { toast } from "sonner";
 
 type SettingsTab = "appearance" | "account" | "notifications" | "security";
 
@@ -29,6 +30,7 @@ export default function SettingsPage() {
 
   const handleSavePreferences = () => {
     setSavedPreferenceNotice("Preferences saved successfully!");
+    toast("Notification preferences saved");
     setTimeout(() => setSavedPreferenceNotice(""), 3000);
   };
 
@@ -42,6 +44,7 @@ export default function SettingsPage() {
       return;
     }
     setPasswordNotice("Password updated successfully!");
+    toast("Password updated successfully");
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
@@ -138,7 +141,8 @@ export default function SettingsPage() {
 
                   {/* Dark Theme Card - Disabled with Coming Soon Badge */}
                   <div
-                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border border-gray-200 bg-white opacity-60 relative select-none cursor-not-allowed group"
+                    onClick={() => toast("Dark theme unlocked in Pro version")}
+                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border border-gray-200 bg-white opacity-60 relative select-none cursor-pointer group hover:opacity-80 hover:border-gray-400 transition-all"
                   >
                     <div className="absolute top-2 right-2">
                       <span className="notion-tag notion-tag-purple text-[10px] font-semibold py-0.5 px-1.5 rounded">
@@ -151,7 +155,8 @@ export default function SettingsPage() {
 
                   {/* System Theme Card - Disabled with Coming Soon Badge */}
                   <div
-                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border border-gray-200 bg-white opacity-60 relative select-none cursor-not-allowed group"
+                    onClick={() => toast("System theme unlocked in Pro version")}
+                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border border-gray-200 bg-white opacity-60 relative select-none cursor-pointer group hover:opacity-80 hover:border-gray-400 transition-all"
                   >
                     <div className="absolute top-2 right-2">
                       <span className="notion-tag notion-tag-purple text-[10px] font-semibold py-0.5 px-1.5 rounded">
@@ -215,7 +220,12 @@ export default function SettingsPage() {
                     <div className="text-xs font-bold text-gray-900">Export Learning History</div>
                     <div className="text-xs text-gray-500 mt-0.5">Download your solved problems and notes in JSON/Markdown.</div>
                   </div>
-                  <Button variant="outline" size="sm" className="h-8 px-3 text-xs font-semibold rounded-lg bg-white border-gray-200 hover:bg-gray-50 flex items-center gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => toast("Exporting your learning history as JSON...")}
+                    className="h-8 px-3 text-xs font-semibold rounded-lg bg-white border-gray-200 hover:bg-gray-50 flex items-center gap-1.5"
+                  >
                     <Download className="size-3.5 stroke-[1.5]" />
                     <span>Export JSON</span>
                   </Button>
@@ -344,7 +354,12 @@ export default function SettingsPage() {
                       <div className="text-xs text-gray-500">Sign in instantly without passwords.</div>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" className="h-8 px-3 text-xs font-semibold rounded-lg border-gray-200 hover:bg-gray-50">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => toast("Registering a security key...")}
+                    className="h-8 px-3 text-xs font-semibold rounded-lg border-gray-200 hover:bg-gray-50"
+                  >
                     Register Key
                   </Button>
                 </div>

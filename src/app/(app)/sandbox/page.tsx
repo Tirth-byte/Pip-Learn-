@@ -3,8 +3,9 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Play, RotateCcw, Check, Save, CheckCircle2, XCircle, Code2, Sparkles, Terminal, FileText } from "lucide-react";
+import { Play, RotateCcw, Check, Save, CheckCircle2, XCircle, Code2, Sparkles, Terminal, FileText, ChevronDown, Copy } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { useAppContext } from "@/context/app-context";
 
 type Problem = {
@@ -171,6 +172,8 @@ function SandboxContent() {
   } | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isCodeVisible, setIsCodeVisible] = useState(false);
+  const [isCodeCopied, setIsCodeCopied] = useState(false);
 
   if (problemIdParam !== prevProblemId) {
     setPrevProblemId(problemIdParam);
@@ -227,7 +230,19 @@ function SandboxContent() {
 
   const handleSave = () => {
     setIsSaved(true);
+    toast("Solution saved to your workspace");
     setTimeout(() => setIsSaved(false), 2000);
+  };
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(currentProblem.initialCode);
+      setIsCodeCopied(true);
+      toast("Reference solution copied to clipboard");
+      setTimeout(() => setIsCodeCopied(false), 2000);
+    } catch {
+      toast("Couldn't access the clipboard");
+    }
   };
 
   const handleSubmit = () => {
@@ -298,8 +313,42 @@ function SandboxContent() {
           >
             Submit <Check className="ml-1 size-3 stroke-[1.5]" />
           </button>
+
+          <button
+            onClick={() => setIsCodeVisible(!isCodeVisible)}
+            className="notion-btn-secondary h-7 text-xs px-2.5"
+          >
+            <ChevronDown className={`mr-1 size-3 stroke-[1.5] transition-transform ${isCodeVisible ? "rotate-180" : ""}`} />
+            {isCodeVisible ? "Hide Code" : "Show Code"}
+          </button>
         </div>
       </div>
+
+      {/* Show Code - Notion Toggle Block */}
+      {isCodeVisible && (
+        <div className="mt-3 border border-[rgba(55,53,47,0.12)] rounded-xl bg-[#262626] overflow-hidden animate-in fade-in duration-200">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-white/10">
+            <div className="flex items-center gap-2 text-[11px] text-[rgba(255,255,255,0.55)] font-medium">
+              <Code2 className="size-3.5 stroke-[1.5]" />
+              <span className="font-mono">reference_solution.py</span>
+            </div>
+            <button
+              onClick={handleCopyCode}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-medium border transition-colors cursor-pointer ${
+                isCodeCopied
+                  ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-300"
+                  : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {isCodeCopied ? <Check className="size-3 stroke-[2]" /> : <Copy className="size-3 stroke-[2]" />}
+              {isCodeCopied ? "Copied" : "Copy"}
+            </button>
+          </div>
+          <pre className="p-4 overflow-x-auto font-mono text-[11px] leading-6 text-[#D4D4D4] whitespace-pre">
+            <code>{currentProblem.initialCode}</code>
+          </pre>
+        </div>
+      )}
 
       {/* Main Sandbox Grid */}
       <div className="flex-1 grid md:grid-cols-2 gap-4 mt-3 min-h-0">
