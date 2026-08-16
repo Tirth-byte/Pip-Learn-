@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,11 +14,49 @@ import {
   CheckCircle2,
   SlidersHorizontal,
   Download,
-  KeyRound
+  KeyRound,
+  Check
 } from "lucide-react";
 import { toast } from "sonner";
 
 type SettingsTab = "appearance" | "account" | "notifications" | "security";
+type ThemeMode = "light" | "dark" | "system";
+type FontSize = "small" | "medium" | "large";
+
+const THEME_KEY = "piplearn_theme";
+const FONT_SIZE_KEY = "piplearn_font_size";
+
+function getStoredTheme(): ThemeMode {
+  if (typeof window === "undefined") return "light";
+  return (localStorage.getItem(THEME_KEY) as ThemeMode) || "light";
+}
+
+function getStoredFontSize(): FontSize {
+  if (typeof window === "undefined") return "medium";
+  return (localStorage.getItem(FONT_SIZE_KEY) as FontSize) || "medium";
+}
+
+const fontSizeMap: Record<FontSize, string> = {
+  small: "14px",
+  medium: "16px",
+  large: "18px",
+};
+
+function applyTheme(mode: ThemeMode) {
+  const html = document.documentElement;
+  if (mode === "system") {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    html.classList.toggle("dark", prefersDark);
+  } else {
+    html.classList.toggle("dark", mode === "dark");
+  }
+  localStorage.setItem(THEME_KEY, mode);
+}
+
+function applyFontSize(size: FontSize) {
+  document.documentElement.style.fontSize = fontSizeMap[size];
+  localStorage.setItem(FONT_SIZE_KEY, size);
+}
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("appearance");
@@ -27,6 +65,43 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordNotice, setPasswordNotice] = useState("");
+
+  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [fontSize, setFontSize] = useState<FontSize>("medium");
+  const [mounted, setMounted] = useState(false);
+
+  // Load persisted settings on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTheme(getStoredTheme());
+      setFontSize(getStoredFontSize());
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Listen for system theme changes when in system mode
+  useEffect(() => {
+    if (!mounted) return;
+    if (theme !== "system") return;
+
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyTheme("system");
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [theme, mounted]);
+
+  const handleThemeChange = useCallback((mode: ThemeMode) => {
+    setTheme(mode);
+    applyTheme(mode);
+    toast(`Theme set to ${mode === "system" ? "System" : mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+  }, []);
+
+  const handleFontSizeChange = useCallback((size: FontSize) => {
+    setFontSize(size);
+    applyFontSize(size);
+    toast(`Font size set to ${size}`);
+  }, []);
 
   const handleSavePreferences = () => {
     setSavedPreferenceNotice("Preferences saved successfully!");
@@ -50,6 +125,18 @@ export default function SettingsPage() {
     setConfirmPassword("");
     setTimeout(() => setPasswordNotice(""), 3000);
   };
+
+  const themeOptions: { key: ThemeMode; icon: typeof Sun; label: string }[] = [
+    { key: "light", icon: Sun, label: "Light" },
+    { key: "dark", icon: Moon, label: "Dark" },
+    { key: "system", icon: Monitor, label: "System" },
+  ];
+
+  const fontSizeOptions: { key: FontSize; label: string; desc: string }[] = [
+    { key: "small", label: "Small", desc: "14px — Compact" },
+    { key: "medium", label: "Medium", desc: "16px — Default" },
+    { key: "large", label: "Large", desc: "18px — Comfortable" },
+  ];
 
   return (
     <div className="max-w-4xl mx-auto w-full pb-16 px-6 text-[#37352F] select-none">
@@ -131,45 +218,61 @@ export default function SettingsPage() {
 
                 {/* Theme Selection Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
-                  {/* Light Theme Card - Active */}
-                  <div
-                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border-2 border-black bg-gray-50/70 shadow-2xs relative select-none cursor-pointer"
-                  >
-                    <Sun className="size-6 text-gray-900 stroke-[1.5] mb-2" />
-                    <span className="text-sm font-bold text-gray-900">Light</span>
-                  </div>
-
-                  {/* Dark Theme Card - Disabled with Coming Soon Badge */}
-                  <div
-                    onClick={() => toast("Dark theme unlocked in Pro version")}
-                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border border-gray-200 bg-white opacity-60 relative select-none cursor-pointer group hover:opacity-80 hover:border-gray-400 transition-all"
-                  >
-                    <div className="absolute top-2 right-2">
-                      <span className="notion-tag notion-tag-purple text-[10px] font-semibold py-0.5 px-1.5 rounded">
-                        Coming Soon
-                      </span>
-                    </div>
-                    <Moon className="size-6 text-gray-400 stroke-[1.5] mb-2" />
-                    <span className="text-sm font-medium text-gray-500">Dark</span>
-                  </div>
-
-                  {/* System Theme Card - Disabled with Coming Soon Badge */}
-                  <div
-                    onClick={() => toast("System theme unlocked in Pro version")}
-                    className="flex flex-col items-center justify-center h-32 p-4 rounded-xl border border-gray-200 bg-white opacity-60 relative select-none cursor-pointer group hover:opacity-80 hover:border-gray-400 transition-all"
-                  >
-                    <div className="absolute top-2 right-2">
-                      <span className="notion-tag notion-tag-purple text-[10px] font-semibold py-0.5 px-1.5 rounded">
-                        Coming Soon
-                      </span>
-                    </div>
-                    <Monitor className="size-6 text-gray-400 stroke-[1.5] mb-2" />
-                    <span className="text-sm font-medium text-gray-500">System</span>
-                  </div>
+                  {themeOptions.map((opt) => {
+                    const isActive = mounted && theme === opt.key;
+                    const Icon = opt.icon;
+                    return (
+                      <button
+                        key={opt.key}
+                        onClick={() => handleThemeChange(opt.key)}
+                        className={`flex flex-col items-center justify-center h-32 p-4 rounded-xl border-2 relative select-none cursor-pointer transition-all ${
+                          isActive
+                            ? "border-black bg-gray-50/70 shadow-2xs"
+                            : "border-gray-200 bg-white hover:border-gray-400 hover:bg-gray-50"
+                        }`}
+                      >
+                        {isActive && (
+                          <div className="absolute top-2 right-2">
+                            <Check className="size-4 text-black stroke-[2]" />
+                          </div>
+                        )}
+                        <Icon className={`size-6 stroke-[1.5] mb-2 ${isActive ? "text-gray-900" : "text-gray-400"}`} />
+                        <span className={`text-sm font-medium ${isActive ? "font-bold text-gray-900" : "text-gray-500"}`}>
+                          {opt.label}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Additional Appearance Settings */}
+              {/* Font Size Selector */}
+              <div className="pt-6 border-t border-gray-100 space-y-4">
+                <h3 className="text-sm font-bold text-gray-900">Font Size</h3>
+                <div className="grid sm:grid-cols-3 gap-3 max-w-lg">
+                  {fontSizeOptions.map((opt) => {
+                    const isActive = mounted && fontSize === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        onClick={() => handleFontSizeChange(opt.key)}
+                        className={`flex flex-col items-center justify-center p-3 rounded-lg border cursor-pointer transition-all text-left ${
+                          isActive
+                            ? "border-black bg-gray-50 shadow-2xs"
+                            : "border-gray-200 bg-white hover:border-gray-400"
+                        }`}
+                      >
+                        <span className={`text-xs font-semibold ${isActive ? "text-gray-900" : "text-gray-600"}`}>
+                          {opt.label}
+                        </span>
+                        <span className="text-[10px] text-gray-400 mt-0.5">{opt.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Code Editor Theme */}
               <div className="pt-6 border-t border-gray-100 space-y-4">
                 <h3 className="text-sm font-bold text-gray-900">Code Editor Theme</h3>
                 <div className="grid sm:grid-cols-2 gap-3 max-w-lg">
@@ -197,7 +300,7 @@ export default function SettingsPage() {
                   <div className="space-y-1.5">
                     <Label className="text-sm font-medium text-gray-700">Python Interpreter Version</Label>
                     <select className="w-full h-10 px-3 bg-[#F7F7F5] border border-gray-200 rounded-lg text-xs font-medium text-gray-900 outline-none focus:border-black cursor-pointer">
-                      <option value="3.12">Python 3.12 (Recommended & Stable)</option>
+                      <option value="3.12">Python 3.12 (Recommended &amp; Stable)</option>
                       <option value="3.11">Python 3.11</option>
                     </select>
                   </div>
@@ -253,7 +356,7 @@ export default function SettingsPage() {
                   <label className="flex items-start gap-3.5 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
                     <input type="checkbox" className="mt-0.5 size-4 rounded border-gray-300 text-black focus:ring-black accent-black" defaultChecked />
                     <div>
-                      <div className="text-sm font-bold text-gray-900">Course & Module Updates</div>
+                      <div className="text-sm font-bold text-gray-900">Course &amp; Module Updates</div>
                       <div className="text-xs text-gray-500 mt-0.5">Get notified when new interactive Python courses are added.</div>
                     </div>
                   </label>
@@ -261,7 +364,7 @@ export default function SettingsPage() {
                   <label className="flex items-start gap-3.5 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
                     <input type="checkbox" className="mt-0.5 size-4 rounded border-gray-300 text-black focus:ring-black accent-black" />
                     <div>
-                      <div className="text-sm font-bold text-gray-900">Community Mentions & Replies</div>
+                      <div className="text-sm font-bold text-gray-900">Community Mentions &amp; Replies</div>
                       <div className="text-xs text-gray-500 mt-0.5">Receive notifications when someone replies to your post or comment.</div>
                     </div>
                   </label>
@@ -286,7 +389,7 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-1">Security & Passkey</h2>
+                <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-1">Security &amp; Passkey</h2>
                 <p className="text-sm text-gray-500 mb-6">Update your credentials and active security sessions.</p>
 
                 <div className="space-y-4 max-w-md">
@@ -343,7 +446,7 @@ export default function SettingsPage() {
 
               {/* Passkey Integration Badge */}
               <div className="pt-6 border-t border-gray-100 space-y-4">
-                <h3 className="text-sm font-bold text-gray-900">Passkeys & Hardware Keys</h3>
+                <h3 className="text-sm font-bold text-gray-900">Passkeys &amp; Hardware Keys</h3>
                 <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 bg-white">
                   <div className="flex items-center gap-3">
                     <div className="size-9 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">

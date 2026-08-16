@@ -21,7 +21,8 @@ export default function MarketingLayout({
   return (
     <div className="flex flex-col min-h-screen bg-white text-[#37352F] font-sans antialiased">
       {/* Notion Top Navigation Bar */}
-      <header className="h-14 border-b border-[rgba(55,53,47,0.09)] flex items-center justify-between px-6 sticky top-0 bg-white/95 backdrop-blur-md z-50 w-full max-w-7xl mx-auto">
+      <header className="h-14 border-b border-[rgba(55,53,47,0.09)] sticky top-0 bg-white/95 backdrop-blur-md z-50 w-full">
+        <div className="flex items-center justify-between px-6 h-full max-w-7xl mx-auto">
         <div className="flex items-center gap-8">
           <Link href="/">
             <Logo />
@@ -77,6 +78,7 @@ export default function MarketingLayout({
             </Link>
           </Button>
         </nav>
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col">{children}</main>

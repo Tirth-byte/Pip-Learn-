@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Globe, Building2 } from "lucide-react";
+import { Globe, Building2, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAppContext } from "@/context/app-context";
 
@@ -20,20 +20,68 @@ function PipLearnLogoMark({ className = "size-12" }: { className?: string }) {
   );
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface FieldErrors {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
 export default function SignupPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const { login } = useAppContext();
   const router = useRouter();
 
-  const handleSignup = (e: React.FormEvent) => {
+  const validateField = useCallback((field: string, value: string): string | undefined => {
+    switch (field) {
+      case "name":
+        if (value.trim().length < 2) return "Name must be at least 2 characters";
+        return undefined;
+      case "email":
+        if (!EMAIL_REGEX.test(value)) return "Please enter a valid email address";
+        return undefined;
+      case "password":
+        if (value.length < 8) return "Password must be at least 8 characters";
+        return undefined;
+      default:
+        return undefined;
+    }
+  }, []);
+
+  const handleBlur = useCallback((field: string, value: string) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const error = validateField(field, value);
+    setErrors(prev => ({ ...prev, [field]: error }));
+  }, [validateField]);
+
+  const isFormValid = 
+    name.trim().length >= 2 && 
+    EMAIL_REGEX.test(email) && 
+    password.length >= 8;
+
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(email || undefined);
+    if (!isFormValid || isLoading) return;
+
+    setIsLoading(true);
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    login({ name, email });
     toast("Account created! Setting up your workspace...");
     router.push("/onboarding");
   };
 
   const handleOAuth = (provider: string) => {
     toast(`Connecting to ${provider}...`);
+    login({ name: `${provider} User`, email: `user@${provider.toLowerCase()}.com` });
+    router.push("/onboarding");
   };
 
   const handleLegal = (label: string) => {
@@ -42,6 +90,10 @@ export default function SignupPage() {
       toast(`${label} — coming soon`);
     };
   };
+
+  const inputBaseClass = "w-full h-11 px-3.5 rounded-lg border text-sm font-medium text-black placeholder:text-[rgba(55,53,47,0.35)] outline-none focus:ring-4 transition-all bg-white";
+  const inputNormalClass = `${inputBaseClass} border-[rgba(55,53,47,0.16)] focus:border-[#0066FF] focus:ring-[#0066FF]/15`;
+  const inputErrorClass = `${inputBaseClass} border-red-400 focus:border-red-500 focus:ring-red-500/15`;
 
   return (
     <div className="min-h-screen bg-[#F7F7F5] flex flex-col items-center justify-center p-4 sm:p-6 text-[#37352F] select-none">
@@ -64,30 +116,85 @@ export default function SignupPage() {
         {/* Form Input Section */}
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="text-left space-y-1.5">
-            <label htmlFor="email" className="text-xs font-semibold text-[rgba(55,53,47,0.7)] block">
+            <label htmlFor="signup-name" className="text-xs font-semibold text-[rgba(55,53,47,0.7)] block">
+              Full Name
+            </label>
+            <input
+              id="signup-name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={() => handleBlur("name", name)}
+              placeholder="e.g. Alex Mercer"
+              required
+              className={touched.name && errors.name ? inputErrorClass : inputNormalClass}
+            />
+            {touched.name && errors.name && (
+              <p className="text-[11px] text-red-500 font-medium mt-0.5">{errors.name}</p>
+            )}
+          </div>
+
+          <div className="text-left space-y-1.5">
+            <label htmlFor="signup-email" className="text-xs font-semibold text-[rgba(55,53,47,0.7)] block">
               Work email
             </label>
             <input
-              id="email"
+              id="signup-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => handleBlur("email", email)}
               placeholder="name@company.com"
               required
-              className="w-full h-11 px-3.5 rounded-lg border-2 border-[#0066FF] text-sm font-medium text-black placeholder:text-[rgba(55,53,47,0.35)] outline-none focus:ring-4 focus:ring-[#0066FF]/15 transition-all bg-white"
+              className={touched.email && errors.email ? inputErrorClass : inputNormalClass}
             />
+            {touched.email && errors.email && (
+              <p className="text-[11px] text-red-500 font-medium mt-0.5">{errors.email}</p>
+            )}
           </div>
 
-          {/* Notion Gray Tip Box */}
-          <div className="bg-[#EFEFEF] rounded-lg p-3.5 text-xs text-[#37352F] text-left leading-relaxed">
-            <span className="font-bold">Tip: Use your work email</span> (if you have one) so it's easier for your team to join you on PipLearn
+          <div className="text-left space-y-1.5">
+            <label htmlFor="signup-password" className="text-xs font-semibold text-[rgba(55,53,47,0.7)] block">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="signup-password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => handleBlur("password", password)}
+                placeholder="Create a password (min. 8 characters)"
+                required
+                className={`${touched.password && errors.password ? inputErrorClass : inputNormalClass} pr-10`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgba(55,53,47,0.4)] hover:text-[#37352F] transition-colors cursor-pointer"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
+            {touched.password && errors.password && (
+              <p className="text-[11px] text-red-500 font-medium mt-0.5">{errors.password}</p>
+            )}
           </div>
 
           <button
             type="submit"
-            className="w-full h-11 bg-[#0066FF] hover:bg-[#0052CC] text-white font-semibold text-sm rounded-lg flex items-center justify-center transition-colors shadow-xs mt-2 cursor-pointer"
+            disabled={!isFormValid || isLoading}
+            className="w-full h-11 bg-[#0066FF] hover:bg-[#0052CC] disabled:bg-[#0066FF]/50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-lg flex items-center justify-center gap-2 transition-colors shadow-xs mt-2 cursor-pointer"
           >
-            Continue
+            {isLoading ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                <span>Creating account…</span>
+              </>
+            ) : (
+              <span>Continue</span>
+            )}
           </button>
         </form>
 
@@ -182,3 +289,4 @@ export default function SignupPage() {
     </div>
   );
 }
+

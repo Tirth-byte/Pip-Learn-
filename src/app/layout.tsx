@@ -11,9 +11,37 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PipLearn - Learn Python",
-  description: "A minimal, focused platform to learn programming.",
+  metadataBase: new URL("https://piplearn.dev"),
+  title: {
+    default: "PipLearn — Learn Python Interactively",
+    template: "%s | PipLearn",
+  },
+  description:
+    "PipLearn is a modern, interactive Python learning platform with a built-in code sandbox, AI mentor, practice problems, and community — all in a Notion-inspired workspace.",
+  openGraph: {
+    title: "PipLearn — Learn Python Interactively",
+    description:
+      "Master Python with an AI-powered learning workspace. Code sandbox, guided courses, practice problems, and a vibrant community.",
+    siteName: "PipLearn",
+    type: "website",
+    locale: "en_US",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
+
+// Inline script to restore theme from localStorage before paint to prevent light flash (FOIT)
+const themeRestoreScript = `
+(function(){
+  try {
+    var t = localStorage.getItem('piplearn_theme');
+    var d = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (d) document.documentElement.classList.add('dark');
+  } catch(e){}
+})();
+`;
 
 export default function RootLayout({
   children,
@@ -24,17 +52,19 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} font-sans h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-neutral-200 selection:text-black">
+        <script dangerouslySetInnerHTML={{ __html: themeRestoreScript }} />
         <AppContextProvider>
           <TooltipProvider>{children}</TooltipProvider>
           <Toaster
             position="bottom-right"
             toastOptions={{
               style: {
-                background: "#fff",
-                border: "1px solid rgba(55,53,47,0.12)",
-                color: "#37352F",
+                background: "var(--background)",
+                border: "1px solid var(--border)",
+                color: "var(--foreground)",
                 fontSize: "13px",
                 fontFamily: "var(--font-sans)",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
@@ -47,3 +77,4 @@ export default function RootLayout({
     </html>
   );
 }
+

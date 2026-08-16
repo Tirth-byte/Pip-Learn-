@@ -25,23 +25,23 @@ export interface AppState {
 }
 
 export const initialSeedData: AppState = {
-  isAuthenticated: true,
+  isAuthenticated: false,
   user: {
-    name: "Tirth Patel",
-    firstName: "Tirth",
-    lastName: "Patel",
-    email: "tirth@piplearn.ai",
-    avatarIndex: 0, // Girl Avatar (Blue Ring) / Pencil Boy
+    name: "Learner",
+    firstName: "Learner",
+    lastName: "",
+    email: "",
+    avatarIndex: 0,
     bio: "Passionate learner building projects in Python, AI, and Next.js.",
-    website: "https://tirthpatel.dev",
-    github: "github.com/tirthpatel",
-    role: "Full-Stack Developer",
+    website: "",
+    github: "",
+    role: "Python Learner",
   },
   progress: {
-    streak: 12,
-    xp: 2450,
-    currentTarget: "Python Control Flow",
-    solvedProblemIds: ["1", "5"],
-    completedModuleIds: ["1", "2"],
+    streak: 1,
+    xp: 0,
+    currentTarget: "Python Basics",
+    solvedProblemIds: [],
+    completedModuleIds: [],
   },
 };

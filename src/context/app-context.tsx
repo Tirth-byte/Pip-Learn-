@@ -6,11 +6,11 @@ import { AppState, UserProfile, UserProgress, initialSeedData } from "@/lib/seed
 const STORAGE_KEY = "piplearn_state_v1";
 
 interface AppContextType extends AppState {
-  login: (email?: string) => void;
+  login: (userInfo?: { name?: string; email?: string } | string) => void;
   logout: () => void;
   updateProfile: (updates: Partial<UserProfile>) => void;
   updateProgress: (xpAdd: number, streakUpdate?: number) => void;
-  completeProblem: (problemId: string, xpEarned: number) => void;
+  completeProblem: (problemId: string, xpEarned?: number) => void;
 }
 
 // --- External store backed by localStorage ---------------------------------
@@ -75,13 +75,36 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
   const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const login = useCallback((email?: string) => {
+  const login = useCallback((userInfo?: { name?: string; email?: string } | string) => {
+    let nameInput = "";
+    let emailInput = "";
+
+    if (typeof userInfo === "string") {
+      emailInput = userInfo;
+    } else if (userInfo) {
+      nameInput = userInfo.name || "";
+      emailInput = userInfo.email || "";
+    }
+
+    const rawEmail = emailInput.trim() || currentState.user.email || "learner@piplearn.ai";
+    const rawName = nameInput.trim() || (rawEmail.includes("@") ? rawEmail.split("@")[0] : "Learner");
+
+    const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+    const nameParts = formattedName.split(" ");
+    const firstName = nameParts[0] || "Learner";
+    const lastName = nameParts.slice(1).join(" ") || "";
+    const fullName = formattedName;
+
     setStateAndPersist({
       ...currentState,
       isAuthenticated: true,
       user: {
         ...currentState.user,
-        email: email || currentState.user.email,
+        name: fullName,
+        firstName: firstName,
+        lastName: lastName,
+        email: rawEmail,
+        github: `github.com/${firstName.toLowerCase()}`,
       },
     });
   }, []);

@@ -4,6 +4,8 @@ import { use, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Check, Code2, HelpCircle, Sparkles } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
+import { toast } from "sonner";
 
 type LessonContent = {
   title: string;
@@ -62,7 +64,18 @@ const lessonDetailsMap: Record<string, LessonContent> = {
 
 export default function LessonPage({ params }: { params: Promise<{ module: string; lesson: string }> }) {
   const { module, lesson } = use(params);
+  const { updateProgress } = useAppContext();
   const [isCompleted, setIsCompleted] = useState(false);
+
+  const handleToggleComplete = () => {
+    if (!isCompleted) {
+      setIsCompleted(true);
+      updateProgress(50);
+      toast.success("Lesson completed! +50 XP earned 🎉");
+    } else {
+      setIsCompleted(false);
+    }
+  };
 
   const detailKey = `${module}-${lesson}`;
   const lessonData = lessonDetailsMap[detailKey] || {
@@ -126,7 +139,7 @@ export default function LessonPage({ params }: { params: Promise<{ module: strin
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-neutral-100 mt-12">
         <Button
           variant={isCompleted ? "outline" : "default"}
-          onClick={() => setIsCompleted(!isCompleted)}
+          onClick={handleToggleComplete}
           className={`w-full sm:w-auto h-9 px-4 shadow-none rounded-md text-sm font-medium ${
             isCompleted ? "border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100" : "bg-black text-white hover:bg-neutral-800"
           }`}

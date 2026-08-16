@@ -1,8 +1,13 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Code2, Globe } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
 
 export default function PortfolioPage() {
+  const { user } = useAppContext();
+
   const completedProjects = [
     {
       id: "personal-blog",
@@ -24,11 +29,11 @@ export default function PortfolioPage() {
     <div className="space-y-8 animate-in fade-in duration-300 max-w-5xl mx-auto pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 border-b border-neutral-100 pb-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-1">John's Portfolio</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-1">{user.firstName}&apos;s Portfolio</h1>
           <p className="text-neutral-500 text-sm">Passionate learner building projects in Python and Next.js</p>
           <div className="flex items-center gap-2 mt-4 text-[13px] font-medium text-neutral-500 w-fit">
             <Globe className="size-4 text-neutral-400" />
-            <span className="hover:text-neutral-900 transition-colors cursor-pointer border-b border-transparent hover:border-neutral-900">github.com/johndoe</span>
+            <span className="hover:text-neutral-900 transition-colors cursor-pointer border-b border-transparent hover:border-neutral-900">{user.github || "github.com/johndoe"}</span>
           </div>
         </div>
         <Button variant="outline" className="shadow-none border-neutral-200 h-8 px-3 hover:bg-neutral-100 text-xs font-medium rounded text-neutral-700">

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import { X, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
 
 type Question = {
   id: number;
@@ -39,6 +40,7 @@ const quizQuestions: Question[] = [
 ];
 
 export default function QuizPage() {
+  const { updateProgress, progress } = useAppContext();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isChecked, setIsChecked] = useState(false);
@@ -68,6 +70,7 @@ export default function QuizPage() {
       setIsChecked(false);
     } else {
       setIsFinished(true);
+      updateProgress(50);
     }
   };
 
@@ -85,7 +88,7 @@ export default function QuizPage() {
         <div className="bg-[#F7F7F5] border border-neutral-200 p-4 rounded-md w-full mb-8 space-y-2 text-left">
           <div className="text-xs font-semibold text-neutral-500 uppercase">Rewards</div>
           <div className="text-sm font-semibold text-neutral-900">+50 XP Earned</div>
-          <div className="text-xs text-neutral-500">Streak updated to 15 days</div>
+          <div className="text-xs text-neutral-500">Streak active: {progress.streak} days</div>
         </div>
 
         <div className="flex gap-3 w-full">
