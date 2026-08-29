@@ -1,8 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { Check, ArrowRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Check, ArrowRight, ArrowLeft, Sparkles, GraduationCap } from "lucide-react";
+import { useAppContext } from "@/context/app-context";
+import { InstitutionSelector } from "@/components/institutions/institution-selector";
+import { Institution } from "@/lib/institutions";
+import { toast } from "sonner";
 
 function PipLearnLogoMark({ className = "size-7" }: { className?: string }) {
   return (
@@ -71,8 +76,24 @@ interface GoalOption {
   avatar: React.ElementType;
 }
 
-export default function OnboardingPage() {
+interface ExperienceOption {
+  id: string;
+  title: string;
+  subtitle: string;
+  level: string;
+}
+
+function OnboardingContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, setInstitution, updateProfile } = useAppContext();
+
+  const stepParam = searchParams.get("step");
+  const parsedStep = stepParam ? parseInt(stepParam, 10) : 1;
+  const [step, setStep] = useState<number>(parsedStep >= 1 && parsedStep <= 3 ? parsedStep : 1);
   const [selectedGoal, setSelectedGoal] = useState<string>("scratch");
+  const [selectedInstitution, setSelectedInstitution] = useState<Institution | null>(null);
+  const [selectedExperience, setSelectedExperience] = useState<string>("beginner");
 
   const goals: GoalOption[] = [
     {
@@ -95,96 +116,301 @@ export default function OnboardingPage() {
     },
   ];
 
+  const experienceLevels: ExperienceOption[] = [
+    {
+      id: "beginner",
+      title: "Beginner",
+      subtitle: "Brand new to Python syntax, variables, and control flow.",
+      level: "Starts at Module 1",
+    },
+    {
+      id: "intermediate",
+      title: "Intermediate",
+      subtitle: "Comfortable with functions, lists, dictionaries, and OOP.",
+      level: "Starts at Module 4",
+    },
+    {
+      id: "advanced",
+      title: "Advanced",
+      subtitle: "Experienced developer diving into AsyncIO, testing, and AI agents.",
+      level: "Starts at Module 10",
+    },
+  ];
+
+  const handleNext = () => {
+    if (step === 1) {
+      setStep(2);
+    } else if (step === 2) {
+      setStep(3);
+    } else if (step === 3) {
+      handleComplete();
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  const handleInstitutionSelect = (institution: Institution | null) => {
+    setSelectedInstitution(institution);
+    setInstitution(institution ? institution.id : null);
+  };
+
+  const handleComplete = () => {
+    const roleMapping: Record<string, string> = {
+      beginner: "Python Learner",
+      intermediate: "Intermediate Developer",
+      advanced: "Senior Pythonista",
+    };
+
+    updateProfile({
+      role: roleMapping[selectedExperience] || "Python Learner",
+      institutionId: selectedInstitution ? selectedInstitution.id : user.institutionId || null,
+    });
+
+    toast.success("Workspace customized successfully!");
+    router.push("/dashboard");
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F7F5] font-sans text-[#37352F] select-none">
+    <div className="min-h-screen flex flex-col bg-[#F7F7F5] dark:bg-[#191919] font-sans text-[#37352F] dark:text-[rgba(255,255,255,0.85)] select-none transition-colors">
       {/* Top Header Bar */}
-      <header className="h-14 border-b border-[rgba(55,53,47,0.1)] bg-white flex items-center justify-between px-6 sm:px-10">
+      <header className="h-14 border-b border-[rgba(55,53,47,0.1)] dark:border-[rgba(255,255,255,0.1)] bg-white dark:bg-[#202020] flex items-center justify-between px-6 sm:px-10">
         <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
           <PipLearnLogoMark className="size-7" />
-          <span className="font-extrabold text-base tracking-tight text-black">PipLearn</span>
+          <span className="font-extrabold text-base tracking-tight text-black dark:text-white">PipLearn</span>
         </Link>
-        <span className="text-xs font-mono font-semibold text-[rgba(55,53,47,0.45)]">
-          Step 1 of 3
-        </span>
+        <div className="flex items-center gap-3">
+          {step > 1 && (
+            <button
+              type="button"
+              onClick={handleBack}
+              className="text-xs font-semibold text-gray-500 hover:text-black dark:hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="size-3.5" />
+              <span>Back</span>
+            </button>
+          )}
+          <span className="text-xs font-mono font-semibold text-[rgba(55,53,47,0.45)] dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
+            Step {step} of 3
+          </span>
+        </div>
       </header>
 
       {/* Main Content Area */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-xl bg-white rounded-2xl p-8 sm:p-10 border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] my-6">
+        <div className="w-full max-w-xl bg-white dark:bg-[#202020] rounded-2xl p-6 sm:p-10 border border-gray-200 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] my-6">
           
-          {/* Title & Subtitle Header */}
-          <div className="text-left mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-1.5">
-              What is your primary goal?
-            </h1>
-            <p className="text-sm text-gray-500">
-              We'll tailor your interactive experience based on your selection.
-            </p>
-          </div>
+          {/* STEP 1: GOAL */}
+          {step === 1 && (
+            <div className="animate-in fade-in duration-200">
+              <div className="text-left mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-1.5">
+                  What is your primary goal?
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  We'll tailor your interactive experience based on your selection.
+                </p>
+              </div>
 
-          {/* Selectable Custom Option Cards with Notion Circular Avatars */}
-          <div className="space-y-3.5">
-            {goals.map((goal) => {
-              const AvatarComponent = goal.avatar;
-              const isSelected = selectedGoal === goal.id;
+              {/* Selectable Goal Cards */}
+              <div className="space-y-3.5">
+                {goals.map((goal) => {
+                  const AvatarComponent = goal.avatar;
+                  const isSelected = selectedGoal === goal.id;
 
-              return (
-                <div
-                  key={goal.id}
-                  onClick={() => setSelectedGoal(goal.id)}
-                  className={`flex items-center gap-4 p-4 sm:p-4.5 rounded-xl cursor-pointer transition-all duration-200 ease-out select-none ${
-                    isSelected
-                      ? "bg-gray-50/70 border-2 border-black shadow-xs"
-                      : "bg-white border border-gray-200 hover:bg-gray-50/60 hover:border-gray-300"
-                  }`}
+                  return (
+                    <div
+                      key={goal.id}
+                      onClick={() => setSelectedGoal(goal.id)}
+                      className={`flex items-center gap-4 p-4 sm:p-4.5 rounded-xl cursor-pointer transition-all duration-200 ease-out select-none ${
+                        isSelected
+                          ? "bg-gray-50/80 dark:bg-gray-800/80 border-2 border-black dark:border-white shadow-xs"
+                          : "bg-white dark:bg-[#252525] border border-gray-200 dark:border-gray-700 hover:bg-gray-50/60 dark:hover:bg-gray-800/50 hover:border-gray-300"
+                      }`}
+                    >
+                      <AvatarComponent className="size-11 sm:size-12" />
+
+                      <div className="flex-1 text-left">
+                        <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white leading-snug">
+                          {goal.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-normal">
+                          {goal.subtitle}
+                        </p>
+                      </div>
+
+                      <div
+                        className={`size-5 sm:size-5.5 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                          isSelected
+                            ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black"
+                            : "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-transparent"
+                        }`}
+                      >
+                        {isSelected && <Check className="size-3.5 stroke-[3]" />}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Footer Actions */}
+              <div className="flex justify-between items-center pt-6 mt-8 border-t border-gray-100 dark:border-gray-800">
+                <button
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="text-sm font-medium text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
                 >
-                  {/* Notion Circular Avatar Badge */}
-                  <AvatarComponent className="size-11 sm:size-12" />
+                  Skip for now
+                </button>
 
-                  {/* Middle Text Content */}
-                  <div className="flex-1 text-left">
-                    <h3 className="font-semibold text-sm sm:text-base text-gray-900 leading-snug">
-                      {goal.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5 leading-normal">
-                      {goal.subtitle}
-                    </p>
-                  </div>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-black rounded-lg px-6 h-11 text-sm font-semibold transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
+                >
+                  <span>Continue</span>
+                  <ArrowRight className="size-4" />
+                </button>
+              </div>
+            </div>
+          )}
 
-                  {/* Custom Right-Side Checkmark Circle */}
-                  <div
-                    className={`size-5 sm:size-5.5 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                      isSelected
-                        ? "bg-black border-2 border-black text-white"
-                        : "border-2 border-gray-300 bg-white"
-                    }`}
-                  >
-                    {isSelected && <Check className="size-3.5 stroke-[3]" />}
-                  </div>
+          {/* STEP 2: INSTITUTION */}
+          {step === 2 && (
+            <div className="animate-in fade-in duration-200">
+              <div className="text-left mb-6">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-3">
+                  <GraduationCap className="size-3.5" />
+                  <span>Campus &amp; Social Scope</span>
                 </div>
-              );
-            })}
-          </div>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-1.5">
+                  Where do you study?
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                  Your institution helps personalize your community and lets you compare progress with learners around you.
+                </p>
+              </div>
 
-          {/* Footer Actions */}
-          <div className="flex justify-between items-center pt-6 mt-8 border-t border-gray-100">
-            <Link
-              href="/dashboard"
-              className="text-sm font-medium text-gray-400 hover:text-gray-900 transition-colors"
-            >
-              Skip for now
-            </Link>
+              {/* Shared Searchable Institution Selector */}
+              <InstitutionSelector
+                selectedInstitutionId={selectedInstitution ? selectedInstitution.id : user.institutionId}
+                onSelect={handleInstitutionSelect}
+                onSkip={() => setStep(3)}
+                showIndependentOption={true}
+                showSkipOption={false}
+                embedded={true}
+              />
 
-            <Link
-              href="/dashboard"
-              className="bg-black hover:bg-gray-800 text-white rounded-lg px-6 h-11 text-sm font-semibold transition-colors flex items-center gap-2 shadow-xs"
-            >
-              <span>Continue</span>
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
+              {/* Footer Actions */}
+              <div className="flex justify-between items-center pt-6 mt-6 border-t border-gray-100 dark:border-gray-800">
+                <button
+                  type="button"
+                  onClick={() => setStep(3)}
+                  className="text-sm font-medium text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  Skip for now
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-black rounded-lg px-6 h-11 text-sm font-semibold transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
+                >
+                  <span>Continue</span>
+                  <ArrowRight className="size-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: EXPERIENCE LEVEL */}
+          {step === 3 && (
+            <div className="animate-in fade-in duration-200">
+              <div className="text-left mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-1.5">
+                  What is your Python experience?
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  We'll start you at the right difficulty level and customize your curriculum path.
+                </p>
+              </div>
+
+              <div className="space-y-3.5">
+                {experienceLevels.map((exp) => {
+                  const isSelected = selectedExperience === exp.id;
+
+                  return (
+                    <div
+                      key={exp.id}
+                      onClick={() => setSelectedExperience(exp.id)}
+                      className={`flex items-center justify-between p-4 sm:p-4.5 rounded-xl cursor-pointer transition-all duration-200 ease-out select-none ${
+                        isSelected
+                          ? "bg-gray-50/80 dark:bg-gray-800/80 border-2 border-black dark:border-white shadow-xs"
+                          : "bg-white dark:bg-[#252525] border border-gray-200 dark:border-gray-700 hover:bg-gray-50/60 dark:hover:bg-gray-800/50 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="text-left">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white leading-snug">
+                            {exp.title}
+                          </h3>
+                          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                            {exp.level}
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 leading-normal">
+                          {exp.subtitle}
+                        </p>
+                      </div>
+
+                      <div
+                        className={`size-5 sm:size-5.5 rounded-full flex items-center justify-center shrink-0 transition-all ml-3 ${
+                          isSelected
+                            ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black"
+                            : "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-transparent"
+                        }`}
+                      >
+                        {isSelected && <Check className="size-3.5 stroke-[3]" />}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Footer Actions */}
+              <div className="flex justify-between items-center pt-6 mt-8 border-t border-gray-100 dark:border-gray-800">
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="text-sm font-medium text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleComplete}
+                  className="bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-black rounded-lg px-6 h-11 text-sm font-semibold transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
+                >
+                  <span>Launch Workspace</span>
+                  <Sparkles className="size-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F7F5] dark:bg-[#191919]" />}>
+      <OnboardingContent />
+    </Suspense>
   );
 }

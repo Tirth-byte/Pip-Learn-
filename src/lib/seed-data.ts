@@ -8,6 +8,7 @@ export interface UserProfile {
   website: string;
   github: string;
   role: string;
+  institutionId: string | null;
 }
 
 export interface UserProgress {
@@ -36,12 +37,14 @@ export const initialSeedData: AppState = {
     website: "",
     github: "",
     role: "Python Learner",
+    institutionId: "stanford",
   },
   progress: {
     streak: 1,
     xp: 0,
-    currentTarget: "Python Basics",
+    currentTarget: "Start Learning",
     solvedProblemIds: [],
     completedModuleIds: [],
   },
 };
+

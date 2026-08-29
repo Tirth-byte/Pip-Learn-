@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useCallback, useSyncExternalStore } from "react";
-import { AppState, UserProfile, UserProgress, initialSeedData } from "@/lib/seed-data";
+import { AppState, UserProfile, initialSeedData } from "@/lib/seed-data";
 
 const STORAGE_KEY = "piplearn_state_v1";
 
@@ -9,6 +9,7 @@ interface AppContextType extends AppState {
   login: (userInfo?: { name?: string; email?: string } | string) => void;
   logout: () => void;
   updateProfile: (updates: Partial<UserProfile>) => void;
+  setInstitution: (institutionId: string | null) => void;
   updateProgress: (xpAdd: number, streakUpdate?: number) => void;
   completeProblem: (problemId: string, xpEarned?: number) => void;
 }
@@ -131,6 +132,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     });
   }, []);
 
+  const setInstitution = useCallback((institutionId: string | null) => {
+    setStateAndPersist({
+      ...currentState,
+      user: {
+        ...currentState.user,
+        institutionId: institutionId,
+      },
+    });
+  }, []);
+
   const updateProgress = useCallback((xpAdd: number, streakUpdate?: number) => {
     setStateAndPersist({
       ...currentState,
@@ -162,6 +173,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         login,
         logout,
         updateProfile,
+        setInstitution,
         updateProgress,
         completeProblem,
       }}

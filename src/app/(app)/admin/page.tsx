@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, BookOpen, Activity, ArrowUpRight, Search } from "lucide-react";
+import { toast } from "sonner";
 
 const initialUsers = [
   { id: 1, name: "Alice Cooper", email: "alice@example.com", role: "Student", joined: "Aug 1, 2026" },
@@ -143,7 +144,9 @@ export default function AdminDashboardPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          setUsers(users.map(u => u.id === user.id ? { ...u, role: u.role === 'Student' ? 'Instructor' : 'Student' } : u));
+                          const nextRole = user.role === 'Student' ? 'Instructor' : 'Student';
+                          setUsers(users.map(u => u.id === user.id ? { ...u, role: nextRole } : u));
+                          toast.success(`Role updated: ${user.name} is now ${nextRole}`);
                         }}
                         className="h-7 px-2.5 text-xs border-neutral-200 hover:bg-neutral-100 rounded text-neutral-700"
                       >

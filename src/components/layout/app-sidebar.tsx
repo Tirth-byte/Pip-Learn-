@@ -14,18 +14,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
-  ChevronDown,
-  Search,
-  Sparkles,
-  Plus,
-  LayoutDashboard,
-  Bot,
-  Terminal,
+  Home,
   BookOpen,
   Target,
   Folder,
   FolderOpen,
   Trophy,
+  TrendingUp,
   MessageSquare,
   User,
   Settings,
@@ -34,8 +29,8 @@ import {
   LucideIcon
 } from "lucide-react";
 import { useAppContext } from "@/context/app-context";
+import { getInstitutionById } from "@/lib/institutions";
 import { NotionAvatar } from "@/components/ui/notion-avatar";
-import { toast } from "sonner";
 
 function PipLearnLogoMark({ className = "size-5" }: { className?: string }) {
   return (
@@ -54,96 +49,76 @@ interface NavItem {
   activeIcon?: LucideIcon;
 }
 
-const favoritesNav: NavItem[] = [
-  { title: "Python Sandbox", url: "/sandbox", icon: Terminal },
-  { title: "AI Mentor", url: "/ai-mentor", icon: Bot },
+const learnNav: NavItem[] = [
+  { title: "Home", url: "/dashboard", icon: Home },
+  { title: "Courses", url: "/courses", icon: BookOpen },
+  { title: "Practice", url: "/practice", icon: Target },
+  { title: "Projects", url: "/projects", icon: Folder, activeIcon: FolderOpen },
 ];
 
-const mainWorkspaceNav: NavItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Course Library", url: "/courses", icon: BookOpen },
-  { title: "Practice Problems", url: "/practice", icon: Target },
-  { title: "Projects", url: "/projects", icon: Folder, activeIcon: FolderOpen },
+const progressNav: NavItem[] = [
+  { title: "Progress", url: "/portfolio", icon: TrendingUp },
   { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
+];
+
+const communityNav: NavItem[] = [
   { title: "Community", url: "/community", icon: MessageSquare },
 ];
 
-const accountNav: NavItem[] = [
+const personalNav: NavItem[] = [
   { title: "Profile", url: "/profile", icon: User },
-  { title: "Settings & Members", url: "/settings", icon: Settings },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
   const pathname = usePathname();
   const { user, progress } = useAppContext();
+  const userInstitution = getInstitutionById(user.institutionId);
 
   return (
-    <Sidebar className="border-r border-[rgba(55,53,47,0.09)] dark:border-[rgba(255,255,255,0.09)] bg-[#FBFBFA] dark:bg-[#202020] text-[#37352F] dark:text-[rgba(255,255,255,0.81)] text-sm select-none transition-colors">
-      {/* Workspace Switcher Header with Official PipLearn Stacked Layers Logo */}
-      <div className="p-2 border-b border-[rgba(55,53,47,0.06)] dark:border-[rgba(255,255,255,0.06)]">
+    <Sidebar className="border-r border-neutral-200/80 dark:border-neutral-800 bg-[#FBFBFA] dark:bg-[#1A1A1A] text-[#37352F] dark:text-[rgba(255,255,255,0.85)] text-sm select-none transition-colors">
+      {/* Brand Header */}
+      <div className="p-3 border-b border-neutral-100 dark:border-neutral-800/80">
         <Link 
           href="/dashboard"
-          className="flex items-center justify-between p-1.5 rounded-md hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer group"
+          className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group"
         >
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <PipLearnLogoMark className="size-5.5 shrink-0" />
-            <div className="truncate font-bold text-xs tracking-tight text-[#37352F] dark:text-white">
-              PipLearn Workspace
-            </div>
+          <PipLearnLogoMark className="size-6 shrink-0" />
+          <div className="flex flex-col overflow-hidden">
+            <span className="font-extrabold text-sm tracking-tight text-neutral-900 dark:text-white leading-tight">
+              pip learn
+            </span>
+            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">
+              Python Platform
+            </span>
           </div>
-          <ChevronDown className="size-3.5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-white shrink-0 stroke-[1.5]" />
         </Link>
-
-        {/* Quick Search & AI Actions */}
-        <div className="mt-1 space-y-0.5">
-          <button
-            onClick={() => toast("Opening quick search... Press ⌘K to search anything")}
-            className="w-full flex items-center justify-between p-1.5 rounded-md text-xs text-gray-600 dark:text-gray-400 hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer group"
-          >
-            <div className="flex items-center gap-3">
-              <Search className="size-4 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-white shrink-0 stroke-[1.5]" />
-              <span>Search</span>
-            </div>
-            <span className="text-[10px] text-gray-400 font-mono bg-[rgba(55,53,47,0.06)] dark:bg-[rgba(255,255,255,0.06)] px-1 rounded">⌘K</span>
-          </button>
-
-          <Link
-            href="/ai-mentor"
-            className="w-full flex items-center justify-between p-1.5 rounded-md text-xs text-[#37352F] dark:text-white font-medium bg-[#F0EBF9]/80 dark:bg-[#2D1F4E]/60 hover:bg-[#E8DEEE] dark:hover:bg-[#3D2A6E]/60 transition-colors cursor-pointer group"
-          >
-            <div className="flex items-center gap-3 text-[#4D2875] dark:text-[#C4A0E8]">
-              <Sparkles className="size-4 text-[#8846C7] dark:text-[#B87FE8] shrink-0 stroke-[1.5]" />
-              <span>Ask Pip AI</span>
-            </div>
-            <span className="text-[10px] bg-[#8846C7] text-white px-1.5 rounded font-semibold">AI</span>
-          </Link>
-        </div>
       </div>
 
-      <SidebarContent className="px-1.5 py-2">
-        {/* Favorites Group */}
-        <SidebarGroup className="py-1">
-          <SidebarGroupLabel className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-2 h-6 flex items-center justify-between">
-            <span>Favorites</span>
+      <SidebarContent className="px-2 py-3 space-y-4">
+        {/* 1. LEARN GROUP */}
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider px-2.5 h-6 flex items-center">
+            Learn
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {favoritesNav.map((item) => {
-                const isActive = pathname === item.url || pathname.startsWith(item.url + "/");
+              {learnNav.map((item) => {
+                const isActive = pathname === item.url || (item.url !== "/dashboard" && pathname.startsWith(item.url + "/"));
                 const IconComponent = isActive && item.activeIcon ? item.activeIcon : item.icon;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       isActive={isActive}
-                      className={`h-8 rounded-md px-2 text-[13px] transition-colors ${
+                      className={`h-8.5 rounded-lg px-2.5 text-[13px] font-medium transition-all ${
                         isActive 
-                          ? 'font-semibold text-gray-900 dark:text-white bg-[rgba(55,53,47,0.08)] dark:bg-[rgba(255,255,255,0.08)]' 
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-[rgba(55,53,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)]'
+                          ? 'font-semibold text-neutral-900 dark:text-white bg-neutral-200/60 dark:bg-neutral-800 shadow-2xs' 
+                          : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60'
                       }`}
                       render={
-                        <Link href={item.url} className="flex items-center gap-3 w-full">
-                          <IconComponent className={`size-4 shrink-0 stroke-[1.5] transition-colors ${
-                            isActive ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-white"
+                        <Link href={item.url} className="flex items-center gap-2.5 w-full">
+                          <IconComponent className={`size-4 shrink-0 stroke-[1.75] transition-colors ${
+                            isActive ? "text-[#0066FF] dark:text-[#3B82F6]" : "text-neutral-400 dark:text-neutral-500"
                           }`} />
                           <span className="truncate">{item.title}</span>
                         </Link>
@@ -156,35 +131,29 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Private Workspace Group */}
-        <SidebarGroup className="py-1 mt-1">
-          <SidebarGroupLabel className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-2 h-6 flex items-center justify-between">
-            <span>Workspace</span>
-            <button
-              onClick={() => toast("Creating a new workspace...")}
-              className="hover:bg-[rgba(55,53,47,0.1)] dark:hover:bg-[rgba(255,255,255,0.1)] p-0.5 rounded text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <Plus className="size-3.5 stroke-[1.5]" />
-            </button>
+        {/* 2. PROGRESS GROUP */}
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider px-2.5 h-6 flex items-center">
+            Progress
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {mainWorkspaceNav.map((item) => {
+              {progressNav.map((item) => {
                 const isActive = pathname === item.url || pathname.startsWith(item.url + "/");
                 const IconComponent = isActive && item.activeIcon ? item.activeIcon : item.icon;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       isActive={isActive}
-                      className={`h-8 rounded-md px-2 text-[13px] transition-colors ${
+                      className={`h-8.5 rounded-lg px-2.5 text-[13px] font-medium transition-all ${
                         isActive 
-                          ? 'font-semibold text-gray-900 dark:text-white bg-[rgba(55,53,47,0.08)] dark:bg-[rgba(255,255,255,0.08)]' 
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-[rgba(55,53,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)]'
+                          ? 'font-semibold text-neutral-900 dark:text-white bg-neutral-200/60 dark:bg-neutral-800 shadow-2xs' 
+                          : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60'
                       }`}
                       render={
-                        <Link href={item.url} className="flex items-center gap-3 w-full group">
-                          <IconComponent className={`size-4 shrink-0 stroke-[1.5] transition-colors ${
-                            isActive ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-white"
+                        <Link href={item.url} className="flex items-center gap-2.5 w-full">
+                          <IconComponent className={`size-4 shrink-0 stroke-[1.75] transition-colors ${
+                            isActive ? "text-[#0066FF] dark:text-[#3B82F6]" : "text-neutral-400 dark:text-neutral-500"
                           }`} />
                           <span className="truncate">{item.title}</span>
                         </Link>
@@ -197,29 +166,64 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Account Settings Group */}
-        <SidebarGroup className="py-1 mt-2">
-          <SidebarGroupLabel className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-2 h-6 flex items-center justify-between">
-            <span>Account</span>
+        {/* 3. COMMUNITY GROUP */}
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider px-2.5 h-6 flex items-center">
+            Community
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {accountNav.map((item) => {
+              {communityNav.map((item) => {
                 const isActive = pathname === item.url || pathname.startsWith(item.url + "/");
                 const IconComponent = isActive && item.activeIcon ? item.activeIcon : item.icon;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       isActive={isActive}
-                      className={`h-8 rounded-md px-2 text-[13px] transition-colors ${
+                      className={`h-8.5 rounded-lg px-2.5 text-[13px] font-medium transition-all ${
                         isActive 
-                          ? 'font-semibold text-gray-900 dark:text-white bg-[rgba(55,53,47,0.08)] dark:bg-[rgba(255,255,255,0.08)]' 
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-[rgba(55,53,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)]'
+                          ? 'font-semibold text-neutral-900 dark:text-white bg-neutral-200/60 dark:bg-neutral-800 shadow-2xs' 
+                          : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60'
                       }`}
                       render={
-                        <Link href={item.url} className="flex items-center gap-3 w-full group">
-                          <IconComponent className={`size-4 shrink-0 stroke-[1.5] transition-colors ${
-                            isActive ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-white"
+                        <Link href={item.url} className="flex items-center gap-2.5 w-full">
+                          <IconComponent className={`size-4 shrink-0 stroke-[1.75] transition-colors ${
+                            isActive ? "text-[#0066FF] dark:text-[#3B82F6]" : "text-neutral-400 dark:text-neutral-500"
+                          }`} />
+                          <span className="truncate">{item.title}</span>
+                        </Link>
+                      }
+                    />
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* 4. PERSONAL GROUP */}
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider px-2.5 h-6 flex items-center">
+            Personal
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-0.5">
+              {personalNav.map((item) => {
+                const isActive = pathname === item.url || pathname.startsWith(item.url + "/");
+                const IconComponent = isActive && item.activeIcon ? item.activeIcon : item.icon;
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      isActive={isActive}
+                      className={`h-8.5 rounded-lg px-2.5 text-[13px] font-medium transition-all ${
+                        isActive 
+                          ? 'font-semibold text-neutral-900 dark:text-white bg-neutral-200/60 dark:bg-neutral-800 shadow-2xs' 
+                          : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60'
+                      }`}
+                      render={
+                        <Link href={item.url} className="flex items-center gap-2.5 w-full">
+                          <IconComponent className={`size-4 shrink-0 stroke-[1.75] transition-colors ${
+                            isActive ? "text-[#0066FF] dark:text-[#3B82F6]" : "text-neutral-400 dark:text-neutral-500"
                           }`} />
                           <span className="truncate">{item.title}</span>
                         </Link>
@@ -233,26 +237,29 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* User Profile Footer with XP/Streak Widget */}
-      <div className="p-2 border-t border-[rgba(55,53,47,0.06)] dark:border-[rgba(255,255,255,0.06)] mt-auto space-y-1">
+      {/* Learner Profile Footer with Streak & XP */}
+      <div className="p-2 border-t border-neutral-100 dark:border-neutral-800 mt-auto space-y-1 bg-[#F5F5F3] dark:bg-[#181818]">
         <Link
           href="/profile"
-          className="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer group"
+          className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800 transition-colors group"
         >
           <NotionAvatar seed={user.name} avatarIndex={user.avatarIndex} size="sm" hasShadow={false} />
           <div className="flex flex-col overflow-hidden">
-            <span className="text-xs font-bold text-gray-900 dark:text-white truncate">{user.name}</span>
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 truncate">{user.email}</span>
+            <span className="text-xs font-bold text-neutral-900 dark:text-white truncate">{user.name}</span>
+            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">
+              {userInstitution?.shortName || userInstitution?.name || "Independent Learner"}
+            </span>
           </div>
         </Link>
-        {/* XP & Streak Micro-Stats */}
-        <div className="flex items-center gap-3 px-1.5 py-1">
-          <div className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400 font-medium">
-            <Flame className="size-3 text-orange-500 shrink-0" />
-            <span>{progress.streak} day streak</span>
+
+        {/* Motivation Streak & XP Micro-Pills */}
+        <div className="flex items-center justify-between px-1.5 py-1">
+          <div className="flex items-center gap-1 text-[10px] text-neutral-600 dark:text-neutral-400 font-semibold">
+            <Flame className="size-3 text-orange-500 shrink-0 fill-orange-500/20" />
+            <span>{progress.streak}d streak</span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400 font-medium">
-            <Zap className="size-3 text-amber-500 shrink-0" />
+          <div className="flex items-center gap-1 text-[10px] text-neutral-600 dark:text-neutral-400 font-semibold">
+            <Zap className="size-3 text-amber-500 shrink-0 fill-amber-500/20" />
             <span>{progress.xp.toLocaleString()} XP</span>
           </div>
         </div>
@@ -260,4 +267,3 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
-

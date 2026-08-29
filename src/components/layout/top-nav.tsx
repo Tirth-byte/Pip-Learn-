@@ -9,16 +9,15 @@ import {
   Star,
   Moon,
   Sun,
-  LayoutDashboard,
+  Home,
   BookOpen,
   Target,
-  Terminal,
-  Sparkles,
-  MessageSquare,
   Trophy,
+  TrendingUp,
   Folder,
   User,
   Settings,
+  MessageSquare,
   LucideIcon
 } from "lucide-react";
 import Link from "next/link";
@@ -39,16 +38,27 @@ function PipLearnLogoMark({ className = "size-4" }: { className?: string }) {
 }
 
 const iconMap: Record<string, LucideIcon> = {
-  dashboard: LayoutDashboard,
+  dashboard: Home,
   courses: BookOpen,
   practice: Target,
-  sandbox: Terminal,
-  "ai-mentor": Sparkles,
-  community: MessageSquare,
-  leaderboard: Trophy,
   projects: Folder,
+  portfolio: TrendingUp,
+  leaderboard: Trophy,
+  community: MessageSquare,
   profile: User,
   settings: Settings,
+};
+
+const titleMap: Record<string, string> = {
+  dashboard: "Home",
+  courses: "Courses",
+  practice: "Practice",
+  projects: "Projects",
+  portfolio: "Progress",
+  leaderboard: "Leaderboard",
+  community: "Community",
+  profile: "Profile",
+  settings: "Settings",
 };
 
 function isDarkActive(): boolean {
@@ -64,7 +74,6 @@ export function TopNav() {
   const [isDark, setIsDark] = useState(isDarkActive);
   const { user } = useAppContext();
 
-  // Sync dark state when external changes happen (e.g. settings page toggles class)
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDark(isDarkActive());
@@ -91,34 +100,35 @@ export function TopNav() {
   };
 
   return (
-    <div className="h-11 border-b border-[rgba(55,53,47,0.09)] dark:border-[rgba(255,255,255,0.09)] flex items-center justify-between px-3 sticky top-0 bg-white/95 dark:bg-[#191919]/95 backdrop-blur-sm z-10 text-xs text-[#37352F] dark:text-[rgba(255,255,255,0.81)] select-none transition-colors">
+    <div className="h-12 border-b border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between px-3.5 sticky top-0 bg-white/95 dark:bg-[#181818]/95 backdrop-blur-sm z-10 text-xs text-neutral-700 dark:text-[rgba(255,255,255,0.85)] select-none transition-colors">
       {/* Breadcrumb Navigation */}
-      <div className="flex items-center gap-1 overflow-hidden">
-        <SidebarTrigger className="mr-0.5 text-[rgba(55,53,47,0.45)] dark:text-[rgba(255,255,255,0.4)] hover:text-[#37352F] dark:hover:text-white hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] p-1 rounded transition-colors" />
-        <div className="flex items-center gap-1 text-[13px] text-[#37352F] dark:text-[rgba(255,255,255,0.81)] font-normal whitespace-nowrap overflow-hidden text-ellipsis">
-          <Link href="/dashboard" className="flex items-center gap-2 hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] px-1.5 py-0.5 rounded transition-colors truncate">
+      <div className="flex items-center gap-1.5 overflow-hidden">
+        <SidebarTrigger className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 p-1.5 rounded-md transition-colors" />
+        
+        <div className="flex items-center gap-1 text-[13px] text-neutral-800 dark:text-neutral-200 font-normal whitespace-nowrap overflow-hidden text-ellipsis">
+          <Link href="/dashboard" className="flex items-center gap-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 py-1 rounded-md transition-colors truncate">
             <PipLearnLogoMark className="size-4 shrink-0" />
-            <span className="font-semibold text-[#37352F] dark:text-white">PipLearn Workspace</span>
+            <span className="font-bold text-neutral-900 dark:text-white text-xs">pip learn</span>
           </Link>
           
           {paths.map((path, index) => {
             const isLast = index === paths.length - 1;
-            const title = path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' ');
+            const title = titleMap[path] || (path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' '));
             const href = "/" + paths.slice(0, index + 1).join("/");
-            const IconComponent = iconMap[path] || LayoutDashboard;
+            const IconComponent = iconMap[path] || Home;
 
             return (
               <div key={path} className="flex items-center gap-1">
-                <span className="text-[rgba(55,53,47,0.3)] dark:text-[rgba(255,255,255,0.2)]">/</span>
+                <span className="text-neutral-300 dark:text-neutral-600">/</span>
                 <Link
                   href={href}
-                  className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-colors truncate ${
+                  className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors truncate ${
                     isLast 
-                      ? 'font-medium text-[#37352F] dark:text-white bg-[rgba(55,53,47,0.06)] dark:bg-[rgba(255,255,255,0.06)]' 
-                      : 'text-[rgba(55,53,47,0.65)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] hover:text-[#37352F] dark:hover:text-white'
+                      ? 'font-semibold text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800' 
+                      : 'text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
                   }`}
                 >
-                  <IconComponent className="size-3.5 text-gray-400 dark:text-gray-500 stroke-[1.5] shrink-0" />
+                  <IconComponent className="size-3.5 text-neutral-400 dark:text-neutral-500 stroke-[1.75] shrink-0" />
                   <span>{title}</span>
                 </Link>
               </div>
@@ -128,41 +138,41 @@ export function TopNav() {
       </div>
 
       {/* Action Bar */}
-      <div className="flex items-center gap-1 flex-shrink-0 text-[rgba(55,53,47,0.65)] dark:text-[rgba(255,255,255,0.5)]">
+      <div className="flex items-center gap-1.5 flex-shrink-0 text-neutral-500 dark:text-neutral-400">
         <button
           onClick={() => setIsStarred(!isStarred)}
           title={isStarred ? "Remove from Favorites" : "Add to Favorites"}
-          className={`p-1 rounded hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer ${
-            isStarred ? "text-amber-500" : "text-[rgba(55,53,47,0.45)] dark:text-[rgba(255,255,255,0.4)] hover:text-[#37352F] dark:hover:text-white"
+          className={`p-1.5 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer ${
+            isStarred ? "text-amber-500" : "text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
           }`}
         >
-          <Star className={`size-3.5 stroke-[1.5] ${isStarred ? "fill-amber-400" : ""}`} />
+          <Star className={`size-3.5 stroke-[1.75] ${isStarred ? "fill-amber-400" : ""}`} />
         </button>
 
         {/* Dark Mode Toggle */}
         <button
           onClick={toggleTheme}
           title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          className="p-1 rounded text-[rgba(55,53,47,0.45)] dark:text-[rgba(255,255,255,0.4)] hover:text-[#37352F] dark:hover:text-white hover:bg-[rgba(55,53,47,0.08)] dark:hover:bg-[rgba(255,255,255,0.08)] transition-all cursor-pointer"
+          className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all cursor-pointer"
         >
           <div className="relative size-3.5">
-            <Sun className={`size-3.5 stroke-[1.5] absolute inset-0 transition-all duration-300 ${isDark ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"}`} />
-            <Moon className={`size-3.5 stroke-[1.5] absolute inset-0 transition-all duration-300 ${isDark ? "opacity-0 rotate-90" : "opacity-100 rotate-0"}`} />
+            <Sun className={`size-3.5 stroke-[1.75] absolute inset-0 transition-all duration-300 ${isDark ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"}`} />
+            <Moon className={`size-3.5 stroke-[1.75] absolute inset-0 transition-all duration-300 ${isDark ? "opacity-0 rotate-90" : "opacity-100 rotate-0"}`} />
           </div>
         </button>
 
         <button
           onClick={handleShare}
-          className="px-2.5 py-1 bg-[#2383E2] hover:bg-[#0070E0] active:bg-[#005FC2] text-white rounded font-medium text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+          className="px-2.5 py-1 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
         >
           {copied ? (
             <>
-              <Check className="size-3 text-white stroke-[1.5]" />
-              <span>Copied Link</span>
+              <Check className="size-3 stroke-[2]" />
+              <span>Copied</span>
             </>
           ) : (
             <>
-              <Share className="size-3 text-white stroke-[1.5]" />
+              <Share className="size-3 stroke-[2]" />
               <span>Share</span>
             </>
           )}
