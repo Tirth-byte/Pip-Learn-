@@ -81,7 +81,24 @@ export class MockExecutionProvider implements ExecutionProvider {
       const executeSequence = async () => {
         // 1. Check for infinite hang scenario
         if (scenario.hangForever) {
-          // Will wait until stop() or timeout
+          if (request.timeoutMs) {
+            this.activeRunTimer = setTimeout(() => {
+              this.status = "timed_out";
+              this.emitEvent({
+                type: "timed_out",
+                runId,
+                timeoutMs: request.timeoutMs!,
+                durationMs: request.timeoutMs!,
+              });
+              resolve({
+                status: "timed_out",
+                exitCode: 124,
+                stdout: accumulatedStdout,
+                stderr: `Execution timed out after ${request.timeoutMs}ms`,
+                durationMs: request.timeoutMs!,
+              });
+            }, request.timeoutMs);
+          }
           return;
         }
 
