@@ -168,13 +168,15 @@ export function completeMilestone(
   state: LearnerProjectState,
   milestoneId: string,
   registry: CurriculumRegistry = defaultRegistry
-): { state: LearnerProjectState; projectCompleted: boolean } {
+): { state: LearnerProjectState; projectCompleted: boolean; isFirstCompletion: boolean } {
   const mState = state.milestoneStates[milestoneId];
   if (!mState) {
     throw new Error(`Milestone "${milestoneId}" does not exist in project "${state.projectId}".`);
   }
 
+  const isFirstCompletion = mState.status !== "completed";
   const now = new Date().toISOString();
+  const completedAt = mState.completedAt || now;
 
   // Create recovery snapshot upon milestone completion
   const snapshot = createSnapshot(state, "milestone_completion", milestoneId);
@@ -184,17 +186,19 @@ export function completeMilestone(
     [milestoneId]: {
       ...mState,
       status: "completed",
-      completedAt: now,
+      completedAt: completedAt,
       lastValidatedAt: now,
     },
   };
 
-  learnerEventBus.emit({
-    type: "MILESTONE_COMPLETED",
-    projectId: state.projectId,
-    milestoneId,
-    timestamp: now,
-  });
+  if (isFirstCompletion) {
+    learnerEventBus.emit({
+      type: "MILESTONE_COMPLETED",
+      projectId: state.projectId,
+      milestoneId,
+      timestamp: now,
+    });
+  }
 
   // Check if ALL milestones for this project in curriculum are completed
   const projectMilestones = registry.getMilestonesForProject(state.projectId);
@@ -212,18 +216,21 @@ export function completeMilestone(
 
   if (allCompleted) {
     updatedProjectState.status = "completed";
-    updatedProjectState.completedAt = now;
+    updatedProjectState.completedAt = state.completedAt || now;
 
-    learnerEventBus.emit({
-      type: "PROJECT_COMPLETED",
-      projectId: state.projectId,
-      timestamp: now,
-    });
+    if (!state.completedAt) {
+      learnerEventBus.emit({
+        type: "PROJECT_COMPLETED",
+        projectId: state.projectId,
+        timestamp: now,
+      });
+    }
   }
 
   return {
     state: updatedProjectState,
     projectCompleted: allCompleted,
+    isFirstCompletion,
   };
 }
 

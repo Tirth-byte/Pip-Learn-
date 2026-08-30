@@ -44,12 +44,14 @@ export function ModuleStepper({
               }`}
             >
               <span className="flex items-center gap-1.5">
-                {isCompleted && !isActive ? (
+                {isCompleted ? (
                   <CheckCircle2 className="size-3.5 text-emerald-500 stroke-[2.2]" />
                 ) : (
                   <Icon className={`size-3.5 ${isActive ? "text-[#0066FF]" : "text-neutral-400"}`} />
                 )}
-                <span className="hidden sm:inline">{step.label}</span>
+                <span className="hidden sm:inline">
+                  {step.id === "workspace" && milestone1Completed ? "Milestone 1 ✓" : step.label}
+                </span>
                 <span className="sm:hidden">{idx + 1}. {step.id}</span>
               </span>
             </button>

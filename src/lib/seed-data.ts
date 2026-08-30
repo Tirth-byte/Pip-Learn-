@@ -17,6 +17,7 @@ export interface UserProgress {
   currentTarget: string;
   solvedProblemIds: string[];
   completedModuleIds: string[];
+  completedMilestoneIds?: string[];
 }
 
 export interface AppState {
@@ -45,6 +46,7 @@ export const initialSeedData: AppState = {
     currentTarget: "Start Learning",
     solvedProblemIds: [],
     completedModuleIds: [],
+    completedMilestoneIds: [],
   },
 };
 

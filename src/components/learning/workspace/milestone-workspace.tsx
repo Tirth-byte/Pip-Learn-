@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import Link from "next/link";
 import {
   Play,
   CheckCircle2,
@@ -11,6 +12,8 @@ import {
   AlertCircle,
   HelpCircle,
   FileCode,
+  ArrowRight,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PythonEditor } from "@/components/editor/python-editor";
@@ -30,6 +33,7 @@ import {
 import { LocalLearnerStorageAdapter } from "@/learning-state/persistence/local-storage";
 import { LearnerProjectState } from "@/learning-state/types";
 import { getAssetPath } from "@/lib/asset-path";
+import { useAppContext } from "@/context/app-context";
 
 interface MilestoneWorkspaceProps {
   onBackToPrimer: () => void;
@@ -42,6 +46,7 @@ export function MilestoneWorkspace({
 }: MilestoneWorkspaceProps) {
   const milestone = smartCalculatorMilestones[0];
   const [storage] = useState(() => new LocalLearnerStorageAdapter());
+  const { completeMilestoneReward } = useAppContext();
 
   // Learner State
   const [projectState, setProjectState] = useState<LearnerProjectState | null>(() => {
@@ -79,6 +84,10 @@ export function MilestoneWorkspace({
     const passed = state?.milestoneStates[milestone.id]?.status === "completed";
     return Boolean(passed);
   });
+
+  // Gamification & Completion Flow State
+  const [justAwardedXP, setJustAwardedXP] = useState<number | null>(null);
+  const [showNextMilestoneModal, setShowNextMilestoneModal] = useState(false);
 
   // UI view toggles
   const [showPrimerRef, setShowPrimerRef] = useState(false);
@@ -221,11 +230,19 @@ export function MilestoneWorkspace({
 
       if (result.passed) {
         // Transition learner milestone state to completed
-        const { state: updatedState } = completeMilestone(projectState, milestone.id);
+        const { state: updatedState, isFirstCompletion } = completeMilestone(projectState, milestone.id);
         setProjectState(updatedState);
         storage.saveProjectState(updatedState);
         setIsMilestonePassed(true);
         onMilestoneCompletedChange?.(true);
+
+        // Award XP strictly once via existing global state
+        if (isFirstCompletion) {
+          const awarded = completeMilestoneReward(milestone.id, 25);
+          if (awarded) {
+            setJustAwardedXP(25);
+          }
+        }
       }
     } catch (err: unknown) {
       setStderr((err as Error).message);
@@ -252,9 +269,16 @@ export function MilestoneWorkspace({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-neutral-200/70 dark:border-neutral-800/70 pb-3">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200/50 dark:border-blue-900/50">
-              Milestone 1 of 4
-            </span>
+            {isMilestonePassed ? (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-300/60 dark:border-emerald-800/60">
+                <CheckCircle2 className="size-3 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <span>Milestone 1 Complete · 1 of 4</span>
+              </span>
+            ) : (
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200/50 dark:border-blue-900/50">
+                Milestone 1 of 4
+              </span>
+            )}
             <span className="text-xs text-neutral-400">Smart Calculator</span>
           </div>
           <h1 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
@@ -334,7 +358,7 @@ export function MilestoneWorkspace({
             Milestone Goal
           </span>
           <span className="text-[11px] font-medium text-neutral-400">
-            {isMilestonePassed ? "Completed ✓" : "Build & Run to test"}
+            {isMilestonePassed ? "1 of 4 milestones complete ✓" : "Build & Run to test"}
           </span>
         </div>
 
@@ -354,7 +378,7 @@ export function MilestoneWorkspace({
             >
               <CheckCircle2
                 className={`size-3.5 shrink-0 ${
-                  isMilestonePassed ? "text-emerald-500" : "text-neutral-300 dark:text-neutral-600"
+                  isMilestonePassed ? "text-emerald-500 stroke-[2.2]" : "text-neutral-300 dark:text-neutral-600"
                 }`}
               />
               <span className="truncate text-[11px]">{c.description}</span>
@@ -383,7 +407,7 @@ export function MilestoneWorkspace({
               : "text-neutral-500"
           }`}
         >
-          Terminal
+          Terminal &amp; Status
         </button>
       </div>
 
@@ -466,21 +490,55 @@ export function MilestoneWorkspace({
 
         {/* Right Column: Terminal & Feedback (5 Cols) */}
         <div className={`lg:col-span-5 space-y-3 ${activeMobileTab === "editor" ? "hidden lg:block" : "block"}`}>
-          {/* Milestone 1 Completion Card (Restrained & Honest) */}
+          {/* Milestone 1 Completion Card (Restrained, Warm, and Honest) */}
           {isMilestonePassed && (
-            <div className="p-3.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-500/40 text-emerald-950 dark:text-emerald-200 space-y-1.5 animate-in fade-in duration-200">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
-                  Milestone 1 Complete
-                </span>
+            <div className="p-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-500/40 text-emerald-950 dark:text-emerald-200 space-y-3 animate-in fade-in duration-200 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+                    Milestone 1 Complete
+                  </span>
+                </div>
+
+                {justAwardedXP !== null ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-200/80 dark:bg-emerald-900/80 text-emerald-900 dark:text-emerald-100 border border-emerald-300 dark:border-emerald-700 shadow-2xs">
+                    <Sparkles className="size-3 text-emerald-600 dark:text-emerald-300" />
+                    <span>+{justAwardedXP} XP</span>
+                  </span>
+                ) : (
+                  <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-100/60 dark:bg-emerald-900/40 px-2 py-0.5 rounded-full">
+                    +25 XP earned
+                  </span>
+                )}
               </div>
-              <p className="text-xs leading-relaxed">
-                You made your Python program talk to the user and remember their input!
+
+              <p className="text-xs leading-relaxed text-emerald-900 dark:text-emerald-200">
+                You taught your calculator to interact with its user! It captures their name and greets them personally.
               </p>
-              <div className="pt-1.5 border-t border-emerald-200/60 dark:border-emerald-900/60 flex items-center justify-between text-[11px] text-emerald-800 dark:text-emerald-400 font-medium">
-                <span>Milestone 2 is in development</span>
-                <span>Your code is saved</span>
+
+              <div className="pt-2 border-t border-emerald-200/70 dark:border-emerald-900/60 flex items-center justify-between text-[11px] text-emerald-800 dark:text-emerald-400 font-medium">
+                <span>1 of 4 milestones complete</span>
+                <span>Work saved</span>
+              </div>
+
+              {/* Primary Next Action & Secondary Review Action */}
+              <div className="flex items-center gap-2 pt-1">
+                <Button
+                  onClick={() => setShowNextMilestoneModal(true)}
+                  className="h-9 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 flex-1 justify-center cursor-pointer"
+                >
+                  <span>Next Milestone</span>
+                  <ArrowRight className="size-3.5" />
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => setActiveMobileTab("editor")}
+                  className="h-9 px-3 rounded-xl border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100/50 dark:hover:bg-emerald-900/40 text-emerald-900 dark:text-emerald-200 text-xs font-medium cursor-pointer"
+                >
+                  <span>Review code</span>
+                </Button>
               </div>
             </div>
           )}
@@ -576,6 +634,61 @@ export function MilestoneWorkspace({
           </div>
         </div>
       </div>
+
+      {/* Honest Next Milestone In-Development Dialog */}
+      {showNextMilestoneModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+        >
+          <div className="bg-white dark:bg-[#1E1E20] border border-neutral-200 dark:border-neutral-800 p-6 rounded-2xl max-w-md w-full space-y-4 shadow-2xl animate-in zoom-in-95 duration-150 text-neutral-900 dark:text-neutral-100 relative">
+            <button
+              onClick={() => setShowNextMilestoneModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+            >
+              <X className="size-4" />
+            </button>
+
+            <div className="size-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <CheckCircle2 className="size-6 stroke-[2.2]" />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-neutral-400">Smart Calculator</span>
+                <span className="text-neutral-300 dark:text-neutral-700">•</span>
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">1 of 4 Complete</span>
+              </div>
+              <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
+                Milestone 2 is in development
+              </h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                You&apos;ve completed Milestone 1! The next milestone (converting user input to numbers and computing arithmetic calculations) is being prepared. Your code and progress have been saved safely.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+              <Button
+                variant="outline"
+                onClick={() => setShowNextMilestoneModal(false)}
+                className="w-full sm:w-auto h-9 px-4 rounded-xl text-xs font-semibold cursor-pointer"
+              >
+                Review Milestone 1 Code
+              </Button>
+
+              <Button
+                asChild
+                className="w-full sm:w-auto h-9 px-4 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-bold cursor-pointer"
+              >
+                <Link href="/courses/python">
+                  <span>Return to Python Path</span>
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -9,6 +9,8 @@ import { ModuleMission } from "@/components/learning/module-mission";
 import { ModulePrimer } from "@/components/learning/module-primer";
 import { MilestoneWorkspace } from "@/components/learning/workspace/milestone-workspace";
 
+import { LocalLearnerStorageAdapter } from "@/learning-state/persistence/local-storage";
+
 export function ModuleClient({ module }: { module: string }) {
   const normalized = (module || "").toLowerCase().trim();
   const isModule1 =
@@ -21,7 +23,16 @@ export function ModuleClient({ module }: { module: string }) {
     normalized === "smart-calculator";
 
   const [phase, setPhase] = useState<LearningPhase>("mission");
-  const [milestone1Completed, setMilestone1Completed] = useState(false);
+  const [milestone1Completed, setMilestone1Completed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const storage = new LocalLearnerStorageAdapter();
+      const state = storage.loadProjectState("project-smart-calculator");
+      return state?.milestoneStates["milestone-calc-1"]?.status === "completed";
+    } catch {
+      return false;
+    }
+  });
 
   if (!isModule1) {
     const formattedTitle = module

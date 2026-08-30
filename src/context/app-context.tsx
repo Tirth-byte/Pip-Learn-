@@ -12,6 +12,7 @@ interface AppContextType extends AppState {
   setInstitution: (institutionId: string | null) => void;
   updateProgress: (xpAdd: number, streakUpdate?: number) => void;
   completeProblem: (problemId: string, xpEarned?: number) => void;
+  completeMilestoneReward: (milestoneId: string, xpEarned?: number) => boolean;
 }
 
 // --- External store backed by localStorage ---------------------------------
@@ -166,6 +167,23 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     });
   }, []);
 
+  const completeMilestoneReward = useCallback((milestoneId: string, xpEarned: number = 25) => {
+    const completed = currentState.progress.completedMilestoneIds || [];
+    if (completed.includes(milestoneId)) {
+      return false; // Idempotent: already rewarded
+    }
+
+    setStateAndPersist({
+      ...currentState,
+      progress: {
+        ...currentState.progress,
+        xp: currentState.progress.xp + xpEarned,
+        completedMilestoneIds: [...completed, milestoneId],
+      },
+    });
+    return true; // Newly rewarded
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -176,6 +194,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setInstitution,
         updateProgress,
         completeProblem,
+        completeMilestoneReward,
       }}
     >
       {children}
