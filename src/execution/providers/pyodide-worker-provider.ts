@@ -6,6 +6,7 @@
  * cancellation, worker crash recovery, and environment resets.
  */
 
+import { getAssetPath } from "@/lib/asset-path";
 import { ExecutionProvider } from "../execution-provider.interface";
 import {
   ExecutionEvent,
@@ -50,7 +51,7 @@ export class PyodideWorkerExecutionProvider implements ExecutionProvider {
   private lastError: PythonRuntimeError | undefined = undefined;
 
   constructor(options: PyodideWorkerProviderOptions = {}) {
-    this.workerScriptUrl = options.workerScriptUrl || "/workers/pyodide-worker.js";
+    this.workerScriptUrl = options.workerScriptUrl || getAssetPath("/workers/pyodide-worker.js");
     this.pyodideCdnUrl = options.pyodideCdnUrl || "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/";
     this.defaultTimeoutMs = options.defaultTimeoutMs || 10000;
   }

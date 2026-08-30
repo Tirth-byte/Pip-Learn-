@@ -30,6 +30,7 @@ import {
 } from "@/learning-state/transitions";
 import { LocalLearnerStorageAdapter } from "@/learning-state/persistence/local-storage";
 import { LearnerProjectState } from "@/learning-state/types";
+import { getAssetPath } from "@/lib/asset-path";
 
 interface MilestoneWorkspaceProps {
   onBackToPrimer: () => void;
@@ -90,7 +91,7 @@ export function MilestoneWorkspace({
   const [provider] = useState<ExecutionProvider | null>(() => {
     if (typeof window === "undefined") return null;
     return createExecutionProvider("pyodide", {
-      workerScriptUrl: "/workers/pyodide-worker.js",
+      workerScriptUrl: getAssetPath("/workers/pyodide-worker.js"),
       defaultTimeoutMs: 10000,
     });
   });

@@ -27,6 +27,11 @@ const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost:3000"}`);
   let pathname = decodeURIComponent(parsedUrl.pathname);
 
+  // If basePath prefix is present (e.g. /Pip-Learn-/...), strip it
+  if (pathname.startsWith("/Pip-Learn-")) {
+    pathname = pathname.substring("/Pip-Learn-".length);
+  }
+
   // If root, serve index.html
   if (pathname === "/" || pathname === "") {
     pathname = "/index.html";

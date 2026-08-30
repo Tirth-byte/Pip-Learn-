@@ -9,7 +9,15 @@ export const courseIds = [
   "finance",
 ];
 
-export const moduleIds = ["basics", "control-flow", "functions", "data-structures"];
+export const moduleIds = [
+  "basics",
+  "control-flow",
+  "functions",
+  "data-structures",
+  "fundamentals",
+  "python-fundamentals",
+  "smart-calculator",
+];
 
 export const moduleLessonCounts: Record<string, number> = {
   "basics": 5,

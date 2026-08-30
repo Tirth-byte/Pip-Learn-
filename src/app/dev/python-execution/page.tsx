@@ -13,6 +13,7 @@ import {
   validateMilestone,
   ValidationResult,
 } from "@/validation";
+import { getAssetPath } from "@/lib/asset-path";
 
 const EXECUTION_PRESETS = [
   {
@@ -205,7 +206,7 @@ export default function PythonExecutionDevPage() {
   const [provider] = useState<ExecutionProvider | null>(() => {
     if (typeof window === "undefined") return null;
     return createExecutionProvider("pyodide", {
-      workerScriptUrl: "/workers/pyodide-worker.js",
+      workerScriptUrl: getAssetPath("/workers/pyodide-worker.js"),
       defaultTimeoutMs: 8000,
     });
   });
