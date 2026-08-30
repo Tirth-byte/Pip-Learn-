@@ -33,22 +33,22 @@ export const smartCalculatorMilestones: Milestone[] = [
     id: "milestone-calc-2",
     projectId: "project-smart-calculator",
     order: 2,
-    title: "The Addition Engine & Type Conversion",
-    objective: "Capture two numbers from the user, convert types, and calculate their sum.",
+    title: "Addition Engine",
+    objective: "Extend your calculator so it asks for two numbers and prints their sum.",
     criteria: [
       {
         id: "crit-2-num1",
-        description: "Prompts user for first numerical input.",
+        description: "Prompts for first number with input().",
         contractDescription: "Captures first number via input().",
       },
       {
         id: "crit-2-num2",
-        description: "Prompts user for second numerical input.",
+        description: "Prompts for second number with input().",
         contractDescription: "Captures second number via input().",
       },
       {
         id: "crit-2-sum",
-        description: "Calculates and prints the mathematical sum as float/number.",
+        description: "Calculates and prints the sum as numbers.",
         contractDescription: "Output contains numerical sum rather than string concatenation.",
       },
     ],

@@ -14,6 +14,8 @@ import {
   FileCode,
   ArrowRight,
   X,
+  Lock,
+  Lightbulb,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PythonEditor } from "@/components/editor/python-editor";
@@ -28,6 +30,7 @@ import { smartCalculatorMilestones } from "@/curriculum/milestones/smart-calcula
 import {
   initializeLearnerProject,
   completeMilestone,
+  advanceToNextMilestone,
   updateProjectFile,
 } from "@/learning-state/transitions";
 import { LocalLearnerStorageAdapter } from "@/learning-state/persistence/local-storage";
@@ -37,18 +40,17 @@ import { useAppContext } from "@/context/app-context";
 
 interface MilestoneWorkspaceProps {
   onBackToPrimer: () => void;
-  onMilestoneCompletedChange?: (completed: boolean) => void;
+  onMilestoneCompletedChange?: (completed: boolean, count: number) => void;
 }
 
 export function MilestoneWorkspace({
   onBackToPrimer,
   onMilestoneCompletedChange,
 }: MilestoneWorkspaceProps) {
-  const milestone = smartCalculatorMilestones[0];
   const [storage] = useState(() => new LocalLearnerStorageAdapter());
   const { completeMilestoneReward } = useAppContext();
 
-  // Learner State
+  // 1. Learner Project State
   const [projectState, setProjectState] = useState<LearnerProjectState | null>(() => {
     if (typeof window === "undefined") return null;
     let state = storage.loadProjectState("project-smart-calculator");
@@ -59,6 +61,18 @@ export function MilestoneWorkspace({
     return state;
   });
 
+  // Active milestone ID (defaults to project's currentMilestoneId or M1)
+  const [activeMilestoneId, setActiveMilestoneId] = useState<string>(() => {
+    if (typeof window === "undefined") return "milestone-calc-1";
+    const state = storage.loadProjectState("project-smart-calculator");
+    return state?.currentMilestoneId || "milestone-calc-1";
+  });
+
+  const milestone =
+    smartCalculatorMilestones.find((m) => m.id === activeMilestoneId) ||
+    smartCalculatorMilestones[0];
+
+  // 2. Cumulative Code in calculator.py
   const [code, setCode] = useState<string>(() => {
     if (typeof window === "undefined") return milestone.starterFiles?.["calculator.py"] || "";
     const state = storage.loadProjectState("project-smart-calculator");
@@ -67,7 +81,7 @@ export function MilestoneWorkspace({
 
   const [isSaved, setIsSaved] = useState(false);
 
-  // Execution Provider & State
+  // 3. Execution Provider & State
   const [status, setStatus] = useState<ExecutionStatus>("idle");
   const [stdout, setStdout] = useState("");
   const [stderr, setStderr] = useState("");
@@ -75,22 +89,26 @@ export function MilestoneWorkspace({
   const [stdinInput, setStdinInput] = useState("");
   const [lastError, setLastError] = useState<PythonRuntimeError | null>(null);
 
-  // Validation State
+  // 4. Validation & Feedback State
   const [isValidating, setIsValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-  const [isMilestonePassed, setIsMilestonePassed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const state = storage.loadProjectState("project-smart-calculator");
-    const passed = state?.milestoneStates[milestone.id]?.status === "completed";
-    return Boolean(passed);
-  });
 
-  // Gamification & Completion Flow State
+  // Status for current active milestone
+  const isCurrentMilestonePassed =
+    projectState?.milestoneStates[activeMilestoneId]?.status === "completed";
+
+  // Total completed milestones count
+  const completedCount = projectState
+    ? Object.values(projectState.milestoneStates).filter((m) => m.status === "completed").length
+    : 0;
+
+  // 5. Gamification & Completion Flow State
   const [justAwardedXP, setJustAwardedXP] = useState<number | null>(null);
   const [showNextMilestoneModal, setShowNextMilestoneModal] = useState(false);
 
-  // UI view toggles
+  // 6. UI View Toggles
   const [showPrimerRef, setShowPrimerRef] = useState(false);
+  const [showTypeHelper, setShowTypeHelper] = useState(false);
   const [activeMobileTab, setActiveMobileTab] = useState<"editor" | "terminal" | "instructions">("editor");
 
   const stdinInputRef = useRef<HTMLInputElement>(null);
@@ -104,12 +122,15 @@ export function MilestoneWorkspace({
     });
   });
 
-  // Notify parent if milestone 1 is already completed
+  // Notify parent of milestone completions
   useEffect(() => {
-    if (isMilestonePassed) {
-      onMilestoneCompletedChange?.(true);
+    if (projectState) {
+      const count = Object.values(projectState.milestoneStates).filter(
+        (m) => m.status === "completed"
+      ).length;
+      onMilestoneCompletedChange?.(count > 0, count);
     }
-  }, [isMilestonePassed, onMilestoneCompletedChange]);
+  }, [projectState, onMilestoneCompletedChange]);
 
   // Warm up Pyodide in background
   useEffect(() => {
@@ -127,7 +148,7 @@ export function MilestoneWorkspace({
     };
   }, [provider]);
 
-  // Auto-focus stdin when input() is requested
+  // Auto-focus stdin input when prompt is active
   useEffect(() => {
     if (activePrompt !== null && stdinInputRef.current) {
       stdinInputRef.current.focus();
@@ -233,8 +254,11 @@ export function MilestoneWorkspace({
         const { state: updatedState, isFirstCompletion } = completeMilestone(projectState, milestone.id);
         setProjectState(updatedState);
         storage.saveProjectState(updatedState);
-        setIsMilestonePassed(true);
-        onMilestoneCompletedChange?.(true);
+
+        const newCompletedCount = Object.values(updatedState.milestoneStates).filter(
+          (m) => m.status === "completed"
+        ).length;
+        onMilestoneCompletedChange?.(true, newCompletedCount);
 
         // Award XP strictly once via existing global state
         if (isFirstCompletion) {
@@ -252,7 +276,54 @@ export function MilestoneWorkspace({
     }
   };
 
-  // Reset to Starter Template
+  // Advance from Milestone 1 to Milestone 2 (Preserving cumulative code)
+  const handleAdvanceToNextMilestone = () => {
+    if (!projectState) return;
+
+    try {
+      const updatedState = advanceToNextMilestone(projectState);
+      setProjectState(updatedState);
+      storage.saveProjectState(updatedState);
+
+      setActiveMilestoneId("milestone-calc-2");
+      setStdout("");
+      setStderr("");
+      setActivePrompt(null);
+      setLastError(null);
+      setValidationResult(null);
+      setJustAwardedXP(null);
+    } catch (err) {
+      console.error("Failed to advance milestone:", err);
+    }
+  };
+
+  // Switch between milestones
+  const handleSelectMilestone = (mId: string) => {
+    if (!projectState) return;
+
+    // Check if target milestone is accessible (M1 is always accessible; M2 accessible if M1 is completed)
+    if (mId === "milestone-calc-2") {
+      const m1Completed = projectState.milestoneStates["milestone-calc-1"]?.status === "completed";
+      if (!m1Completed) return;
+
+      // If M2 was not started, advance to it
+      if (projectState.milestoneStates["milestone-calc-2"]?.status === "not_started") {
+        const updated = advanceToNextMilestone(projectState);
+        setProjectState(updated);
+        storage.saveProjectState(updated);
+      }
+    }
+
+    setActiveMilestoneId(mId);
+    setStdout("");
+    setStderr("");
+    setActivePrompt(null);
+    setLastError(null);
+    setValidationResult(null);
+    setJustAwardedXP(null);
+  };
+
+  // Reset to Starter Template (for current milestone)
   const handleResetCode = () => {
     const starter = milestone.starterFiles?.["calculator.py"] || "";
     handleCodeChange(starter);
@@ -263,63 +334,100 @@ export function MilestoneWorkspace({
     setValidationResult(null);
   };
 
+  const isM1 = activeMilestoneId === "milestone-calc-1";
+  const isM2 = activeMilestoneId === "milestone-calc-2";
+
   return (
     <div className="space-y-4 max-w-6xl mx-auto py-1 select-none text-neutral-900 dark:text-neutral-100">
-      {/* 1. Header & Status Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-neutral-200/70 dark:border-neutral-800/70 pb-3">
-        <div className="space-y-0.5">
-          <div className="flex items-center gap-2">
-            {isMilestonePassed ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-300/60 dark:border-emerald-800/60">
-                <CheckCircle2 className="size-3 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
-                <span>Milestone 1 Complete · 1 of 4</span>
-              </span>
-            ) : (
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200/50 dark:border-blue-900/50">
-                Milestone 1 of 4
-              </span>
-            )}
-            <span className="text-xs text-neutral-400">Smart Calculator</span>
-          </div>
-          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            {milestone.title}
-          </h1>
+      {/* 1. Header & Milestone Selector Bar */}
+      <div className="space-y-2 border-b border-neutral-200/70 dark:border-neutral-800/70 pb-3">
+        {/* Milestone Navigation Segment Control */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+          {smartCalculatorMilestones.map((m, idx) => {
+            const mState = projectState?.milestoneStates[m.id];
+            const isCompleted = mState?.status === "completed";
+            const isActive = m.id === activeMilestoneId;
+            const isAccessible =
+              idx === 0 ||
+              projectState?.milestoneStates[smartCalculatorMilestones[idx - 1].id]?.status === "completed";
+
+            return (
+              <button
+                key={m.id}
+                onClick={() => isAccessible && handleSelectMilestone(m.id)}
+                disabled={!isAccessible}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-black dark:bg-white text-white dark:text-black font-bold shadow-xs"
+                    : isCompleted
+                    ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 font-semibold border border-emerald-200 dark:border-emerald-800/60"
+                    : isAccessible
+                    ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 font-medium"
+                    : "bg-neutral-100/50 dark:bg-neutral-900/50 text-neutral-400 dark:text-neutral-600 opacity-60 cursor-not-allowed"
+                }`}
+              >
+                {isCompleted ? (
+                  <CheckCircle2 className={`size-3.5 ${isActive ? "text-emerald-300 dark:text-emerald-700 stroke-[2.5]" : "text-emerald-500 stroke-[2.2]"}`} />
+                ) : !isAccessible ? (
+                  <Lock className="size-3 text-neutral-400" />
+                ) : (
+                  <span className={`text-[11px] font-bold ${isActive ? "text-blue-300 dark:text-blue-700" : "text-neutral-500"}`}>{idx + 1}</span>
+                )}
+                <span>M{idx + 1}: {m.order === 1 ? "Welcome" : m.order === 2 ? "Addition Engine" : m.order === 3 ? "Math Suite" : "Receipt"}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Runtime Status & Quick Reference */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-          <button
-            onClick={() => setShowPrimerRef(!showPrimerRef)}
-            className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white py-1 px-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
-          >
-            <HelpCircle className="size-3.5 text-blue-500" />
-            <span>Reference</span>
-            {showPrimerRef ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
-          </button>
+        {/* Milestone Title & Runtime Status */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-300/60 dark:border-emerald-800/60">
+                {completedCount} of 4 Milestones Complete
+              </span>
+              <span className="text-xs text-neutral-400">Smart Calculator</span>
+            </div>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              Milestone {milestone.order}: {milestone.title}
+            </h1>
+          </div>
 
-          <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 px-2.5 py-1 rounded-lg border border-neutral-200/60 dark:border-neutral-800 text-xs">
-            <span
-              className={`size-2 rounded-full ${
-                status === "ready"
-                  ? "bg-emerald-500"
-                  : status === "running" || status === "waiting_for_input"
-                  ? "bg-blue-500 animate-ping"
+          {/* Quick Syntax Reference & Python Runtime Indicator */}
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+            <button
+              onClick={() => setShowPrimerRef(!showPrimerRef)}
+              className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white py-1 px-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+            >
+              <HelpCircle className="size-3.5 text-blue-500" />
+              <span>Reference</span>
+              {showPrimerRef ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+            </button>
+
+            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 px-2.5 py-1 rounded-lg border border-neutral-200/60 dark:border-neutral-800 text-xs">
+              <span
+                className={`size-2 rounded-full ${
+                  status === "ready"
+                    ? "bg-emerald-500"
+                    : status === "running" || status === "waiting_for_input"
+                    ? "bg-blue-500 animate-ping"
+                    : status === "initializing"
+                    ? "bg-amber-500 animate-pulse"
+                    : "bg-neutral-400"
+                }`}
+              />
+              <span className="font-medium text-neutral-600 dark:text-neutral-400 text-[11px]">
+                {status === "ready"
+                  ? "Python Ready"
                   : status === "initializing"
-                  ? "bg-amber-500 animate-pulse"
-                  : "bg-neutral-400"
-              }`}
-            />
-            <span className="font-medium text-neutral-600 dark:text-neutral-400 text-[11px]">
-              {status === "ready"
-                ? "Python Ready"
-                : status === "initializing"
-                ? "Starting Python…"
-                : status === "waiting_for_input"
-                ? "Waiting for Input"
-                : status === "running"
-                ? "Running…"
-                : "Python Ready"}
-            </span>
+                  ? "Starting Python…"
+                  : status === "waiting_for_input"
+                  ? "Waiting for Input"
+                  : status === "running"
+                  ? "Running…"
+                  : "Python Ready"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -355,15 +463,15 @@ export function MilestoneWorkspace({
       <div className="p-3 sm:p-3.5 rounded-xl bg-neutral-50/80 dark:bg-[#161618] border border-neutral-200/70 dark:border-neutral-800 space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
-            Milestone Goal
+            Milestone {milestone.order} Objective
           </span>
           <span className="text-[11px] font-medium text-neutral-400">
-            {isMilestonePassed ? "1 of 4 milestones complete ✓" : "Build & Run to test"}
+            {isCurrentMilestonePassed ? "Completed ✓" : "Build & Run to test"}
           </span>
         </div>
 
         <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-normal">
-          Print the calculator welcome header, prompt the user for their name, and greet them personally.
+          {milestone.objective}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
@@ -371,14 +479,14 @@ export function MilestoneWorkspace({
             <div
               key={c.id}
               className={`flex items-center gap-1.5 p-2 rounded-lg text-xs transition-colors ${
-                isMilestonePassed
+                isCurrentMilestonePassed
                   ? "bg-emerald-500/10 text-emerald-900 dark:text-emerald-300 font-medium"
                   : "bg-white dark:bg-[#1E1E20] border border-neutral-200/60 dark:border-neutral-800/80 text-neutral-600 dark:text-neutral-400"
               }`}
             >
               <CheckCircle2
                 className={`size-3.5 shrink-0 ${
-                  isMilestonePassed ? "text-emerald-500 stroke-[2.2]" : "text-neutral-300 dark:text-neutral-600"
+                  isCurrentMilestonePassed ? "text-emerald-500 stroke-[2.2]" : "text-neutral-300 dark:text-neutral-600"
                 }`}
               />
               <span className="truncate text-[11px]">{c.description}</span>
@@ -386,6 +494,50 @@ export function MilestoneWorkspace({
           ))}
         </div>
       </div>
+
+      {/* 3. Milestone 2 Contextual Concept Helper: Strings vs Numbers */}
+      {isM2 && (
+        <div className="rounded-xl border border-amber-300/70 dark:border-amber-900/60 bg-amber-50/60 dark:bg-amber-950/20 p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setShowTypeHelper(!showTypeHelper)}
+              className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300 hover:text-amber-950 dark:hover:text-amber-200 cursor-pointer"
+            >
+              <Lightbulb className="size-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Something surprising with 10 + 20? (Strings vs. Numbers)</span>
+              {showTypeHelper ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+            </button>
+
+            <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+              Concept Note
+            </span>
+          </div>
+
+          {showTypeHelper && (
+            <div className="space-y-2 text-xs text-amber-950 dark:text-amber-200/90 pt-1 border-t border-amber-200 dark:border-amber-900/50 leading-relaxed animate-in fade-in duration-150">
+              <p>
+                In Python, <code className="font-mono bg-amber-100 dark:bg-amber-900/60 px-1 py-0.5 rounded">input()</code> always returns <strong>text (a string)</strong>, even when the user types digits.
+              </p>
+              <p>
+                When you use <code className="font-mono bg-amber-100 dark:bg-amber-900/60 px-1 py-0.5 rounded">+</code> between two strings, Python glues them together (<code className="font-mono bg-amber-100 dark:bg-amber-900/60 px-1 py-0.5 rounded">&quot;10&quot; + &quot;20&quot; = &quot;1020&quot;</code>).
+              </p>
+              <p>
+                To perform real arithmetic, convert the text into numbers:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-[11px] pt-0.5">
+                <div className="p-2 rounded-lg bg-white dark:bg-[#1C1C1E] border border-amber-200 dark:border-amber-900/60">
+                  <span className="font-sans font-bold text-neutral-500 block text-[10px] mb-0.5">Whole numbers:</span>
+                  num = <span className="text-sky-500">int</span>(<span className="text-emerald-500">&quot;10&quot;</span>)
+                </div>
+                <div className="p-2 rounded-lg bg-white dark:bg-[#1C1C1E] border border-amber-200 dark:border-amber-900/60">
+                  <span className="font-sans font-bold text-neutral-500 block text-[10px] mb-0.5">Numbers with decimals:</span>
+                  num = <span className="text-sky-500">float</span>(<span className="text-emerald-500">&quot;10.5&quot;</span>)
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Mobile Tab Switcher */}
       <div className="flex lg:hidden rounded-xl bg-neutral-100 dark:bg-neutral-900 p-1 border border-neutral-200/80 dark:border-neutral-800 text-xs font-semibold">
@@ -411,7 +563,7 @@ export function MilestoneWorkspace({
         </button>
       </div>
 
-      {/* 3. Main Split Workspace (Editor + Output) */}
+      {/* 4. Main Split Workspace (Editor + Output) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Left Column: Code Editor (7 Cols) */}
         <div className={`lg:col-span-7 space-y-3 ${activeMobileTab === "terminal" ? "hidden lg:block" : "block"}`}>
@@ -432,7 +584,7 @@ export function MilestoneWorkspace({
               className="h-6 px-2 text-[11px] text-neutral-400 hover:text-rose-500 cursor-pointer"
             >
               <RotateCcw className="size-3 mr-1" />
-              <span>Reset Starter</span>
+              <span>Reset Template</span>
             </Button>
           </div>
 
@@ -490,14 +642,14 @@ export function MilestoneWorkspace({
 
         {/* Right Column: Terminal & Feedback (5 Cols) */}
         <div className={`lg:col-span-5 space-y-3 ${activeMobileTab === "editor" ? "hidden lg:block" : "block"}`}>
-          {/* Milestone 1 Completion Card (Restrained, Warm, and Honest) */}
-          {isMilestonePassed && (
+          {/* Milestone Completion Card */}
+          {isCurrentMilestonePassed && (
             <div className="p-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-500/40 text-emerald-950 dark:text-emerald-200 space-y-3 animate-in fade-in duration-200 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-                    Milestone 1 Complete
+                    Milestone {milestone.order} Complete
                   </span>
                 </div>
 
@@ -514,23 +666,35 @@ export function MilestoneWorkspace({
               </div>
 
               <p className="text-xs leading-relaxed text-emerald-900 dark:text-emerald-200">
-                You taught your calculator to interact with its user! It captures their name and greets them personally.
+                {isM1
+                  ? "You taught your calculator to interact with its user! It captures their name and greets them personally."
+                  : "Your calculator now treats user input as numbers and can perform real addition."}
               </p>
 
               <div className="pt-2 border-t border-emerald-200/70 dark:border-emerald-900/60 flex items-center justify-between text-[11px] text-emerald-800 dark:text-emerald-400 font-medium">
-                <span>1 of 4 milestones complete</span>
+                <span>{completedCount} of 4 milestones complete</span>
                 <span>Work saved</span>
               </div>
 
-              {/* Primary Next Action & Secondary Review Action */}
+              {/* Action CTAs */}
               <div className="flex items-center gap-2 pt-1">
-                <Button
-                  onClick={() => setShowNextMilestoneModal(true)}
-                  className="h-9 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 flex-1 justify-center cursor-pointer"
-                >
-                  <span>Next Milestone</span>
-                  <ArrowRight className="size-3.5" />
-                </Button>
+                {isM1 ? (
+                  <Button
+                    onClick={handleAdvanceToNextMilestone}
+                    className="h-9 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 flex-1 justify-center cursor-pointer"
+                  >
+                    <span>Continue to Milestone 2</span>
+                    <ArrowRight className="size-3.5" />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => setShowNextMilestoneModal(true)}
+                    className="h-9 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 flex-1 justify-center cursor-pointer"
+                  >
+                    <span>Next Milestone</span>
+                    <ArrowRight className="size-3.5" />
+                  </Button>
+                )}
 
                 <Button
                   variant="outline"
@@ -624,7 +788,7 @@ export function MilestoneWorkspace({
                   <Button
                     type="submit"
                     size="sm"
-                    className="h-6 px-2.5 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs rounded"
+                    className="h-6 px-2.5 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs rounded cursor-pointer"
                   >
                     Enter
                   </Button>
@@ -635,7 +799,7 @@ export function MilestoneWorkspace({
         </div>
       </div>
 
-      {/* Honest Next Milestone In-Development Dialog */}
+      {/* Honest In-Development Dialog for Milestone 3 */}
       {showNextMilestoneModal && (
         <div
           role="dialog"
@@ -658,13 +822,13 @@ export function MilestoneWorkspace({
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-neutral-400">Smart Calculator</span>
                 <span className="text-neutral-300 dark:text-neutral-700">•</span>
-                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">1 of 4 Complete</span>
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">2 of 4 Complete</span>
               </div>
               <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
-                Milestone 2 is in development
+                Milestone 3 is in development
               </h3>
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                You&apos;ve completed Milestone 1! The next milestone (converting user input to numbers and computing arithmetic calculations) is being prepared. Your code and progress have been saved safely.
+                You&apos;ve completed Milestone 2! The next build step (Multi-Operator Arithmetic Suite with subtraction, multiplication, division, modulo, and powers) is being prepared. Your code and progress have been saved safely.
               </p>
             </div>
 
@@ -674,7 +838,7 @@ export function MilestoneWorkspace({
                 onClick={() => setShowNextMilestoneModal(false)}
                 className="w-full sm:w-auto h-9 px-4 rounded-xl text-xs font-semibold cursor-pointer"
               >
-                Review Milestone 1 Code
+                Review Calculator Code
               </Button>
 
               <Button

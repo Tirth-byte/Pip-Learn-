@@ -23,16 +23,27 @@ export function ModuleClient({ module }: { module: string }) {
     normalized === "smart-calculator";
 
   const [phase, setPhase] = useState<LearningPhase>("mission");
-  const [milestone1Completed, setMilestone1Completed] = useState(() => {
-    if (typeof window === "undefined") return false;
+  const [completedMilestonesCount, setCompletedMilestonesCount] = useState(() => {
+    if (typeof window === "undefined") return 0;
     try {
       const storage = new LocalLearnerStorageAdapter();
       const state = storage.loadProjectState("project-smart-calculator");
-      return state?.milestoneStates["milestone-calc-1"]?.status === "completed";
+      if (!state) return 0;
+      return Object.values(state.milestoneStates).filter((m) => m.status === "completed").length;
     } catch {
-      return false;
+      return 0;
     }
   });
+
+  const milestone1Completed = completedMilestonesCount > 0;
+
+  const handleMilestoneCompletedChange = (completed: boolean, count?: number) => {
+    if (count !== undefined) {
+      setCompletedMilestonesCount(count);
+    } else if (completed) {
+      setCompletedMilestonesCount((prev) => Math.max(prev, 1));
+    }
+  };
 
   if (!isModule1) {
     const formattedTitle = module
@@ -107,6 +118,7 @@ export function ModuleClient({ module }: { module: string }) {
           currentPhase={phase}
           onSelectPhase={setPhase}
           milestone1Completed={milestone1Completed}
+          completedMilestonesCount={completedMilestonesCount}
         />
 
         <div className="hidden sm:block text-xs font-medium text-neutral-400">
@@ -130,11 +142,11 @@ export function ModuleClient({ module }: { module: string }) {
         />
       )}
 
-      {/* Phase 3: Milestone 1 Workspace */}
+      {/* Phase 3: Build Workspace */}
       {phase === "workspace" && (
         <MilestoneWorkspace
           onBackToPrimer={() => setPhase("primer")}
-          onMilestoneCompletedChange={setMilestone1Completed}
+          onMilestoneCompletedChange={handleMilestoneCompletedChange}
         />
       )}
     </div>

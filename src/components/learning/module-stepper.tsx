@@ -9,17 +9,21 @@ interface ModuleStepperProps {
   currentPhase: LearningPhase;
   onSelectPhase: (phase: LearningPhase) => void;
   milestone1Completed?: boolean;
+  completedMilestonesCount?: number;
 }
 
 export function ModuleStepper({
   currentPhase,
   onSelectPhase,
   milestone1Completed = false,
+  completedMilestonesCount = 0,
 }: ModuleStepperProps) {
+  const isAnyMilestoneDone = milestone1Completed || completedMilestonesCount > 0;
+
   const steps: { id: LearningPhase; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: "mission", label: "Mission & Outcome", icon: Compass },
     { id: "primer", label: "Essential Primer", icon: BookOpen },
-    { id: "workspace", label: "Build Milestone 1", icon: Hammer },
+    { id: "workspace", label: "Build Workspace", icon: Hammer },
   ];
 
   return (
@@ -31,7 +35,18 @@ export function ModuleStepper({
           const isCompleted =
             (step.id === "mission" && currentPhase !== "mission") ||
             (step.id === "primer" && currentPhase === "workspace") ||
-            (step.id === "workspace" && milestone1Completed);
+            (step.id === "workspace" && isAnyMilestoneDone);
+
+          let workspaceLabel = step.label;
+          if (step.id === "workspace") {
+            if (completedMilestonesCount >= 2) {
+              workspaceLabel = "Milestones 1 & 2 ✓";
+            } else if (isAnyMilestoneDone) {
+              workspaceLabel = "Milestone 1 ✓";
+            } else {
+              workspaceLabel = "Build Milestone 1";
+            }
+          }
 
           return (
             <button
@@ -49,9 +64,7 @@ export function ModuleStepper({
                 ) : (
                   <Icon className={`size-3.5 ${isActive ? "text-[#0066FF]" : "text-neutral-400"}`} />
                 )}
-                <span className="hidden sm:inline">
-                  {step.id === "workspace" && milestone1Completed ? "Milestone 1 ✓" : step.label}
-                </span>
+                <span className="hidden sm:inline">{workspaceLabel}</span>
                 <span className="sm:hidden">{idx + 1}. {step.id}</span>
               </span>
             </button>

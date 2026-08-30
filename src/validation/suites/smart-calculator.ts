@@ -52,7 +52,7 @@ export const smartCalculatorMilestone2Suite: MilestoneValidationSuite = {
   projectId: "project-smart-calculator",
   milestoneId: "milestone-calc-2",
   version: "1.0.0",
-  title: "Milestone 2: The Addition Engine & Type Conversion Validation",
+  title: "Milestone 2: Addition Engine & Type Conversion Validation",
   testCases: [
     {
       id: "tc-m2-integers-1",
@@ -101,7 +101,7 @@ export const smartCalculatorMilestone2Suite: MilestoneValidationSuite = {
     {
       id: "tc-m2-decimals",
       name: "Decimal Addition Check (12.5 + 7.5)",
-      description: "Tests decimal numbers (12.5 and 7.5) to verify float conversion.",
+      description: "Tests decimal numbers (12.5 and 7.5) to verify decimal addition.",
       simulatedInputs: ["Dev", "12.5", "7.5"],
       criterionIds: ["crit-2-sum"],
       assertions: [
@@ -110,7 +110,7 @@ export const smartCalculatorMilestone2Suite: MilestoneValidationSuite = {
           value: 20.0,
           label: "Sum of 12.5 and 7.5",
           description: "Outputs numerical sum of 20.0.",
-          failureMessage: "For decimal inputs 12.5 and 7.5, the calculator did not output 20.0. Ensure your program converts inputs to float.",
+          failureMessage: "For decimal inputs 12.5 and 7.5, the calculator did not output 20 (or 20.0). Make sure to convert inputs so decimals are supported.",
         },
       ],
     },
