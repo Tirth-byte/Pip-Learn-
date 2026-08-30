@@ -68,6 +68,7 @@ export default function AppLayout({
 }) {
   const { isAuthenticated } = useAppContext();
   const router = useRouter();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -87,13 +88,15 @@ export default function AppLayout({
     return <SkeletonLoader />;
   }
 
+  const isWideRoute = pathname.includes("/courses/python");
+
   return (
     <SidebarProvider>
       <div className="flex h-screen overflow-hidden bg-white dark:bg-[#191919] w-full text-neutral-900 dark:text-[rgba(255,255,255,0.81)] transition-colors">
         <AppSidebar />
         <main className="flex-1 overflow-y-auto w-full relative flex flex-col scroll-smooth">
           <TopNav />
-          <div className="p-8 max-w-5xl mx-auto w-full flex-1 flex flex-col">
+          <div className={`${isWideRoute ? "p-3 sm:p-6 max-w-6xl" : "p-4 sm:p-8 max-w-5xl"} mx-auto w-full flex-1 flex flex-col`}>
             <PageTransition>{children}</PageTransition>
           </div>
         </main>

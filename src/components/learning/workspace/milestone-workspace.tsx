@@ -8,7 +8,6 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
-  Terminal,
   AlertCircle,
   HelpCircle,
   FileCode,
@@ -83,7 +82,7 @@ export function MilestoneWorkspace({
 
   // UI view toggles
   const [showPrimerRef, setShowPrimerRef] = useState(false);
-  const [activeMobileTab, setActiveMobileTab] = useState<"editor" | "instructions" | "terminal">("editor");
+  const [activeMobileTab, setActiveMobileTab] = useState<"editor" | "terminal" | "instructions">("editor");
 
   const stdinInputRef = useRef<HTMLInputElement>(null);
 
@@ -103,7 +102,7 @@ export function MilestoneWorkspace({
     }
   }, [isMilestonePassed, onMilestoneCompletedChange]);
 
-  // 2. Warm up Pyodide in background
+  // Warm up Pyodide in background
   useEffect(() => {
     if (!provider) return;
     provider
@@ -126,7 +125,7 @@ export function MilestoneWorkspace({
     }
   }, [activePrompt]);
 
-  // 3. Debounced Autosave to Learner State Store
+  // Debounced Autosave to Learner State Store
   const handleCodeChange = useCallback(
     (newCode: string) => {
       setCode(newCode);
@@ -142,7 +141,7 @@ export function MilestoneWorkspace({
     [projectState, storage]
   );
 
-  // 4. Run Code (Interactive Exploration — Does NOT mutate progress)
+  // Run Code (Primary interactive exploration action)
   const handleRunCode = async () => {
     if (!provider) return;
 
@@ -181,7 +180,7 @@ export function MilestoneWorkspace({
     }
   };
 
-  // 5. Send Stdin to Interactive Input()
+  // Send Stdin to Interactive Input()
   const handleSendStdin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!provider || activePrompt === null) return;
@@ -198,7 +197,7 @@ export function MilestoneWorkspace({
     }
   };
 
-  // 6. Check Milestone (Behavioral Validation Engine)
+  // Check Milestone (Secondary validation action)
   const handleCheckMilestone = async () => {
     if (!provider || !projectState) return;
 
@@ -236,7 +235,7 @@ export function MilestoneWorkspace({
     }
   };
 
-  // 7. Reset to Starter Template
+  // Reset to Starter Template
   const handleResetCode = () => {
     const starter = milestone.starterFiles?.["calculator.py"] || "";
     handleCodeChange(starter);
@@ -248,33 +247,33 @@ export function MilestoneWorkspace({
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto py-2 select-none text-neutral-900 dark:text-neutral-100">
-      {/* Workspace Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-neutral-200/80 dark:border-neutral-800 pb-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-200/50 dark:border-blue-900/50">
+    <div className="space-y-4 max-w-6xl mx-auto py-1 select-none text-neutral-900 dark:text-neutral-100">
+      {/* 1. Header & Status Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-neutral-200/70 dark:border-neutral-800/70 pb-3">
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200/50 dark:border-blue-900/50">
               Milestone 1 of 4
             </span>
-            <span className="text-xs text-neutral-400 font-medium">Smart Calculator</span>
+            <span className="text-xs text-neutral-400">Smart Calculator</span>
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
             {milestone.title}
           </h1>
         </div>
 
-        {/* Runtime Status & Primer Helper */}
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+        {/* Runtime Status & Quick Reference */}
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <button
             onClick={() => setShowPrimerRef(!showPrimerRef)}
-            className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white py-1 px-2 rounded-lg border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800 transition-all"
+            className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white py-1 px-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
           >
-            <HelpCircle className="size-3.5 text-purple-500" />
-            <span>Need Help?</span>
+            <HelpCircle className="size-3.5 text-blue-500" />
+            <span>Reference</span>
             {showPrimerRef ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
           </button>
 
-          <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 px-3 py-1.5 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-xs">
+          <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 px-2.5 py-1 rounded-lg border border-neutral-200/60 dark:border-neutral-800 text-xs">
             <span
               className={`size-2 rounded-full ${
                 status === "ready"
@@ -286,76 +285,79 @@ export function MilestoneWorkspace({
                   : "bg-neutral-400"
               }`}
             />
-            <span className="font-medium text-neutral-600 dark:text-neutral-300 text-[11px]">
+            <span className="font-medium text-neutral-600 dark:text-neutral-400 text-[11px]">
               {status === "ready"
                 ? "Python Ready"
                 : status === "initializing"
-                ? "Preparing Python…"
+                ? "Starting Python…"
                 : status === "waiting_for_input"
                 ? "Waiting for Input"
                 : status === "running"
-                ? "Executing…"
+                ? "Running…"
                 : "Python Ready"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Collapsible Primer Reference Card */}
+      {/* Collapsible Primer Reference */}
       {showPrimerRef && (
-        <div className="p-4 rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/20 space-y-3 animate-in fade-in duration-200">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">
-              Quick Reference for Milestone 1
+        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-[#181818] space-y-2.5 animate-in fade-in duration-150">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-bold text-neutral-800 dark:text-neutral-200">
+              Quick Syntax Reminder
             </span>
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={onBackToPrimer}
-              className="h-6 px-2 text-[11px] text-purple-600 hover:text-purple-900 dark:text-purple-400"
+              className="text-[11px] font-semibold text-[#0066FF] hover:underline cursor-pointer"
             >
               Open Full Primer →
-            </Button>
+            </button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="bg-white dark:bg-[#1A1A1A] p-2.5 rounded-xl border border-purple-100 dark:border-purple-900/40">
-              <span className="font-bold text-neutral-800 dark:text-neutral-200 block mb-1">Print to screen:</span>
-              <code className="text-neutral-600 dark:text-neutral-300 font-mono text-[11px]">print(&quot;Welcome to Calculator&quot;)</code>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+            <div className="bg-white dark:bg-[#202022] p-2 rounded-lg border border-neutral-200/60 dark:border-neutral-800 text-[11px]">
+              <span className="text-neutral-400 block font-sans text-[10px] mb-0.5">Print:</span>
+              <span className="text-sky-400">print</span>(<span className="text-emerald-400">&quot;=== SMART CALCULATOR ===&quot;</span>)
             </div>
-            <div className="bg-white dark:bg-[#1A1A1A] p-2.5 rounded-xl border border-purple-100 dark:border-purple-900/40">
-              <span className="font-bold text-neutral-800 dark:text-neutral-200 block mb-1">Ask for name:</span>
-              <code className="text-neutral-600 dark:text-neutral-300 font-mono text-[11px]">name = input(&quot;Your name? &quot;)</code>
+            <div className="bg-white dark:bg-[#202022] p-2 rounded-lg border border-neutral-200/60 dark:border-neutral-800 text-[11px]">
+              <span className="text-neutral-400 block font-sans text-[10px] mb-0.5">Input &amp; variable:</span>
+              name = <span className="text-sky-400">input</span>(<span className="text-emerald-400">&quot;What is your name? &quot;</span>)
             </div>
           </div>
         </div>
       )}
 
-      {/* Acceptance Criteria Cards */}
-      <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-[#161616] border border-neutral-200/80 dark:border-neutral-800 space-y-2">
+      {/* 2. Compact Milestone Brief & Checklist */}
+      <div className="p-3 sm:p-3.5 rounded-xl bg-neutral-50/80 dark:bg-[#161618] border border-neutral-200/70 dark:border-neutral-800 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
-            Milestone 1 Requirements
+          <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+            Milestone Goal
           </span>
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {isMilestonePassed ? "All criteria satisfied" : "Test with 'Check Milestone'"}
+          <span className="text-[11px] font-medium text-neutral-400">
+            {isMilestonePassed ? "Completed ✓" : "Build & Run to test"}
           </span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1">
+
+        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-normal">
+          Print the calculator welcome header, prompt the user for their name, and greet them personally.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
           {milestone.criteria.map((c) => (
             <div
               key={c.id}
-              className={`flex items-start gap-2 p-2.5 rounded-xl border transition-all text-xs ${
+              className={`flex items-center gap-1.5 p-2 rounded-lg text-xs transition-colors ${
                 isMilestonePassed
-                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-950 dark:text-emerald-300"
-                  : "bg-white dark:bg-[#1E1E1E] border-neutral-200/80 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300"
+                  ? "bg-emerald-500/10 text-emerald-900 dark:text-emerald-300 font-medium"
+                  : "bg-white dark:bg-[#1E1E20] border border-neutral-200/60 dark:border-neutral-800/80 text-neutral-600 dark:text-neutral-400"
               }`}
             >
               <CheckCircle2
-                className={`size-4 mt-0.5 shrink-0 ${
+                className={`size-3.5 shrink-0 ${
                   isMilestonePassed ? "text-emerald-500" : "text-neutral-300 dark:text-neutral-600"
                 }`}
               />
-              <span className="leading-snug">{c.description}</span>
+              <span className="truncate text-[11px]">{c.description}</span>
             </div>
           ))}
         </div>
@@ -366,30 +368,34 @@ export function MilestoneWorkspace({
         <button
           onClick={() => setActiveMobileTab("editor")}
           className={`flex-1 py-1.5 rounded-lg transition-all ${
-            activeMobileTab === "editor" ? "bg-white dark:bg-[#1C1C1E] text-neutral-900 dark:text-white shadow-xs font-bold" : "text-neutral-500"
+            activeMobileTab === "editor"
+              ? "bg-white dark:bg-[#1C1C1E] text-neutral-900 dark:text-white shadow-xs font-bold"
+              : "text-neutral-500"
           }`}
         >
-          Code Editor
+          Code
         </button>
         <button
           onClick={() => setActiveMobileTab("terminal")}
           className={`flex-1 py-1.5 rounded-lg transition-all ${
-            activeMobileTab === "terminal" ? "bg-white dark:bg-[#1C1C1E] text-neutral-900 dark:text-white shadow-xs font-bold" : "text-neutral-500"
+            activeMobileTab === "terminal"
+              ? "bg-white dark:bg-[#1C1C1E] text-neutral-900 dark:text-white shadow-xs font-bold"
+              : "text-neutral-500"
           }`}
         >
-          Terminal & Checks
+          Terminal
         </button>
       </div>
 
-      {/* Main Workspace Split Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Code Editor & Controls (7 Cols) */}
+      {/* 3. Main Split Workspace (Editor + Output) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Code Editor (7 Cols) */}
         <div className={`lg:col-span-7 space-y-3 ${activeMobileTab === "terminal" ? "hidden lg:block" : "block"}`}>
           {/* File Toolbar */}
-          <div className="flex items-center justify-between px-1">
+          <div className="flex items-center justify-between px-0.5">
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 text-xs font-mono font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800/80 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-700">
-                <FileCode className="size-3.5 text-[#0066FF]" />
+              <span className="flex items-center gap-1.5 text-xs font-mono font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-700">
+                <FileCode className="size-3 text-[#0066FF]" />
                 <span>calculator.py</span>
               </span>
               <span className="text-[11px] text-neutral-400">{isSaved ? "Saved" : "Saving…"}</span>
@@ -399,7 +405,7 @@ export function MilestoneWorkspace({
               variant="ghost"
               size="sm"
               onClick={handleResetCode}
-              className="h-7 px-2 text-xs text-neutral-400 hover:text-rose-500"
+              className="h-6 px-2 text-[11px] text-neutral-400 hover:text-rose-500 cursor-pointer"
             >
               <RotateCcw className="size-3 mr-1" />
               <span>Reset Starter</span>
@@ -411,85 +417,89 @@ export function MilestoneWorkspace({
             value={code}
             onChange={handleCodeChange}
             onRun={handleRunCode}
-            minHeight="320px"
-            maxHeight="520px"
+            minHeight="360px"
+            maxHeight="540px"
           />
 
-          {/* Action Execution Buttons */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div className="flex items-center gap-3">
-              {/* Check Milestone Button */}
+          {/* Action Toolbar: RUN (Primary) & CHECK (Secondary) */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div className="flex items-center gap-2.5">
+              {/* PRIMARY: Run Code Button */}
               <Button
+                onClick={handleRunCode}
+                disabled={status === "running" || status === "waiting_for_input" || isValidating}
+                className="h-10 px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-bold shadow-sm transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+              >
+                <Play className="size-3.5 fill-current" />
+                <span>Run Code</span>
+              </Button>
+
+              {/* SECONDARY: Check Milestone Button */}
+              <Button
+                variant="outline"
                 onClick={handleCheckMilestone}
                 disabled={isValidating || status === "running" || status === "waiting_for_input"}
-                className="h-10 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 text-xs font-extrabold shadow-sm transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                className="h-10 px-4 rounded-xl border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs font-semibold transition-all flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
               >
                 {isValidating ? (
                   <>
-                    <span className="size-3.5 border-2 border-neutral-950 border-t-transparent rounded-full animate-spin" />
-                    <span>Checking Milestone…</span>
+                    <span className="size-3 border-2 border-neutral-700 dark:border-neutral-300 border-t-transparent rounded-full animate-spin" />
+                    <span>Checking…</span>
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="size-4 stroke-[2.5]" />
+                    <CheckCircle2 className="size-3.5 stroke-[2]" />
                     <span>Check Milestone</span>
                   </>
                 )}
               </Button>
-
-              {/* Interactive Run Code Button */}
-              <Button
-                onClick={handleRunCode}
-                disabled={status === "running" || status === "waiting_for_input" || isValidating}
-                className="h-10 px-4 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
-              >
-                <Play className="size-3.5 fill-current" />
-                <span>Run</span>
-              </Button>
             </div>
 
             <span className="text-[11px] text-neutral-400 hidden sm:inline">
-              Press <kbd className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 font-mono">Cmd+Enter</kbd> to run
+              <kbd className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 font-mono text-[10px]">
+                Cmd+Enter
+              </kbd>{" "}
+              to run
             </span>
           </div>
         </div>
 
-        {/* Right Column: Terminal & Validation Inspection (5 Cols) */}
-        <div className={`lg:col-span-5 space-y-4 ${activeMobileTab === "editor" ? "hidden lg:block" : "block"}`}>
-          {/* Milestone 1 Completion Celebration Moment */}
+        {/* Right Column: Terminal & Feedback (5 Cols) */}
+        <div className={`lg:col-span-5 space-y-3 ${activeMobileTab === "editor" ? "hidden lg:block" : "block"}`}>
+          {/* Milestone 1 Completion Card (Restrained & Honest) */}
           {isMilestonePassed && (
-            <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/40 text-emerald-950 dark:text-emerald-200 space-y-2 animate-in fade-in duration-300 shadow-sm">
-              <div className="flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-500/40 text-emerald-950 dark:text-emerald-200 space-y-1.5 animate-in fade-in duration-200">
+              <div className="flex items-center gap-1.5">
                 <Sparkles className="size-4 text-emerald-600 dark:text-emerald-400" />
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
                   Milestone 1 Complete
                 </span>
               </div>
-              <p className="text-xs leading-relaxed font-medium">
-                You made your Python program interact with a real user! It captures their input and delivers a personalized greeting.
+              <p className="text-xs leading-relaxed">
+                You made your Python program talk to the user and remember their input!
               </p>
-              <div className="pt-2 border-t border-emerald-200 dark:border-emerald-900/60 flex items-center justify-between text-[11px] text-emerald-800 dark:text-emerald-400">
-                <span>Milestone 2 (Addition Engine) coming in next slice</span>
-                <span className="font-bold">1 / 4 Complete</span>
+              <div className="pt-1.5 border-t border-emerald-200/60 dark:border-emerald-900/60 flex items-center justify-between text-[11px] text-emerald-800 dark:text-emerald-400 font-medium">
+                <span>Milestone 2 is in development</span>
+                <span>Your code is saved</span>
               </div>
             </div>
           )}
 
-          {/* Validation Failure Feedback Card */}
+          {/* Validation Feedback (Constructive & Calm) */}
           {validationResult && !validationResult.passed && (
-            <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-500/40 text-rose-950 dark:text-rose-200 space-y-2.5 animate-in fade-in duration-200">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="size-4 text-rose-600 dark:text-rose-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-300">
-                  Milestone Needs Adjustment
+            <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-500/40 text-amber-950 dark:text-amber-200 space-y-1.5 animate-in fade-in duration-200">
+              <div className="flex items-center gap-1.5">
+                <AlertCircle className="size-4 text-amber-600 dark:text-amber-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                  Almost there
                 </span>
               </div>
 
-              <div className="space-y-1.5 text-xs leading-relaxed">
+              <div className="space-y-1 text-xs leading-relaxed">
                 {validationResult.testCaseResults.map((tc) => (
-                  <div key={tc.testCaseId} className="space-y-0.5">
+                  <div key={tc.testCaseId}>
                     {!tc.passed && tc.learnerFeedback && (
-                      <p className="text-rose-800 dark:text-rose-300 text-[11px]">
+                      <p className="text-amber-900 dark:text-amber-300 text-[11px]">
                         • {tc.learnerFeedback}
                       </p>
                     )}
@@ -499,31 +509,39 @@ export function MilestoneWorkspace({
             </div>
           )}
 
-          {/* Interactive Terminal Panel */}
-          <div className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 text-neutral-100 overflow-hidden shadow-xl flex flex-col h-[340px]">
-            <div className="flex items-center justify-between px-4 py-2.5 bg-neutral-900 border-b border-neutral-800 text-xs">
+          {/* Terminal Window */}
+          <div className="rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-[#0F0F11] text-neutral-100 overflow-hidden shadow-sm flex flex-col h-[360px]">
+            <div className="flex items-center justify-between px-3.5 py-2 bg-[#18181B] border-b border-neutral-800 text-xs">
               <div className="flex items-center gap-2">
-                <Terminal className="size-3.5 text-neutral-400" />
-                <span className="font-mono text-neutral-300 text-[11px]">Terminal Output</span>
+                <div className="flex items-center gap-1">
+                  <span className="size-2 rounded-full bg-[#FF5F56]" />
+                  <span className="size-2 rounded-full bg-[#FFBD2E]" />
+                  <span className="size-2 rounded-full bg-[#27C93F]" />
+                </div>
+                <span className="font-mono text-neutral-400 text-[11px] ml-1">Terminal Output</span>
               </div>
-              <span className="text-[10px] text-neutral-500 font-mono">stdio</span>
+              <span className="text-[10px] text-neutral-500 font-mono">python3</span>
             </div>
 
             {/* Terminal Body */}
-            <div className="flex-1 p-4 font-mono text-xs text-neutral-200 overflow-y-auto whitespace-pre-wrap leading-relaxed space-y-2">
-              {stdout ? stdout : <span className="text-neutral-600 italic">Click &apos;Run&apos; to execute your program.</span>}
+            <div className="flex-1 p-3.5 font-mono text-xs text-neutral-200 overflow-y-auto whitespace-pre-wrap leading-relaxed space-y-2">
+              {stdout ? (
+                stdout
+              ) : (
+                <span className="text-neutral-600 italic">Click &apos;Run Code&apos; to execute your program.</span>
+              )}
               {stderr && <div className="text-rose-400 font-mono text-xs">{stderr}</div>}
 
-              {/* Real Python Error Display */}
+              {/* Calm Python Error Display */}
               {lastError && (
-                <div className="mt-3 p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-xs space-y-1.5">
-                  <div className="flex items-center justify-between text-rose-400 font-bold">
-                    <span>Python Error: {lastError.name}</span>
+                <div className="mt-2 p-2.5 rounded-lg bg-rose-950/40 border border-rose-500/30 text-xs space-y-1">
+                  <div className="flex items-center justify-between text-rose-300 font-bold text-[11px]">
+                    <span>Your program hit a Python error: {lastError.name}</span>
                     {lastError.line && <span>Line {lastError.line}</span>}
                   </div>
-                  <p className="text-rose-200/90">{lastError.message}</p>
+                  <p className="text-rose-200/80 text-[11px]">{lastError.message}</p>
                   {lastError.traceback && (
-                    <pre className="text-[10px] text-neutral-400 bg-neutral-950/80 p-2 rounded border border-neutral-800 overflow-x-auto whitespace-pre-wrap">
+                    <pre className="text-[10px] text-neutral-400 bg-black/40 p-1.5 rounded border border-neutral-800 overflow-x-auto whitespace-pre-wrap">
                       {lastError.traceback}
                     </pre>
                   )}
@@ -534,21 +552,21 @@ export function MilestoneWorkspace({
               {activePrompt !== null && (
                 <form
                   onSubmit={handleSendStdin}
-                  className="flex items-center gap-2 mt-3 pt-3 border-t border-neutral-800 bg-amber-500/10 p-2 rounded-xl"
+                  className="flex items-center gap-2 mt-2 pt-2 border-t border-neutral-800 bg-amber-500/10 p-2 rounded-lg"
                 >
-                  <span className="text-amber-400 font-bold">{activePrompt || "> "}</span>
+                  <span className="text-amber-400 font-bold text-xs">{activePrompt || "> "}</span>
                   <input
                     ref={stdinInputRef}
                     type="text"
                     value={stdinInput}
                     onChange={(e) => setStdinInput(e.target.value)}
                     placeholder="Type response and press Enter…"
-                    className="flex-1 bg-neutral-900 border border-neutral-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500"
+                    className="flex-1 bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500"
                   />
                   <Button
                     type="submit"
                     size="sm"
-                    className="h-7 px-3 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs rounded-lg"
+                    className="h-6 px-2.5 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs rounded"
                   >
                     Enter
                   </Button>

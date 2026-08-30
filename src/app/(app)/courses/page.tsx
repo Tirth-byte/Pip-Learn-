@@ -2,122 +2,109 @@
 
 import Link from "next/link";
 import {
-  Sparkles,
   ArrowRight,
   Code2,
   Lock,
   Database,
   Layers,
   Network,
-  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const UPCOMING_COURSES = [
+const UPCOMING_PATHS = [
   {
     id: "data-science",
-    title: "Data Science & Analytics",
-    description: "Data wrangling, statistical analysis, and interactive visualization with Pandas and NumPy.",
+    title: "Data Science",
+    description: "Work with real datasets, analyze statistics, and visualize trends.",
     icon: Database,
     level: "Intermediate",
-    status: "upcoming",
   },
   {
     id: "django",
-    title: "Full-Stack Django",
-    description: "Production web development with models, views, templates, authentication, and REST APIs.",
+    title: "Web Apps with Django",
+    description: "Build complete web applications with databases, user logins, and APIs.",
     icon: Layers,
     level: "Intermediate",
-    status: "upcoming",
   },
   {
     id: "algorithms",
-    title: "Algorithms & Data Structures",
-    description: "Core computer science algorithms, complexity analysis, trees, graphs, and dynamic programming.",
+    title: "Algorithms & Logic",
+    description: "Tackle classic problem-solving patterns, recursion, and data structures.",
     icon: Code2,
     level: "Advanced",
-    status: "upcoming",
   },
   {
     id: "fastapi",
-    title: "FastAPI & Microservices",
-    description: "High-performance asynchronous backend services with Pydantic validation and OpenAPI.",
+    title: "FastAPI & Services",
+    description: "Create fast, modern backend APIs and connected services in Python.",
     icon: Network,
     level: "Intermediate",
-    status: "upcoming",
   },
 ];
 
 export default function CoursesPage() {
   return (
-    <div className="space-y-8 animate-in fade-in duration-300 max-w-4xl mx-auto py-8 px-4 select-none text-neutral-900 dark:text-neutral-100">
-      {/* Page Header */}
-      <div className="border-b border-neutral-100 dark:border-neutral-800 pb-4">
-        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mb-1">
-          Courses &amp; Learning Paths
+    <div className="space-y-8 animate-in fade-in duration-300 max-w-4xl mx-auto py-6 px-4 select-none text-neutral-900 dark:text-neutral-100">
+      {/* Header */}
+      <div className="space-y-1.5 border-b border-neutral-100 dark:border-neutral-800/80 pb-5">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          Learn by Building
         </h1>
         <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-          Master Python through applied software development, real algorithmic challenges, and hands-on projects.
+          Pick a language or topic. You'll write real code and construct working projects step by step.
         </p>
       </div>
 
-      {/* 1. Featured Active Path: Python Masterclass */}
+      {/* Featured Primary Track: Learn Python */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-            Active Learning Path
-          </h2>
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="size-3.5" />
-            <span>Unit 1 Ready to Build</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+            Available Now
+          </span>
+          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            Unit 1: Smart Calculator is ready
           </span>
         </div>
 
-        <div className="p-6 sm:p-8 rounded-2xl border-2 border-blue-500/80 dark:border-blue-600 bg-white dark:bg-[#1A1A1A] shadow-md space-y-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 size-40 rounded-full bg-blue-500/10 blur-2xl pointer-events-none" />
-
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-1">
+        <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-[#1C1C1E] shadow-sm space-y-6 relative overflow-hidden">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3 max-w-xl">
-              <div className="flex items-center gap-2">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] border border-blue-200/60 dark:border-blue-900/60">
-                  <Sparkles className="size-3" />
-                  <span>PROJECT-FIRST CURRICULUM</span>
-                </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
-                  Active
-                </span>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] border border-blue-200/60 dark:border-blue-900/60">
+                <Sparkles className="size-3" />
+                <span>START HERE</span>
               </div>
 
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-                  Python Masterclass
-                </h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-                  Learn Python by building authentic software tools. Start with Unit 1: Python Fundamentals and construct a complete command-line <strong>Smart Calculator</strong> with real-time test validation.
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+                  Learn Python
+                </h2>
+                <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-1.5 leading-relaxed">
+                  Start from zero and learn Python by building real things. You'll begin with Python Fundamentals and create a friendly, interactive <strong>Smart Calculator</strong> from scratch.
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500 dark:text-neutral-400 pt-1">
-                <span>4 Curriculum Units</span>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-400 dark:text-neutral-500 pt-1">
+                <span>Beginner friendly</span>
                 <span>•</span>
-                <span className="text-[#0066FF] font-semibold">Primary Project: Smart Calculator</span>
+                <span>In-browser code runner</span>
                 <span>•</span>
-                <span>Pyodide Web Worker Execution</span>
+                <span>No setup required</span>
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Actions */}
             <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 shrink-0">
-              <Button asChild className="h-10 px-5 rounded-xl bg-[#0066FF] hover:bg-blue-600 text-white text-xs font-bold shadow-xs">
+              <Button asChild className="h-10 px-5 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100 text-xs font-bold shadow-xs">
                 <Link href="/courses/python" className="flex items-center justify-center gap-2">
-                  <span>Explore Python Track</span>
+                  <span>Start Learning Python</span>
                   <ArrowRight className="size-3.5" />
                 </Link>
               </Button>
 
-              <Button asChild variant="outline" className="h-10 px-5 rounded-xl border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-800 dark:text-neutral-200">
+              <Button asChild variant="outline" className="h-10 px-5 rounded-xl border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                 <Link href="/courses/python/basics" className="flex items-center justify-center gap-2">
-                  <span>Start Unit 1 Project</span>
+                  <span>Open Smart Calculator</span>
                 </Link>
               </Button>
             </div>
@@ -125,51 +112,51 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      {/* 2. Upcoming Learning Paths */}
-      <div className="space-y-4 pt-4">
+      {/* Upcoming Paths */}
+      <div className="space-y-3 pt-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-            Upcoming Learning Tracks
-          </h2>
+          <span className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+            More Paths Coming Soon
+          </span>
           <span className="text-xs text-neutral-400">
-            Under Active Authoring
+            In development
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {UPCOMING_COURSES.map((course) => {
-            const Icon = course.icon;
+          {UPCOMING_PATHS.map((path) => {
+            const Icon = path.icon;
             return (
               <div
-                key={course.id}
-                className="p-5 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/50 dark:bg-[#181818]/60 space-y-3 opacity-90 transition-all hover:opacity-100"
+                key={path.id}
+                className="p-5 rounded-2xl border border-neutral-200/70 dark:border-neutral-800/80 bg-neutral-50/60 dark:bg-[#181818]/60 space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <div className="size-9 rounded-xl bg-white dark:bg-[#222222] border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shadow-2xs">
-                    <Icon className="size-4.5" />
+                  <div className="size-8 rounded-lg bg-white dark:bg-[#222222] border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-300 shadow-2xs">
+                    <Icon className="size-4" />
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 rounded-full">
+                  <div className="flex items-center gap-1 text-[11px] font-medium text-neutral-400 dark:text-neutral-500 bg-neutral-100 dark:bg-neutral-800/80 px-2.5 py-0.5 rounded-full">
                     <Lock className="size-2.5" />
-                    <span>Under Construction</span>
+                    <span>Coming soon</span>
                   </div>
                 </div>
 
                 <div className="space-y-1">
                   <h3 className="text-sm font-bold text-neutral-900 dark:text-white">
-                    {course.title}
+                    {path.title}
                   </h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
-                    {course.description}
+                    {path.description}
                   </p>
                 </div>
 
-                <div className="pt-2 flex items-center justify-between text-xs border-t border-neutral-200/50 dark:border-neutral-800/50">
-                  <span className="text-neutral-400 text-[11px] font-medium">{course.level}</span>
+                <div className="pt-2 flex items-center justify-between text-xs border-t border-neutral-200/40 dark:border-neutral-800/40">
+                  <span className="text-neutral-400 text-[11px]">{path.level}</span>
                   <Link
-                    href={`/courses/${course.id}`}
-                    className="text-[11px] font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    href={`/courses/${path.id}`}
+                    className="text-[11px] font-semibold text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
                   >
-                    View Status →
+                    Details →
                   </Link>
                 </div>
               </div>
